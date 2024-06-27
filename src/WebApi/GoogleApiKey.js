@@ -1,0 +1,4 @@
+export const GoogleApiKey = 'AIzaSyDBeSqFBgF2V-IXmJdeTM3ZZUYG_5nKm-g'
+export const reactnativecardscan = 'otN5EJwBHgQRUAYzasnciAd1Q5sJbBkY'
+export const Stripe_public_key = 'pk_test_51PJqDBD3Sa6XIrtnhQMUpOWKUZcl07kj7B8B7uaqmzVN4FPSlgQBNn4bqwRDzQu2Qg9zyXgZ1qbKAvtKPDWOSt9T00ys9wh8pN'
+export const Stripe_secret_key = 'sk_test_51PJqDBD3Sa6XIrtnOBYRMxlZFVF7E8CYYLKj4MR5zTxsHKNev4pPD3KOBB3zqwM1x6ZxethK18mmxezEOKS8SMLC00sFDf5dhO'

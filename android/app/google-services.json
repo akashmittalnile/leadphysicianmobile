@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "92657033371",
+    "project_id": "leadphysician-26638",
+    "storage_bucket": "leadphysician-26638.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92657033371:android:f2d13ed5356071f46de63e",
+        "android_client_info": {
+          "package_name": "com.leadphysician"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA4QStbsQHYlCoqQXrmugA-W7ceeZyxwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
