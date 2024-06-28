@@ -42,12 +42,13 @@ import Color from '../../Global/Color';
 
 //import : modal
 //import : redux
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 //import svg
 import Mycourse from '../../Global/Images/courses.svg'
 import Resume from '../../Global/Images/playCircle.svg'
 import Delte from '../../Global/Images/trash.svg'
 import { Tuple } from '@reduxjs/toolkit';
+import { setFavCount } from '../../reduxToolkit/reducer/user';
 const physicianCourse = [{
     id: '1',
     title: 'Leg joints',
@@ -76,6 +77,7 @@ const physicianCourse = [{
 
 const Saved = ({ navigation }) => {
     const isFocus = useIsFocused()
+    const dispatch = useDispatch()
     //variables : redux
 
     const userToken = useSelector(state => state.user.userToken);
@@ -91,6 +93,8 @@ const Saved = ({ navigation }) => {
     const [saved, setSaved] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     useEffect(() => {
+
+        dispatch(setFavCount((0)))
 
     }, []);
     const checkcon = () => {
@@ -115,6 +119,7 @@ const Saved = ({ navigation }) => {
         // Return the function to unsubscribe from the event so it gets removed on unmount
         return unsubscribe;
     }, [isFocus]);
+    
 
     ///get deatils
     const getCartCount = async () => {

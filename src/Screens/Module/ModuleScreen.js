@@ -38,7 +38,7 @@ import { getApiWithToken, GET_MODULEDETAIL, MARK_COMPLETE, postApiWithToken, LIK
 import { styles } from './ModuleScreenStyle';
 //import : modal
 //import : redux
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 // import { width, height } from 'global/Constant';
 // import Divider from 'components/Divider/Divider';
 // // import {WebView} from 'react-native-webview';
@@ -85,6 +85,7 @@ import HeartFilled from '../../Global/Images/heartGreen.svg'
 import SaveFilled from '../../Global/Images/savedBook.svg'
 import LinearGradient from 'react-native-linear-gradient';
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import { setFavCount } from '../../reduxToolkit/reducer/user';
 
 const data = [{
     id: '1',
@@ -102,7 +103,7 @@ const data = [{
 },
 ]
 const addToCartObject = {};
-const ModuleScreen = ({ navigation, dispatch, route }) => {
+const ModuleScreen = ({ navigation,  route }) => {
 
     // const defaultImgPath = Image.resolveAssetSource(defaultImg).uri;
     //variables
@@ -111,6 +112,8 @@ const ModuleScreen = ({ navigation, dispatch, route }) => {
     //variables : redux
 
     const userToken = useSelector(state => state.user.userToken);
+
+    const dispatch = useDispatch()
 
     const [webViewVisible, setWebViewVisible] = React.useState(false);
 
@@ -250,6 +253,7 @@ const ModuleScreen = ({ navigation, dispatch, route }) => {
 
             if (resp?.data?.status) {
                 Toast.show({ text1: resp.data.message });
+                dispatch(setFavCount((1)))
                 getCartCount();
             } else {
                 Toast.show({ text1: resp.data.message });

@@ -5,6 +5,7 @@ const initialState = {
   userToken: '',
   userNotifications: false,
   cartCount: 0,
+  favCount: 0
 };
 const user = createSlice({
   name: 'user',
@@ -46,10 +47,16 @@ const user = createSlice({
         userToken: '',
       };
     },
+    setFavCount(state, {payload}) {
+      return {
+        ...state,
+        favCount: payload,
+      };
+    },
   },
 });
 
-export const {setUserToken, setUser, setUserNotifications, logOutUser, clearCart, setCartCount} = user.actions;
+export const {setUserToken, setUser, setUserNotifications, logOutUser, clearCart, setCartCount, setFavCount} = user.actions;
 const themeReducer = user.reducer;
 
 export default themeReducer;

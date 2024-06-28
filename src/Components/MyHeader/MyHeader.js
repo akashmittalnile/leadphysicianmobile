@@ -63,6 +63,8 @@ const MyHeader = ({
 }) => {
     const dispatch = useDispatch();
     const userNotifications = useSelector(state => state.user.userNotifications);
+    const favCount = useSelector(state => state.user.favCount);
+    // const favCount = 1
     console.log('my usernotification-->>', userNotifications);
     //variables
     const navigation = useNavigation();
@@ -293,6 +295,15 @@ const MyHeader = ({
                         >
 
                             <Cart></Cart>
+                            {favCount !== 0 ? (
+                                <View style={[styles.numNotiView, { backgroundColor: Color.PRIMARY, borderRadius: 50, height: 12, width: 12 }]}>
+                                    {/* <MyText
+                  text={userNotifications}
+                  fontSize={10}
+                  textColor="white"
+                /> */}
+                                </View>
+                            ) : null}
 
                         </TouchableOpacity>
                     ) : null}
