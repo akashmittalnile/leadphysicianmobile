@@ -426,16 +426,17 @@ export const requestPostApi = async (endPoint, body, method, token) => {
         }
         )
         let code = await response.status
-        console.log('the api responce is------------->>', url)
+        console.log('the api responce is------------->>', url, code)
         //  let responseJ = await response.json();
         //  console.log('the api responce is',responseJ.headers)
         if (code == 200) {
             let responseJson = await response.json();
             console.log(responseJson, '-------------kkkkkkkkkkkkkkkkk')
             return { responseJson: responseJson, err: null }
-        } else if (code == 400 || code == 402) {
+        } else if (code == 400 || code == 402 || code == 401) {
             let responseJson = await response.json();
             //Completion block 
+            console.log({responseJson});
             return { responseJson: responseJson, err: responseJson.message }
         } else {
             let responseJson = await response.json();

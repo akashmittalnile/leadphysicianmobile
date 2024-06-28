@@ -42,10 +42,15 @@ import Youtube from '../../Global/Images/youtube.svg'
 import Headphone from '../../Global/Images/headphone.svg'
 import Sticky from '../../Global/Images/stickynote.svg'
 import Privacy from '../../Global/Images/PrivacySticky.svg'
+import Loader from '../../Components/Loader';
+import { logOutUser } from '../../reduxToolkit/reducer/user';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GET_PROFILE, postApiWithToken, LOGOUT, getApiWithToken } from '../../Global/Service';
 
 const CustomDrawer = ({ navigation }) => {
     //variables
     const userToken = useSelector(state => state.user.userToken);
+    const dispatch = useDispatch();
     const user = useSelector(state => state?.user?.userInfo);
     console.log('my userToken from the drawer', user);
     // const dispatch = useDispatch();
@@ -118,21 +123,25 @@ const CustomDrawer = ({ navigation }) => {
     const gotoWelcome = () =>
         CommonActions.reset({
             index: 1,
-            routes: [{ name: ScreenNames.WELCOME }],
+            routes: [{ name: 'SignIn' }],
         });
     const logout = async () => {
+
+        
         setShowLoader(true);
         try {
-            const resp = await Service.postApiWithToken(
+            const resp = await postApiWithToken(
                 userToken,
-                Service.LOGOUT,
+                LOGOUT,
                 {},
             );
             console.log('logout resp', resp?.data);
             if (resp?.data?.status) {
-                closeDrawer();
+                // closeDrawer();
                 navigation.dispatch(gotoWelcome);
+                Toast.show({ text1: resp?.data?.message });
                 dispatch(logOutUser());
+                navigation?.closeDrawer()
                 await AsyncStorage.clear();
             }
         } catch (error) {
@@ -143,7 +152,7 @@ const CustomDrawer = ({ navigation }) => {
 
 
     //UI
-    return (
+    return (<>
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ paddingBottom: '20%' }}>
                 <View style={styles.mainView}>
@@ -292,7 +301,7 @@ const CustomDrawer = ({ navigation }) => {
                         <DrawerItemList
                             Title="Logout"
                         // image={require('assets/images/logout-sb.png')}
-                        // onPress={logout}
+                        onPress={logout}
                         />
                     </View>
 
@@ -353,6 +362,9 @@ const CustomDrawer = ({ navigation }) => {
             </ScrollView >
             {/* <CustomLoader text="Logging Out...." showLoader={showLoader} /> */}
         </View >
+
+        {showLoader && <Loader/>}
+        </>
     );
 };
 

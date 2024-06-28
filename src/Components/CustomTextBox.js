@@ -14,7 +14,7 @@ import Eye from '../Global/Images/eye.svg';
 // global
 const H = Dimensions.get('screen').height;
 const W = Dimensions.get('screen').width;
-const CustomTextBox = ({ imageComponent, placeholder, value, onChangeText, err, secureTextEntry = false, keyboardType = '' }) => {
+const CustomTextBox = ({ imageComponent, placeholder, value, onChangeText, err, secureTextEntry = false, keyboardType = '', maxLength=undefined }) => {
     const [isSecureTextEntry, setIsSecureTextEntry] = useState(secureTextEntry);
 
     const toggleSecureEntry = () => {
@@ -30,6 +30,7 @@ const CustomTextBox = ({ imageComponent, placeholder, value, onChangeText, err, 
                 </View>
             )}
             <TextInput
+            maxLength={maxLength}
                 style={[styles.text, secureTextEntry && { paddingRight: 40 }]}
                 value={value}
                 secureTextEntry={isSecureTextEntry}

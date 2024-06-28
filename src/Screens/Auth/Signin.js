@@ -98,8 +98,10 @@ const SignIn = ({ navigation }) => {
             console.log('clllll----->>>', data);
             setLoading(true);
             const { responseJson, err } = await requestPostApi(LOGIN, data, 'POST', '');
-            console.log('login?????????', responseJson.authorization.token);
-            if (responseJson.status === true) {
+            // console.log('login?????????', responseJson.authorization.token);
+            if (responseJson.status == true) {
+
+                // console.log("true");
                 setLoading(false);
                 console.log('sign in jsonValue', responseJson.user);
                 await AsyncStorage.setItem('userToken', responseJson.authorization.token);

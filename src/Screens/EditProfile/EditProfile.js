@@ -452,6 +452,7 @@ const EditProfile = ({ navigation }) => {
                     </View>
                     <View style={{ marginTop: 12 }}>
                         <CustomTextBox
+                            maxLength={10}
                             imageComponent={<Call width={24} height={24} />}
                             //  placeholder='Email address'
                             value={phoneno}

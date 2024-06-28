@@ -1,5 +1,5 @@
 //import : react components
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     View,
     ScrollView,
@@ -41,6 +41,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 //import api
 import { GET_PROFILE, postApiWithToken, LOGOUT, getApiWithToken, GET_MYCOURSES } from '../../Global/Service';
 import { CommonActions } from '@react-navigation/core';
+import SkeletonContainer from '../../Components/Skelton/SkeltonContainer';
 const physicianCourse = [{
     id: '1',
     title: 'Module 01',
@@ -329,7 +330,8 @@ const MyCourse = ({ navigation }) => {
                     </View>
 
                 </ScrollView>
-                {loading ? <Loader /> : null}
+                {/* {loading ? <Loader /> : null} */}
+                {loading && <SkeletonContainer />}
                 {/* <CustomLoader showLoader={showLoader} /> */}
             </View>
         </SafeAreaView>

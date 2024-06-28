@@ -58,6 +58,7 @@ import { GET_PROFILE, postApiWithToken, LOGOUT, getApiWithToken, GET_MYCOURSES, 
 import { CommonActions } from '@react-navigation/core';
 import Saved from '../Saved/Saved';
 import { height } from '../../Global/Constants';
+import SkeletonContainer from '../../Components/Skelton/SkeltonContainer';
 const physicianCourse = [{
     id: '1',
     title: 'Module 01',
@@ -666,7 +667,8 @@ const CalendarListing = ({ navigation, route }) => {
 
                 </ScrollView>
 
-                {loading ? <Loader /> : null}
+                {/* {loading ? <Loader /> : null} */}
+                {loading && <SkeletonContainer />}
                 <View style={{ flex: 1, position: 'absolute', top: 200, alignSelf: 'center' }} >
                     {console.log('result found---->>', noData)}
                     {noData ? (

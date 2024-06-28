@@ -88,6 +88,15 @@ const SetGoal = ({ navigation }) => {
             '3',
         title: 'C-Type Goal'
     }]
+    useEffect(() => {
+      
+        setActiveIndex(0)
+    
+      return () => {
+        
+      }
+    }, [])
+    
     // Function to handle item press
     const handleItemPress = (index, item) => {
         { console.log('my seletcted item---->>', item) }

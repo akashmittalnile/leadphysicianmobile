@@ -323,7 +323,7 @@ const ModuleScreen = ({ navigation, dispatch, route }) => {
     const RenderItemPdf = ({ item }) => {
         console.log('my detailssstitle---->>>', item);
         return (
-            <TouchableOpacity style={styles.moduleView}  >
+            <TouchableOpacity onPress={() => { setShowViewPdfModal(true), setPdfLink(item?.details); }} style={styles.moduleView}  >
                 <MyIcon height={40} width={40} style={{ justifyContent: 'center', marginTop: 12 }}></MyIcon>
                 <View style={{ justifyContent: 'center' }}>
                     <MyText

@@ -9,6 +9,7 @@ import {
     TextInput,
     Keyboard,
     KeyboardAvoidingView,
+    SafeAreaView,
 } from 'react-native';
 import FAB_Button from '../../Screens/FAB_Button/FAB_Button';
 import FabDownload from '../../Screens/FabDownload/FabDownload';
@@ -24,8 +25,9 @@ import { styles } from './ViewPdfStyle';
 
 
 import Pdf from 'react-native-pdf';
+import GlobalUtils from '../../Global/GlobalUtils';
 
-const ViewPdf = ({ visible, setVisibility, pdfLink, handleDownload }) => {
+const ViewPdf = ({ visible, setVisibility, pdfLink, handleDownload, pdfName }) => {
     const [pdfHeight, setPdfHeight] = useState(null);
     const [pdfWidth, setPdfWidth] = useState(null);
     //variables : navigation
@@ -35,6 +37,15 @@ const ViewPdf = ({ visible, setVisibility, pdfLink, handleDownload }) => {
     const closeModal = () => {
         setVisibility(false);
     };
+
+    console.log(pdfLink);
+
+    // const fileName = new URL(pdfLink).pathname.split('/').pop();
+
+    // console.log("pdfName", fileName);
+
+
+
     const renderHeader = () => {
         return (
             <View style={styles.header}>
@@ -64,6 +75,7 @@ const ViewPdf = ({ visible, setVisibility, pdfLink, handleDownload }) => {
             onRequestClose={closeModal}
             animationType="fade"
             transparent>
+            <SafeAreaView></SafeAreaView>
             <View style={styles.container}>
                 <TouchableOpacity style={styles.blurView} onPress={closeModal} />
                 <View style={styles.mainView}>
@@ -106,7 +118,12 @@ const ViewPdf = ({ visible, setVisibility, pdfLink, handleDownload }) => {
                     <FabDownload
                         icon={<Image source={require('../../Global/Images/dowloadPdf.png')} style={{ height: 24, width: 24, resizeMode: 'contain' }} />}
                         bottom={50}
-                    // onPress={handleDownload}
+                        // onPress={handleDownload}
+                        onPress={() => {
+                            GlobalUtils.downloadPDF(pdfLink, undefined)
+                            setVisibility(false);
+                            console.log("dd");
+                        }}
 
                     />
                     {/* <MyButton
