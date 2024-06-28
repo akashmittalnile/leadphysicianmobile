@@ -21,6 +21,6 @@ export const styles = StyleSheet.create({
     tabStyle: {
         alignItems: 'center',
         justifyContent: 'center',
-        // paddingTop: Platform.OS === 'android' ? 0 : 20
+        paddingTop: Platform.OS === 'android' ? 0 : 20
     },
 });
