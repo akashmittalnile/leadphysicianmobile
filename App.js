@@ -192,6 +192,7 @@ import { NotificationManagerIOS } from './src/NotificationManagerIOS';
 
 const App = () => {
   LogBox.ignoreAllLogs();
+  console.log("");
 
   const toastConfig = {
     success: (props) => (
