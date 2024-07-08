@@ -49,6 +49,7 @@ target 'leadPhysician' do
 
     # Firebase Configuration
     pod 'Firebase/Core', $FirebaseSDKVersion
+    pod 'GoogleDataTransport'
 
   # pod 'Firebase', :modular_headers => true
   # pod 'FirebaseCoreInternal', :modular_headers => true
