@@ -183,10 +183,9 @@ const CustomDrawer = ({ navigation }) => {
                                 ? { uri: user?.profile_image }
                                 : require('../../Global/Images/user-default.png')
                         }
-                        style={{ height: 43, width: 43, borderRadius: 50, marginHorizontal: 6 }}
+                        style={{ height: 43, width: 43, borderRadius: 50, marginHorizontal: 6,backgroundColor:'#fff' }}
                     />
-                    <View sty
-                        le={{ flexDirection: 'column' }}>
+                    <View style={{ flexDirection: 'column',width:'45%' }}>
                         <MyText
                             text={user?.first_name}
                             fontWeight={600}
@@ -199,6 +198,7 @@ const CustomDrawer = ({ navigation }) => {
                             text={user?.email}
                             fontWeight={400}
                             fontSize={14}
+                            numberOfLines={2}
                             textColor="white"
                             fontFamily="Roboto"
                             style={{}}

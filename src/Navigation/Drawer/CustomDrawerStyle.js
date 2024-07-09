@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
 
     },
     viewProfile: {
-        height: 32, width: 74, backgroundColor: 'white', borderRadius: 5, marginLeft: 0, justifyContent: 'center',
+        height: 32, width: 74, backgroundColor: 'white', borderRadius: 5, marginLeft: 7, justifyContent: 'center',
         marginBottom: 12
 
     }
