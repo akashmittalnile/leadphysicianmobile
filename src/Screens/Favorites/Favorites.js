@@ -268,7 +268,7 @@ const Favorites = ({ navigation }) => {
                 backgroundColor: '#F7FAEB',
             }}>
                 <MyHeader
-                    Title={`Favourite Chapters`}
+                    Title={`Favourite Sections`}
                     isBackButton
                 />
 

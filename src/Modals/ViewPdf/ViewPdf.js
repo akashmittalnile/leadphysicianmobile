@@ -38,11 +38,19 @@ const ViewPdf = ({ visible, setVisibility, pdfLink, handleDownload, pdfName }) =
         setVisibility(false);
     };
 
-    console.log(pdfLink);
+    // console.log("pdfLink........",pdfLink);
 
     // const fileName = new URL(pdfLink).pathname.split('/').pop();
+    const parts = pdfLink.split('/');
 
-    // console.log("pdfName", fileName);
+// Get the last part of the URL
+const lastPart = parts[parts.length - 1];
+
+// Split the last part by "." to get the filename without extension
+const filenameParts = lastPart.split('.');
+const lastName = filenameParts[0];
+
+    // console.log("pdfName", lastName);
 
 
 
@@ -86,7 +94,7 @@ const ViewPdf = ({ visible, setVisibility, pdfLink, handleDownload, pdfName }) =
                             // pdfHeight === null ? {} : {height: pdfHeight}
                         ]}>
                         <Pdf
-                            source={{ uri: pdfLink }}
+                            source={{ uri: `${pdfLink}` }}
                             // source={{uri: `http://samples.leanpub.com/thereactnativebook-sample.pdf`}}
                             trustAllCerts={false}
                             onLoadComplete={(
@@ -120,24 +128,13 @@ const ViewPdf = ({ visible, setVisibility, pdfLink, handleDownload, pdfName }) =
                         bottom={50}
                         // onPress={handleDownload}
                         onPress={() => {
-                            GlobalUtils.downloadPDF(pdfLink, undefined)
+                            GlobalUtils.downloadPDF(pdfLink, lastName)
                             setVisibility(false);
                             console.log("dd");
                         }}
 
                     />
-                    {/* <MyButton
-            text="Download Certificate"
-            style={{
-              width: '100%',
-              marginBottom: 10,
-              backgroundColor: Colors.THEME_BROWN,
-              alignSelf: 'center',
-              position: 'absolute',
-              bottom: 50,
-            }}
-            onPress={handleDownload}
-          /> */}
+                 
                 </View>
             </View>
         </Modal>

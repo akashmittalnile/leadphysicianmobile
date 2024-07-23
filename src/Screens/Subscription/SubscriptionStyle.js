@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
         borderTopWidth: 90, // Consider removing this line if not needed
 
         width: dimensions.SCREEN_WIDTH * 0.90,
-        height: 445,
+        height: 485,
         alignSelf: 'center',
         borderRadius: 10,
 

@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     modalContent: {
         width: width,
         // height: 134,
-        backgroundColor: 'white',
+        backgroundColor: Color.WHITE,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         padding: 20,
@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         // paddingBottom: 93,
         marginBottom: 15,
-        color: 'black',
+        color: Color.BLACK,
         borderWidth: 1,
         borderColor: '#DDD',
         borderRadius: 4,

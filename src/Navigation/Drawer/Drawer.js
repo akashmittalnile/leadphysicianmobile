@@ -30,7 +30,7 @@ const Drawer = () => {
             screenOptions={{
                 headerShown: false,
                 drawerStyle: {
-                    // backgroundColor: Colors.LITE_GREY,
+                    
                     // width: Constant.width,
                 },
             }}

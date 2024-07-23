@@ -100,6 +100,7 @@ const ChangePassword = ({ navigation }) => {
             const { responseJson, err } = await requestPostApi(CHANGE_PASSWORD, data, 'POST', userToken);
             console.log('login?????????', responseJson.status);
             if (responseJson.status === true) {
+                console.log("responseJson.message.....",responseJson.message);
                 Toast.show({ text1: responseJson.message });
                 navigation.goBack()
                 // gotoLogin();
@@ -246,7 +247,7 @@ const ChangePassword = ({ navigation }) => {
 
                         changePassword()
                     }} style={{ marginTop: 20 }}>
-                        <CustomButtonBlue name="Save"></CustomButtonBlue>
+                        <CustomButtonBlue name="Update"></CustomButtonBlue>
                     </TouchableOpacity>
 
 

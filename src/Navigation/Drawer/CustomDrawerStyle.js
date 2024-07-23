@@ -4,7 +4,6 @@ import { dimensions } from '../../Global/Color';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // color: Colors.LITE_GREY,
         backgroundColor: Color.LIGHT_BLACK,
     },
     mainView: {

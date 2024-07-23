@@ -203,7 +203,7 @@ export const styles = StyleSheet.create({
     leadView: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 25,
+        marginTop: 35,
         marginVertical: 1
     },
     teamView: {

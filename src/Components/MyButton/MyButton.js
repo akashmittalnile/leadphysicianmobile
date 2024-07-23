@@ -44,7 +44,7 @@ const MyButton = ({
                 text={text}
                 fontSize={14}
                 fontFamily="medium"
-                textColor={isWhite ? Colors.THEME_BROWN : textColor}
+                textColor={isWhite ? Color.THEME_BROWN : textColor}
                 textAlign="center"
             />
         </TouchableOpacity>

@@ -288,7 +288,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 10,
         backgroundColor: Color.WHITE,
-
+marginBottom:2,
         marginTop: 8,
         paddingVertical: 20,
         alignSelf: 'center',

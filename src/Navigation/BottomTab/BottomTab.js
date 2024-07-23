@@ -80,7 +80,7 @@ const BottomTab = ({ userToken }) => {
                                 <ChatInactive></ChatInactive>
                             )}
                             <MyText
-                                text="Chats"
+                                text="Group Chats"
                                 fontSize={14}
                                 fontFamily="medium"
                                 textColor={focused ? Color.PRIMARY : Color.LIGHT_BLACK}

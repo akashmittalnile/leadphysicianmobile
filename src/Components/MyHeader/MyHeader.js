@@ -13,6 +13,7 @@ import {
     useNavigation,
     useFocusEffect,
     CommonActions,
+    useIsFocused
 } from '@react-navigation/native';
 //import : custom components
 import MyText from '../MyText/MyText';
@@ -22,7 +23,7 @@ import Color, { dimensions } from '../../Global/Color';
 import { styles } from './MyHeaderStyle';
 //redux
 import { useSelector, useDispatch } from 'react-redux';
-import { setUserNotifications, } from '../../reduxToolkit/reducer/user';
+import { setAdminCount, setUser, setUserNotifications, } from '../../reduxToolkit/reducer/user';
 import { logOutUser } from 'src/reduxToolkit/reducer/user';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
@@ -39,7 +40,7 @@ import Animated, {
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { setCartCount } from '../../reduxToolkit/reducer/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getApiWithToken, GET_NOTIFICATION } from '../../Global/Service';
+import { getApiWithToken, GET_NOTIFICATION, UNSEEN_MESSAGE, CHECK_SUBSCRIPTION } from '../../Global/Service';
 
 const personImg = `https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWFufGVufDB8fDB8fHww&auto=format&fit=crop&w=400&q=60`;
 //svg imgess
@@ -61,17 +62,18 @@ const MyHeader = ({
     toNavigParams = null,
     shouldNavigateToModuleScreen = false, // New prop to decide the navigation behavior
 }) => {
+    const isFocus = useIsFocused();
     const dispatch = useDispatch();
     const userNotifications = useSelector(state => state.user.userNotifications);
     const favCount = useSelector(state => state.user.favCount);
     // const favCount = 1
-    console.log('my usernotification-->>', userNotifications);
+    // console.log('my usernotification-->>', userNotifications);
     //variables
     const navigation = useNavigation();
     //   const dispatch = useDispatch();
     //   const cartCount = useSelector(state => state.user.cartCount);
     //   const userInfo = useSelector(state => state.user.userInfo);
-    //   const userToken = useSelector(state => state.user.userToken);
+ 
     //   const userNotifications = useSelector(state => state.user.userNotifications);
 
     const [greetingMsg, setGreetingMsg] = useState('');
@@ -79,9 +81,99 @@ const MyHeader = ({
     // animated code
 
     useEffect(() => {
-        getGreetingMessage();
-        getCartCount();
-    }, []);
+        
+        const unsubscribe = navigation.addListener('focus', () => {
+           
+            gotoUnseenMessageCount();
+            getGreetingMessage();
+            getCartCount();
+            
+          });
+          // Return the function to unsubscribe from the event so it gets removed on unmount
+          return unsubscribe;
+    }, [isFocus]);
+
+    useFocusEffect(
+        useCallback(() => {
+          const getCount = async () => {
+            console.error('==token*********', userToken);
+            try {
+                const resp = await getApiWithToken(userToken, CHECK_SUBSCRIPTION);
+              if (resp.data) {
+                console.error(
+                  'your plan has expired plz upgra===========>>>>>>>>>>*********resp.data?.is_plan_expired',
+                  resp.data,
+                );
+               
+                if (resp.data?.plan_status != true ) {
+                  // console.log(headerName,"9090909090-CHAT_NOTIFICATION_COUNT",resp.data.is_plan_expired_msg);
+                  
+                  navigation.navigate('Subscription');
+                    
+        
+                  const jsonValue = JSON.stringify(resp.data.data);
+                  await AsyncStorage.setItem('userInfo', jsonValue);
+                  dispatch(setUser(resp.data.data));
+                } 
+                // else if (resp?.data?.status == 'N') {
+                  
+                //   Toast.show({text1: `Your account is temporary inactive please contact the owner for same.`});
+    
+                // //   await AsyncStorage.clear();
+                // //   dispatch(UserAction.logOutUser());
+                // //   navigation.dispatch(resetIndexGoWelcom);
+                // }
+              } else {
+                if (resp?.msg == 'User not found') {
+                  
+                  Toast.show({text1: `Your account has been deleted please contact the owner for same.`});
+    
+                //   await AsyncStorage.clear();
+                //   dispatch(UserAction.logOutUser());
+                //   navigation.dispatch(resetIndexGoWelcom);
+                }
+                // setUnreadCount(0);
+              }
+            } catch (error) {
+              console.error('error in getCount', error);
+            //   setUnreadCount(0);
+            }
+          };
+
+         
+          if (userToken == null || userToken == '') {
+          } else {
+            getCount();
+            
+          }
+          return () => {};
+        }, [isFocus]),
+      );
+
+     //get data for admin chat count
+  const gotoUnseenMessageCount = async () => {
+    // setShowLoader(true);
+   try {
+     const resp = await getApiWithToken(userToken, UNSEEN_MESSAGE);
+     console.log('DRAWR---admincount-', resp?.data?.unseen_message_count);
+     if (resp?.data?.status) {
+    //    setAdminChatCount(resp?.data?.unseen_message_count);
+        
+       dispatch(setAdminCount(resp?.data?.unseen_message_count));
+    //    setShowLoader(false);
+     } else {
+       Toast.show({text1: resp.data.message});
+    //    setShowLoader(false);
+     }
+   } catch (error) {
+     console.log('error in getCartCount', resp);
+    //  setShowLoader(false);
+   } finally {
+    //  setShowLoader(false);
+   }
+ };
+
+
     const headerRadius = useDerivedValue(() => {
         // console.log('scrollY.value', scrollY.value, scrollY.value === 0 ? 30 : 0);
         return withSpring(scrollY.value === 0 ? 0 : 30);
@@ -106,25 +198,22 @@ const MyHeader = ({
         setGreetingMsg(msg);
     };
     const getCartCount = async () => {
-        console.log('my get cart count is called');
+        // console.log('my get cart count is called');
         setLoading(true);
         try {
             const resp = await getApiWithToken(userToken, GET_NOTIFICATION);
-            console.log('get notification cont--->>>', resp?.data?.success);
+            console.log('get notification contssss--->>>', resp?.data?.length);
             if (resp?.data?.success) {
-
-
                 dispatch(setUserNotifications(resp?.data?.count));
                 await AsyncStorage.setItem(
                     'userNotifications',
                     JSON.stringify(resp?.data?.count),
                 );
-
-
                 // setProfile(resp?.data?.data)
                 // setCurrentPlan(resp?.data?.current_plan)
             } else {
-                Toast.show({ text1: resp.data.message });
+                // console.log('error in getCartCount in Myheader', resp.data.message);
+                // Toast.show({ text1: resp.data.message });
             }
         } catch (error) {
             console.log('error in getCartCount', error);
@@ -159,7 +248,7 @@ const MyHeader = ({
         .getInitialNotification()
         .then(remoteMessage => {
             const data = remoteMessage;
-            console.log('when app is opem',);
+            // console.log('when app is opem',);
             if (data && Object.keys(data).length !== 0) {
                 dispatch(setUserNotifications('1'));
             } else {

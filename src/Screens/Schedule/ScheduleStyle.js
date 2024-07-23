@@ -10,9 +10,9 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     mainView: {
-        padding: 20,
-        paddingTop: 0,
-        marginTop: -30,
+        // padding: 20,
+        // paddingTop: 0,
+        // marginTop: -30,
     },
     buttonsRow: {
         flexDirection: 'row',

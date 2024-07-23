@@ -227,7 +227,7 @@ const EditProfile = ({ navigation }) => {
         console.log('my url for the edit-->>', url);
         try {
             const formaData = new FormData();
-            console.log('my filePAth--->>', filePath.length);
+            console.log('my filePAth--->>', filePath.uri);
             if (filePath.length != 0) {
                 const imageName = filePath?.uri?.slice(
                     filePath?.uri?.lastIndexOf('/'),
@@ -245,8 +245,7 @@ const EditProfile = ({ navigation }) => {
             formaData.append('phone', phoneno);
             // formaData.append('password', password);
             setLoading(true);
-
-            setLoading(true);
+ 
             console.log('my uiuiui--->>', formaData)
 
             const resp = await postAPI(url
@@ -347,7 +346,8 @@ const EditProfile = ({ navigation }) => {
                 <TouchableOpacity
                     style={{
                         alignItems: 'center',
-                        marginTop: 40
+                        marginTop: 40,
+                        
                     }}
                     onPress={() => {
                         setShowImageSourceModal(true);
@@ -374,7 +374,7 @@ const EditProfile = ({ navigation }) => {
                     }
 
 
-                        style={{ width: 150, height: 150, borderRadius: 100 }} />
+                        style={{ width: 150, height: 150, borderRadius: 100,backgroundColor:'#E6E6E6'}} />
                     <Image source={require('../../Global/Images/camera.png')} style={{ height: 20, width: 20, position: 'absolute', bottom: 12, right: 130 }} />
                 </TouchableOpacity>
 
@@ -433,7 +433,8 @@ const EditProfile = ({ navigation }) => {
                             paddingHorizontal: 10,
                             borderWidth: 1,
                             borderColor: '#959FA6',
-                            paddingRight: 40
+                            paddingRight: 40,
+                            backgroundColor:'#F2F2F2'
                         }}>
                             <EmailSvg width={24} height={24} />
                             <Text style={{ width: '90%', color: 'black' }}>{emailid}</Text>
@@ -452,7 +453,7 @@ const EditProfile = ({ navigation }) => {
                     </View>
                     <View style={{ marginTop: 12 }}>
                         <CustomTextBox
-                            maxLength={10}
+                            maxLength={14}
                             imageComponent={<Call width={24} height={24} />}
                             //  placeholder='Email address'
                             value={phoneno}
@@ -484,7 +485,7 @@ const EditProfile = ({ navigation }) => {
 
                         signUpUser()
                     }} style={{ marginTop: 20 }}>
-                        <CustomButtonBlue name="Save"></CustomButtonBlue>
+                        <CustomButtonBlue name="Update"></CustomButtonBlue>
                     </TouchableOpacity>
 
 
