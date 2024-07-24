@@ -1,8 +1,10 @@
 import { Platform, StyleSheet } from 'react-native';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 export const styles = StyleSheet.create({
     navigatorStyle: {
-        height: 70,
+        position: 'relative',
+        height: responsiveHeight(10),
         alignItems: 'center',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
