@@ -4,7 +4,6 @@ import { dimensions } from '../../Global/Color';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // color: Colors.LITE_GREY,
         backgroundColor: Color.LIGHT_BLACK,
     },
     mainView: {
@@ -106,7 +105,7 @@ export const styles = StyleSheet.create({
 
     },
     viewProfile: {
-        height: 32, width: 74, backgroundColor: 'white', borderRadius: 5, marginLeft: 0, justifyContent: 'center',
+        height: 32, width: 74, backgroundColor: 'white', borderRadius: 5, marginLeft: 7, justifyContent: 'center',
         marginBottom: 12
 
     }

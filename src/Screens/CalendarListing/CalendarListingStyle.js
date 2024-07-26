@@ -271,10 +271,24 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     noDataText: {
-        color: Color.THEME_BLACK,
+        // color: Color.THEME_BLACK,
         fontSize: 20,
         fontWeight: '500',
         textAlign: 'center',
     },
+    showMeImageView: {
+        justifyContent: "center",
+        alignItems: "center",
+        // backgroundColor:'red',
+        height: 22,
+        width: 22,
+        borderRadius: 20 / 2,
+        marginLeft: 3,
+      },
+      showMeImage: {
+        height: 24,
+        width: 24,
+        tintColor:'red'
+      },
 
 });

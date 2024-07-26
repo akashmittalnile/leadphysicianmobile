@@ -275,7 +275,7 @@ const Saved = ({ navigation }) => {
                 backgroundColor: '#F7FAEB',
             }}>
                 <MyHeader
-                    Title={`Saved Chapters`}
+                    Title={`Saved Sections`}
                     isBackButton
                 />
 

@@ -32,7 +32,7 @@ const FabDownload = ({
             }}>
             {/* <Image source={require('.././../Global/Images/ReviewGreenPng.png')} style={{ width: 22, height: 22 }} /> */}
             {icon}
-            {/* <MyIcon.AntDesign name="plus" size={30} color={Colors.WHITE} /> */}
+            {/* <MyIcon.AntDesign name="plus" size={30} color={Color.WHITE} /> */}
         </TouchableOpacity>
     );
 };

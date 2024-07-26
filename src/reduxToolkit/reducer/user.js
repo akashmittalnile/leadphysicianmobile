@@ -5,7 +5,9 @@ const initialState = {
   userToken: '',
   userNotifications: false,
   cartCount: 0,
-  favCount: 0
+  favCount: 0,
+  adminCount: 0, 
+  isSubscribed : {isSubscribed: false},
 };
 const user = createSlice({
   name: 'user',
@@ -53,10 +55,24 @@ const user = createSlice({
         favCount: payload,
       };
     },
+
+    setAdminCount(state, {payload}) {
+      return {
+        ...state,
+        adminCount: payload,
+      };
+    },
+    userisSubscribedHandler(state, {payload}) {
+      return {
+        ...state,
+        isSubscribed: payload,
+      };
+    },
+
   },
 });
 
-export const {setUserToken, setUser, setUserNotifications, logOutUser, clearCart, setCartCount, setFavCount} = user.actions;
+export const {setUserToken, setUser, setUserNotifications, logOutUser, clearCart, setCartCount, setFavCount, setAdminCount,userisSubscribedHandler} = user.actions;
 const themeReducer = user.reducer;
 
 export default themeReducer;

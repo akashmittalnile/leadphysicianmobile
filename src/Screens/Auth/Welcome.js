@@ -34,6 +34,12 @@ const Welcome = ({ navigation }) => {
     //     index: 1,
     //     routes: [{ name: 'MainContainer' }],
     // });
+    const gotoPrivacy = () => {
+        navigation.navigate('TermsCondition', { params: 'Privacy' })
+    }
+    const gotoPolicy = () => {
+        navigation.navigate('TermsCondition', { params: 'Policy' })
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
 
@@ -81,6 +87,8 @@ const Welcome = ({ navigation }) => {
 
                     </View>
                     <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+
+                        <TouchableOpacity onPress={()=>{gotoPrivacy()}}>
                         <MyText
                             text={`Terms of Use `}
                             fontWeight="normal"
@@ -90,6 +98,8 @@ const Welcome = ({ navigation }) => {
                         Roboto"
                             style={{ textAlign: 'center', alignSelf: 'center', marginTop: 5, }}
                         />
+                        </TouchableOpacity>
+                        
                         <MyText
                             text={` & `}
                             fontWeight="normal"
@@ -99,6 +109,7 @@ const Welcome = ({ navigation }) => {
                         Roboto"
                             style={{ marginTop: 5, }}
                         />
+                        <TouchableOpacity onPress={()=>{gotoPolicy()}}>
                         <MyText
                             text={`Privacy Policy`}
                             fontWeight="normal"
@@ -108,6 +119,8 @@ const Welcome = ({ navigation }) => {
                         Roboto"
                             style={{ marginTop: 5, }}
                         />
+                        </TouchableOpacity>
+                        
                     </View>
                 </ImageBackground>
                 {/* </ScrollView> */}

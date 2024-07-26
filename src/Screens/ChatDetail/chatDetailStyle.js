@@ -446,6 +446,7 @@
 //         color: '#fff'
 //     },
 // });
+import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Color, { dimensions } from '../../Global/Color';
 import { StyleSheet } from 'react-native';
 
@@ -479,5 +480,69 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '20%',
+    },
+    sendMessageContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        paddingHorizontal: "3%",
+        paddingBottom:20
+        // height: responsiveHeight(15)
+    },
+    textInputContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        height: responsiveHeight(6.5),
+        width: responsiveWidth(77),
+        borderRadius: responsiveHeight(5),
+        elevation: 2,
+        shadowColor: "rgba(137, 137, 137, .25)",
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+        backgroundColor: "white"
+        // flexDirection: 'row',
+        // justifyContent: 'space-between',
+        // alignItems: 'center',
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: -2 },
+        // shadowOpacity: 0.5,
+        // shadowRadius: 2,
+        // elevation: 2,
+        // backgroundColor: Color.WHITE,
+        // height: 50,
+        // width: dimensions.SCREEN_WIDTH * 0.90,
+        // alignSelf: 'center'
+    },
+    touch: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        paddingRight: responsiveWidth(4)
+    },
+    attachedFiles: {
+        height: responsiveHeight(3),
+        width: responsiveWidth(6)
+    },
+    sendButtonContainer: {
+        height: responsiveHeight(5),
+        width: responsiveHeight(5),
+        borderRadius: responsiveHeight(2.5),
+        overflow: "hidden"
+    },
+    sendButtonTouch: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        width: "100%"
+    },
+    textInput: {
+        flex: 1,
+        height: "100%",
+        width: "80%",
+        paddingHorizontal: "5%",
+        fontSize: responsiveFontSize(1.8),
+        letterSpacing: 0.8
     },
 });

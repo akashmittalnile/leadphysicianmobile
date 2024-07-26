@@ -274,7 +274,7 @@
 //                         <View style={{ flexDirection: 'row', marginVertical: 6 }}>
 //                             <Clock>
 //                             </Clock>
-//                             <MyText text={`${moment(item.schedule_start_date).format('MM/DD/YYYY')}`} fontWeight='400' fontSize={13} textColor={Color.LIGHT_BLACK} fontFamily='Roboto' style={{ marginHorizontal: 5, }} />
+//                             <MyText text={`${moment(item.schedule_start_date).format('MM-DD-YYYY')}`} fontWeight='400' fontSize={13} textColor={Color.LIGHT_BLACK} fontFamily='Roboto' style={{ marginHorizontal: 5, }} />
 //                         </View>
 //                         <View style={{ flexDirection: 'row', marginTop: 4 }}>
 //                             <IconClendar></IconClendar>
@@ -713,7 +713,7 @@ const Home = ({navigation}) => {
   const isFocus = useIsFocused();
   const userToken = useSelector(state => state.user.userToken);
   console.log('my user token--->>', userToken);
-  const [loading, setLoading] = useState('');
+  const [loading, setLoading] = useState(false);
   const [scrolling, setscrolling] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -787,7 +787,7 @@ const Home = ({navigation}) => {
     setLoading(true);
     try {
       const resp = await getApiWithToken(userToken, GET_HOME);
-
+ 
       if (resp?.data?.status) {
         setLoading(false);
         setHome(resp?.data?.data);
@@ -840,6 +840,7 @@ const Home = ({navigation}) => {
                   }}>
                   <MyText
                     text={item.title}
+                    numberOfLines={2}
                     fontWeight="700"
                     fontSize={16}
                     textColor={Color.WHITE}
@@ -1097,7 +1098,7 @@ const Home = ({navigation}) => {
               <Clock></Clock>
               <MyText
                 text={`${moment(item.schedule_start_date).format(
-                  'MM/DD/YYYY',
+                  'MM-DD-YYYY',
                 )}`}
                 fontWeight="400"
                 fontSize={13}
@@ -1401,11 +1402,12 @@ const Home = ({navigation}) => {
               <Arrow></Arrow>
             </TouchableOpacity>
           </TouchableOpacity>
+          <View style={{ marginTop: 15, borderRadius: 10, overflow: 'hidden', backgroundColor: '#fff', padding: 10 }}>
           <Calendar
             style={{
-              borderWidth: 1,
-              borderColor: 'gray',
-              height: 390,
+            //   borderWidth: 1,
+            //   borderColor: 'gray',
+            //   height: 390,
             }}
             markingType="custom"
             theme={{
@@ -1421,7 +1423,31 @@ const Home = ({navigation}) => {
             onDayPress={handleDayPress}
             markedDates={markedDates}
           />
-          {/* my selected date calendar */}
+             <View style={{ width: '100%',   flexDirection: 'row', marginTop: 25,flexWrap:'wrap',gap:6 }}>
+            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#EE82EE', paddingHorizontal: 15 }}
+               >
+              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 10 }}>Goals and Schedule</Text>
+            </View>
+            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#008000', paddingHorizontal: 15, marginLeft: 0 }}
+              >
+              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 10 }}>All Types Goals</Text>
+            </View>
+            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#FFA500', paddingHorizontal: 15, marginLeft: 0 }}
+              >
+              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 10 }}>Schedule</Text>
+            </View>
+            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#FFFF00', paddingHorizontal: 15, marginLeft: 0 }}
+              >
+              <Text style={{ color: '#000', textAlign: 'center', fontSize: 10 }}>Only A-Type Goal</Text>
+            </View>
+           
+            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#0000FF', paddingHorizontal: 15, marginLeft: 0 }}
+              >
+              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 10 }}>A-Type and B-Type Goals</Text>
+            </View>
+          </View>
+          </View>
+          {/* my selected date calendar  */}
           <View
             style={{
               flexDirection: 'row',

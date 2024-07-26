@@ -13,7 +13,7 @@ import Color from '../global/Color';
 const H = Dimensions.get('screen').height;
 const W = Dimensions.get('screen').width;
 const CustomTextInput = ({ placeholder, value, onChangeText, err, secureTextEntry = false, editable = true, keyboardType = '' }) => {
-    console.log('error------>', err, placeholder);
+    // console.log('error------>', err, placeholder);
     return (
         // { ...styles.input, borderColor: err == 2  ? '#133072' : '#FFFFFF' }
         <View style={styles.input}>

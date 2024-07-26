@@ -1,16 +1,15 @@
-
 import React from 'react';
 import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Splash from '../Screens/splash';
 import Welcome from '../Screens/Auth/Welcome';
 import Signup from '../Screens/Auth/Signup';
@@ -42,65 +41,81 @@ import CalendarListing from '../Screens/CalendarListing/CalendarListing';
 import AllReviews from '../Screens/AllReviews/AllReviews';
 import Payment from '../Payment/Paymnet';
 import Certificate from '../Screens/Certificate/Certificate';
+import ForgotPassword from '../Screens/Auth/ForgotPassword';
+import VerifyCode from '../Screens/Auth/VerifyCode';
+import UpdatePassword from '../Screens/Auth/UpdatePassword';
+import ViewPdf from '../Screens/ViewPdf/ViewPdf';
+import FullImageView from '../Screens/FullImageView/FullImageView';
+import PurchaseReview from '../Screens/Purchase/Purchase';
+import PaymentWebView from '../Components/PaymentWebView';
+
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {
-    return (
-        <Stack.Navigator screenOptions={{
-            headerShown: false, // set the headerShown option to false to hide the header
-        }}>
-            <Stack.Screen name="Splash" component={Splash} />
-            <Stack.Screen name="Welcome" component={Welcome} />
-            <Stack.Screen name="Signup" component={Signup} />
-            <Stack.Screen name="SignIn" component={SignIn} />
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false, // set the headerShown option to false to hide the header
+      }}>
+      <Stack.Screen name="Splash" component={Splash} />
+      <Stack.Screen name="Welcome" component={Welcome} />
+      <Stack.Screen name="Signup" component={Signup} />
+      <Stack.Screen name="SignIn" component={SignIn} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="VerifyCode" component={VerifyCode} />
+      <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
 
-            <Stack.Screen name="BottomTab" component={BottomTab} />
-            <Stack.Screen name="CourseDetail" component={CourseDetail} />
-            <Stack.Screen name="ModuleScreen" component={ModuleScreen} />
-            <Stack.Screen name="Summary" component={Summary} />
-            <Stack.Screen name="Favorites" component={Favorites} />
-            <Stack.Screen name="Saved" component={Saved} />
-            <Stack.Screen name="Subscription" component={Subscription} />
-            <Stack.Screen name="SubscriptionCard" component={SubscriptionCard} />
-            <Stack.Screen name="Message" component={Message} />
-            <Stack.Screen name="EditProfile" component={EditProfile} />
-            <Stack.Screen name="ChangePassword" component={ChangePassword} />
-            <Stack.Screen name="Notification" component={Notification} />
-            <Stack.Screen name="SetGoal" component={SetGoal} />
-            <Stack.Screen name="ModuleListing" component={ModuleListing} />
-            <Stack.Screen name="GoalsList" component={GoalsList} />
-            <Stack.Screen name="EditGoal" component={EditGoal} />
-            <Stack.Screen name="ChatDetail" component={ChatDetail} />
-            <Stack.Screen name="ChatSection" component={ChatSection} />
-            <Stack.Screen name="TermsCondition" component={TermsCondition} />
-            <Stack.Screen name="SchduleDetails" component={SchduleDetails} />
-            <Stack.Screen name="SideMenuLinks" component={SideMenuLinks} />
-            <Stack.Screen name="AdminChat" component={AdminChat} />
-            <Stack.Screen name="SummaryWorksheet" component={SummaryWorksheet} />
-            <Stack.Screen name="AllReviews" component={AllReviews} />
-            <Stack.Screen name="Payment" component={Payment} />
-            <Stack.Screen name="CalendarListing" component={CalendarListing} />
-            <Stack.Screen name="Certificate" component={Certificate} />
+      <Stack.Screen name="BottomTab" component={BottomTab} />
+      <Stack.Screen name="CourseDetail" component={CourseDetail} />
+      <Stack.Screen name="ModuleScreen" component={ModuleScreen} />
+      <Stack.Screen name="Summary" component={Summary} />
+      <Stack.Screen name="Favorites" component={Favorites} />
+      <Stack.Screen name="Saved" component={Saved} />
+      <Stack.Screen name="Subscription" component={Subscription} />
+      <Stack.Screen name="SubscriptionCard" component={SubscriptionCard} />
+      <Stack.Screen name="Message" component={Message} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="Notification" component={Notification} />
+      <Stack.Screen name="SetGoal" component={SetGoal} />
+      <Stack.Screen name="ModuleListing" component={ModuleListing} />
+      <Stack.Screen name="GoalsList" component={GoalsList} />
+      <Stack.Screen name="EditGoal" component={EditGoal} />
+      <Stack.Screen name="ChatDetail" component={ChatDetail} />
+      <Stack.Screen name="ChatSection" component={ChatSection} />
+      <Stack.Screen name="TermsCondition" component={TermsCondition} />
+      <Stack.Screen name="SchduleDetails" component={SchduleDetails} />
+      <Stack.Screen name="SideMenuLinks" component={SideMenuLinks} />
+      <Stack.Screen name="AdminChat" component={AdminChat} />
+      <Stack.Screen name="SummaryWorksheet" component={SummaryWorksheet} />
+      <Stack.Screen name="AllReviews" component={AllReviews} />
+      <Stack.Screen name="Payment" component={Payment} />
+      <Stack.Screen name="CalendarListing" component={CalendarListing} />
+      <Stack.Screen name="Certificate" component={Certificate} />
 
-        </Stack.Navigator>
-    );
+      <Stack.Screen name={'ViewPdf'} component={ViewPdf} />
+      <Stack.Screen name={'FullImageView'} component={FullImageView} />
+      <Stack.Screen name={'PurchaseReview'} component={PurchaseReview} />
+      <Stack.Screen name={"PaymentWebView"} component={PaymentWebView} />
+    </Stack.Navigator>
+  );
 };
 const styles = StyleSheet.create({
-    sectionContainer: {
-        marginTop: 32,
-        paddingHorizontal: 24,
-    },
-    sectionTitle: {
-        fontSize: 24,
-        fontWeight: '600',
-    },
-    sectionDescription: {
-        marginTop: 8,
-        fontSize: 18,
-        fontWeight: '400',
-    },
-    highlight: {
-        fontWeight: '700',
-    },
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  highlight: {
+    fontWeight: '700',
+  },
 });
 
 export default AuthStack;
