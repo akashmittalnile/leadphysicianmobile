@@ -355,25 +355,27 @@ export const styles = StyleSheet.create({
     },
     chatView: {
         width: dimensions.SCREEN_WIDTH * 0.88,
-        height: 140,
+        height: 'auto',
         backgroundColor: Color.WHITE,
         borderRadius: 10,
         backgroundColor: 'white',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 8 },
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.13,
-        shadowRadius: 13,
-        marginVertical: 6,
+        shadowRadius: 10,
+        // marginVertical: 6,
+        margin:3,
         elevation: 5,
         alignSelf: 'center'
 
 
     },
     bottomChat: {
-
-        height: 76,
+        // height: 76,
         backgroundColor: '#F7FAEB',
-        paddingVertical: 12
+        paddingVertical: 12,
+        borderBottomLeftRadius:10,borderBottomRightRadius:10,
+        paddingVertical:10
     },
     rowIndivi: {
         flexDirection: 'row'

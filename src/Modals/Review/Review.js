@@ -34,6 +34,7 @@ const Review = ({
 }) => {
   //variables : navigation
   const navigation = useNavigation();
+  console.log("REVIEW -isReviewed",isReviewed);
   //function : navigation function
   //function : modal function
   const closeModal = () => {
@@ -76,8 +77,9 @@ const Review = ({
         setVisibility(false);
       }}
       onModalWillHide={() => {
-        setStarRating(1);
-        setReview('');
+        setVisibility(false);
+        // setStarRating(1);
+        // setReview('');
       }}
       scrollTo={() => {}}
       scrollOffset={1}
@@ -90,7 +92,7 @@ const Review = ({
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> */}
       <View style={styles.modalContent}>
         <MyText
-          text="Review & Rating"
+          text={!isReviewed ? "Add Review" : "Update Review"}
           textColor={'black'}
           fontSize={20}
           textAlign="center"

@@ -7,7 +7,7 @@ const initialState = {
   cartCount: 0,
   favCount: 0,
   adminCount: 0, 
-  isSubscribed : {isSubscribed: true},
+  isSubscribed : {isSubscribed: false},
 };
 const user = createSlice({
   name: 'user',

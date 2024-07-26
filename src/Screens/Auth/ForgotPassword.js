@@ -57,10 +57,10 @@ const ForgotPassword = ({navigation}) => {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
     if (emailid == '') {
-      Toast.show({type: 'error', text1: 'Please enter Email Address'});
+      Toast.show({type: 'error', text1: 'Please Enter Email Address'});
       return false;
     } else if (!EmailReg.test(emailid)) {
-      Toast.show({type: 'error', text1: 'Plase enter Valid Emailid'});
+      Toast.show({type: 'error', text1: 'Please enter valid email address'});
       return false;
     } 
     
@@ -74,7 +74,6 @@ const ForgotPassword = ({navigation}) => {
     try {
       var data = {
         email: emailid.trim(),
-        
       };
       console.log('LoginPressed- forgot data---->>>', data);
       setLoading(true);

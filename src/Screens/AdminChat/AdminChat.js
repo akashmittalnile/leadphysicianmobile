@@ -542,6 +542,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: '3%',
+    paddingBottom:20
     // height: responsiveHeight(15)
   },
   textInputContainer: {

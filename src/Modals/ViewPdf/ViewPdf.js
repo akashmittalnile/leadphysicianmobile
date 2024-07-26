@@ -83,7 +83,7 @@ const lastName = filenameParts[0];
             onRequestClose={closeModal}
             animationType="fade"
             transparent>
-            <SafeAreaView></SafeAreaView>
+            {/* <SafeAreaView></SafeAreaView> */}
             <View style={styles.container}>
                 <TouchableOpacity style={styles.blurView} onPress={closeModal} />
                 <View style={styles.mainView}>

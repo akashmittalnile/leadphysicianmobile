@@ -295,7 +295,7 @@ const CustomDrawer = ({navigation}) => {
             <View style={{flexDirection: 'row'}}>
               <Like></Like>
               <DrawerItemList
-                Title="My Favourite Chapters"
+                Title="My Favourite Sections"
                 icon={() => <Like width={34} height={45} />}
                 onPress={gotoMyWhishlist}
               />

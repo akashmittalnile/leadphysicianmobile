@@ -38,7 +38,7 @@ const Subscription = ({navigation, route}) => {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
   const userToken = useSelector(state => state.user.userToken);
-  const isSubscribed = useSelector(state => state.user.isSubscribed.isSubscribed);
+  const isSubscribed = useSelector(state => state.user?.isSubscribed?.isSubscribed);
   console.log("isSubscribed======",isSubscribed);
 
   const H = Dimensions.get('screen').height;
@@ -225,8 +225,8 @@ const Subscription = ({navigation, route}) => {
             // hitSlop={{  bottom: 100}}
 
             onPress={() => {
-              // navigation.navigate('PurchaseReview', {item: item})
-              navigation.navigate('Payment', {item: item});
+              navigation.navigate('PurchaseReview', {item: item,type:"Subscription"})
+              // navigation.navigate('Payment', {item: item});
             }}>
             <MyText
               text={

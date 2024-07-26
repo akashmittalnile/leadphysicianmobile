@@ -205,7 +205,7 @@ const GoalsList = ({navigation}) => {
             }}>
             <Editbtn/>
             <MyText
-              text={'Edit'}
+              text={'Update'}
               fontWeight="500"
               fontSize={14}
               textColor={Color.WHITE}

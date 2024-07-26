@@ -495,7 +495,7 @@ const MyCourse = ({navigation}) => {
                         flexWrap: 'wrap',
                         flexDirection: 'row',
                         marginTop: 10,
-                        height: '90%',
+                        height: '95%',
                         paddingBottom: 10,
                       }}>
                       {displaydate != '' ? (
@@ -503,7 +503,7 @@ const MyCourse = ({navigation}) => {
                           style={{
                             flexDirection: 'row',
                             backgroundColor: '#cde188',
-                            padding: 7,
+                            padding: 10,
                             borderRadius: 10,
                             margin: 4,
                             justifyContent: 'center',

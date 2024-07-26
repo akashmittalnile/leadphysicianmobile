@@ -904,7 +904,7 @@ const CalendarListing = ({navigation, route}) => {
                         style={{
                           flexDirection: 'row',
                           backgroundColor: '#cde188',
-                          padding: 7,
+                          padding: 10,
                           borderRadius: 10,
                           margin: 4,
                           justifyContent: 'center',

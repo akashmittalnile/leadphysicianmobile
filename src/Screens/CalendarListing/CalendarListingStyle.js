@@ -286,8 +286,8 @@ export const styles = StyleSheet.create({
         marginLeft: 3,
       },
       showMeImage: {
-        height: 20,
-        width: 20,
+        height: 24,
+        width: 24,
         tintColor:'red'
       },
 

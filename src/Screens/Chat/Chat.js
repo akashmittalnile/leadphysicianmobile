@@ -40,6 +40,7 @@ import Indivijual from '../../Global/Images/chatPersonal.svg';
 import Toast from 'react-native-toast-message';
 import KeySvg from '../../Global/Images/logo.svg';
 import Nodata from '../../Global/Images/lock-circle.svg';
+import {Svg, SvgUri} from 'react-native-svg';
 const Chat = ({navigation}) => {
   const userToken = useSelector(state => state.user.userToken);
   const [animating, setAnimating] = useState(true);
@@ -142,8 +143,15 @@ const Chat = ({navigation}) => {
           }}>
           <View style={{flexDirection: 'row'}}>
             {/* <GroupChat></GroupChat> */}
-            <Image style={{height:45,width:45,borderRadius:100/2}} source={{uri:`${item?.users[0].profile_image}`}}/>
-
+            {/* <Image style={{height:45,width:45,borderRadius:100/2}} source={{uri:`${item?.image}`}}/> */}
+            <View style={{backgroundColor:Color.GREY,borderRadius:100/2}}>
+            <SvgUri
+              width={50}
+              height={50}
+              uri={`${item?.image}`}
+            />
+            </View>
+            
             <View>
               <MyText
                 text={item?.name}
@@ -176,7 +184,15 @@ const Chat = ({navigation}) => {
         <View style={styles.bottomChat}>
           <View style={styles.rowIndivi}>
             {/* <Indivijual style={{marginLeft: 22}}></Indivijual> */}
-            <Image style={{height:30,width:30,borderRadius:100/2,marginLeft: 22}} source={{uri:`${item?.users[0].profile_image}`}}/>
+            <Image
+              style={{
+                height: 30,
+                width: 30,
+                borderRadius: 100 / 2,
+                marginLeft: 22,
+              }}
+              source={{uri: `${item?.lastUserTakeMembership?.profile_image}`}}
+            />
             <MyText
               text={`${item?.users?.length} members`}
               fontWeight="bold"
@@ -200,7 +216,7 @@ const Chat = ({navigation}) => {
   };
 
   ////get data
-  React.useEffect(() => {
+  useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       // setLoading(true);
       getCartCount();
