@@ -15,6 +15,7 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
   Platform,
+  Alert,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Loader from '../../Components/Loader';
@@ -25,7 +26,7 @@ import CustomButtonBlue from '../../Components/CustomButtonBlue';
 import CustomTextBox from '../../Components/CustomTextBox';
 import Color from '../../Global/Color';
 import {dimensions} from '../../Global/Color';
-import {requestPostApi, LOGIN} from '../../Global/Service';
+import {requestPostApi, LOGIN, LOGOUT, postApiWithToken} from '../../Global/Service';
 import {CommonActions} from '@react-navigation/native';
 // svg image
 import {useDispatch} from 'react-redux';
@@ -53,9 +54,9 @@ const SignIn = ({navigation}) => {
     countryCodes[0].code,
   );
   const [fullname, setFullname] = useState('');
-  const [emailid, setEmailid] = useState('ssuser@gmail.com');
+  const [emailid, setEmailid] = useState('Amit6@yopmail.com');
   const [phoneno, setPhoneno] = useState('');
-  const [password, setPassword] = useState('Ssuser@1234');
+  const [password, setPassword] = useState('Beast@205');
   const [loading, setLoading] = useState('');
   const [My_Alert, setMy_Alert] = useState(false);
   const [alert_sms, setalert_sms] = useState('');
@@ -104,6 +105,19 @@ const SignIn = ({navigation}) => {
     }
     return true;
   };
+  const logout = async (token) => {
+    setLoading(true);
+    try {
+      const resp = await postApiWithToken(token, LOGOUT, {});
+      console.log('logout resp', resp?.data);
+      if (resp?.data?.status) {
+        Toast.show({text1: resp?.data?.message});
+      }
+    } catch (error) {
+      console.log('error in logout', error);
+    }
+    setLoading(false);
+  };
 
   const LoginPressed = async () => {
     if (!Validation()) {
@@ -137,13 +151,28 @@ const SignIn = ({navigation}) => {
         setLoading(false);
         navigation.dispatch(resetIndexGoToBottomTab);
         Toast.show({ type: 'success', text1: 'Loggedin successfully' });
-      } else {
-        setLoading(false);
-        console.log('login????????? come in catch block', responseJson.message);
-        console.log('the err==>>', responseJson.message);
-        setalert_sms(responseJson.message);
-        setMy_Alert(true);
+      }  else {
+        if (responseJson?.token) {
+          Alert.alert('', `${responseJson.message}`, [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'Reset', onPress: () => logout(responseJson?.token)},
+          ]);
+        } else {
+          Toast.show({ type: 'error', text1: responseJson?.message });
+          setLoading(false);
+        }
       }
+      // else {
+      //   setLoading(false);
+      //   console.log('login????????? come in catch block', responseJson.message);
+      //   console.log('the err==>>', responseJson.message);
+      //   setalert_sms(responseJson.message);
+      //   setMy_Alert(true);
+      // }
     } catch (error) {
       setLoading(false);
       console.error('API call error:', error);

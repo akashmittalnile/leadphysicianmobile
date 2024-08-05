@@ -48,6 +48,8 @@ import ViewPdf from '../Screens/ViewPdf/ViewPdf';
 import FullImageView from '../Screens/FullImageView/FullImageView';
 import PurchaseReview from '../Screens/Purchase/Purchase';
 import PaymentWebView from '../Components/PaymentWebView';
+import Contact from '../Screens/ContactUs/Contact';
+import ContactForQuery from '../Screens/ContactUs/ContactForQuery';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {
@@ -96,6 +98,9 @@ const AuthStack = () => {
       <Stack.Screen name={'FullImageView'} component={FullImageView} />
       <Stack.Screen name={'PurchaseReview'} component={PurchaseReview} />
       <Stack.Screen name={"PaymentWebView"} component={PaymentWebView} />
+<Stack.Screen name={"Contact"} component={Contact} />
+<Stack.Screen name={"ContactForQuery"} component={ContactForQuery} />
+
     </Stack.Navigator>
   );
 };

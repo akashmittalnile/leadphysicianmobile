@@ -35,6 +35,8 @@ import {
   postApiWithToken,
   LOGOUT,
   getApiWithToken,
+  CHECK_SUBSCRIPTION,
+  CANCEL_SUBSCRIPTION,
 } from '../../Global/Service';
 import {CommonActions} from '@react-navigation/core';
 import {connect, useSelector, useDispatch} from 'react-redux';
@@ -43,14 +45,49 @@ import ProfileCall from '../../Global/Images/callProfile.svg';
 import EmailProfile from '../../Global/Images/smsProfile.svg';
 import ArrowRigt from '../../Global/Images/Shape.svg';
 import Nodata from '../../Global/Images/lock-circle.svg';
-import {logOutUser} from '../../reduxToolkit/reducer/user';
+import {
+  logOutUser,
+  setUser,
+  userisSubscribedHandler,
+} from '../../reduxToolkit/reducer/user';
+
 const Profile = ({navigation}) => {
+  //variables : redux
+  const userToken = useSelector(state => state.user.userToken);
+  console.log('my user token---->>', userToken);
+  const [planStatus, setPlanStatus] = useState(false);
+  const [scrolling, setscrolling] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const scrollY = useSharedValue(0);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState('');
   const [profile, setProfile] = useState('');
   const [currentPlan, setCurrentPlan] = useState({});
   const isFocus = useIsFocused();
+  const [subscrptnId, setSubscrptnId] = useState('');
+  const physicianCourse = [
+    {
+      id: '0',
+      title: 'My Certificates',
+    },
+    {
+      id: '1',
+      title: 'Change password',
+    },
+    {
+      id: '2',
+      title: 'Terms & Conditions',
+    },
+    {
+      id: '3',
+      title: 'Privacy Policy',
+    },
 
+    {
+      id: '4',
+      title: 'Logout',
+    },
+  ];
   ///my dispatch function
   const gotoWelcome = () =>
     CommonActions.reset({
@@ -59,13 +96,39 @@ const Profile = ({navigation}) => {
     });
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setLoading(true);
+      // setLoading(true);
       getCartCount();
-      setLoading(false);
+      getSubscription();
+      // setLoading(false);
     });
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [isFocus]);
+
+  const getSubscription = async () => {
+    try {
+      const resp = await getApiWithToken(userToken, CHECK_SUBSCRIPTION);
+      if (resp.data) {
+        setPlanStatus(resp.data?.plan_status);
+        if (resp.data?.plan_status != true) {
+          dispatch(
+            userisSubscribedHandler({
+              isSubscribed: false,
+            }),
+          );
+          const jsonValue = JSON.stringify(resp.data.data);
+          await AsyncStorage.setItem('userInfo', jsonValue);
+          dispatch(setUser(resp.data.data));
+          navigation.navigate('Subscription');
+        }
+        console.error('CHECK_SUBSCRIPTION', resp.data);
+        setSubscrptnId(resp?.data?.data?.subscription_id);
+      }
+    } catch (error) {
+      console.error('error in getCount', error);
+      //   setUnreadCount(0);
+    }
+  };
   //get data for list
   const getCartCount = async () => {
     setLoading(true);
@@ -103,37 +166,6 @@ const Profile = ({navigation}) => {
     }
     setLoading(false);
   };
-  //variables : redux
-  const userToken = useSelector(state => state.user.userToken);
-  console.log('my user token---->>', userToken);
-  const [animating, setAnimating] = useState(true);
-  const [scrolling, setscrolling] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const scrollY = useSharedValue(0);
-
-  const physicianCourse = [
-    {
-      id: '0',
-      title: 'My Certificates',
-    },
-    {
-      id: '1',
-      title: 'Change password',
-    },
-    {
-      id: '2',
-      title: 'Terms & Conditions',
-    },
-    {
-      id: '3',
-      title: 'Privacy Policy',
-    },
-
-    {
-      id: '4',
-      title: 'Logout',
-    },
-  ];
 
   const handleScroll = event => {
     const yOffset = event.nativeEvent.contentOffset.y;
@@ -196,6 +228,45 @@ const Profile = ({navigation}) => {
       </TouchableOpacity>
     );
   };
+
+  const cancelMemberShip = async () => {
+    console.log('cancelMemberShip-print---->', subscrptnId);
+    setLoading(true);
+    try {
+      // const data = {
+      //   "subscription_id": subscrptnId,
+      // };
+      const formdata = new FormData();
+      formdata.append('subscription_id', subscrptnId);
+      
+      const resp = await postApiWithToken(
+        userToken,
+        CANCEL_SUBSCRIPTION,
+        formdata,
+      );
+      console.log(':::::::::::::cancelMemberShip', resp.data);
+      if (resp.data.message == 'Subscription cancelled successfully') {
+        // getCartCount();
+        Toast.show({text1: resp.data.message});
+        getSubscription();
+        setLoading(false);
+        // const jsonValue = JSON.stringify(resp.data.data);
+        // await AsyncStorage.setItem('userInfo', jsonValue);
+        // dispatch(UserAction.setUser(resp.data.data));
+        // dispatch(CustomAlertAction.showToast(resp.data.msg));
+        // getUserDetail();
+      } else {
+        Toast.show({text1: resp.data.message});
+        setLoading(false);
+      }
+    } catch (error) {
+      Toast.show({text1: error});
+      setLoading(false);
+      console.log('error in cancelMemberShip', error);
+    }
+    setLoading(false);
+  };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#F7FAEB'}}>
       <StatusBar backgroundColor={Color.LIGHT_BLACK} />
@@ -354,13 +425,20 @@ const Profile = ({navigation}) => {
                   width: dimensions.SCREEN_WIDTH * 0.9,
                   alignItems: 'center',
                 }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginLeft: 5,
+                  }}>
                   <Image
-                    source={currentPlan?.id === 1
+                    source={
+                      currentPlan?.id === 1
                         ? require('../../Global/Images/silverMembership.png')
                         : currentPlan?.id === 2
                         ? require('../../Global/Images/goldMembership.png')
-                        : require('../../Global/Images/PlataniumMembership.png')}
+                        : require('../../Global/Images/PlataniumMembership.png')
+                    }
                     style={{
                       width: 62,
                       height: 62,
@@ -370,54 +448,83 @@ const Profile = ({navigation}) => {
                       alignItems: 'center',
                       marginVertical: 25,
                     }}></Image>
-                  <View>
-                    {console.log('my current pan values---->>', currentPlan)}
+                  <View style={{width: 162}}>
                     <MyText
                       text={currentPlan.name}
-                      fontWeight="400"
-                      fontSize={16}
+                      fontWeight="800"
+                      fontSize={18}
+                      numberOfLines={2}
                       textColor={Color.WHITE}
                       fontFamily="Roboto"
                       style={{}}
                     />
                     <MyText
-                      text={`$ ${
+                      text={`$${
                         currentPlan?.price
                           ? currentPlan?.price
                           : currentPlan?.monthly_price
-                      }`}
+                      }/${currentPlan?.plan_type}`}
                       fontWeight="500"
-                      fontSize={24}
+                      fontSize={22}
                       textColor={Color.WHITE}
                       fontFamily="Roboto"
                       style={{}}
                     />
                   </View>
                 </View>
-                <TouchableOpacity
-                  style={{
-                    width: 103,
-                    height: 44,
-                    borderRadius: 5,
-                    backgroundColor: 'white',
-                    justifyContent: 'center',
-                  }}
-                  onPress={() => {
-                    navigation.navigate('Subscription');
-                  }}>
-                  <MyText
-                    text="Renew"
-                    fontWeight="700"
-                    fontSize={14}
-                    textColor={'#070F14'}
-                    fontFamily="Roboto"
-                    style={{alignSelf: 'center'}}
-                  />
-                </TouchableOpacity>
+                <View style={{flexDirection: 'row'}}>
+                  {/* {
+                    planStatus != true ?
+                
+                  <TouchableOpacity
+                    style={{
+                      width: 60,
+                      height: 44,
+                      borderRadius: 5,
+                      backgroundColor: 'white',
+                      justifyContent: 'center',
+                    }}
+                    onPress={() => {
+                      navigation.navigate('Subscription');
+                    }}>
+                    <MyText
+                      text="Renew"
+                      fontWeight="700"
+                      fontSize={13}
+                      textColor={'#070F14'}
+                      fontFamily="Roboto"
+                      style={{alignSelf: 'center'}}
+                    />
+                  </TouchableOpacity> 
+                  : */}
+                  <TouchableOpacity
+                    style={{
+                      width: 105,
+                      height: 44,
+                      borderRadius: 5,
+                      backgroundColor: 'white',
+                      justifyContent: 'center',
+                      marginLeft: 10,
+                      // paddingHorizontal:10
+                    }}
+                    onPress={() => {
+                      cancelMemberShip();
+                    }}>
+                    <MyText
+                      text="Cancel Membership"
+                      fontWeight="600"
+                      fontSize={14}
+                      textAlign="center"
+                      textColor={'#070F14'}
+                      fontFamily="Roboto"
+                      style={{alignSelf: 'center'}}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
             </ImageBackground>
           </View>
-          <View style={{marginVertical:8}}>
+          <View style={{marginVertical: 8}}>
             <FlatList
               horizontal={false}
               data={physicianCourse}

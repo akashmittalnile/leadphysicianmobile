@@ -115,6 +115,7 @@ const data = [
 ];
 const addToCartObject = {};
 const ModuleScreen = ({navigation, route}) => {
+  console.log("route?.params--ModuleScreen",route?.params);
   // const defaultImgPath = Image.resolveAssetSource(defaultImg).uri;
   //variables
   const LINE_HEIGTH = 25;
@@ -322,6 +323,7 @@ const ModuleScreen = ({navigation, route}) => {
   };
   /// for quiz redirection
   const gotoSideMenuLinks = (name, link, detail, type, id) => {
+    // console.log("gotoSideMenuLinks",name, link, type, id);
     navigation.navigate('SideMenuLinks', {name, link, detail, type, id});
   };
 
@@ -333,7 +335,8 @@ const ModuleScreen = ({navigation, route}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          setShowViewPdfModal(true);setPdfLink(item?.details);
+          setShowViewPdfModal(true);
+          setPdfLink(item?.details);
         }}
         style={styles.moduleView}>
         <MyIcon
@@ -495,6 +498,7 @@ const ModuleScreen = ({navigation, route}) => {
                       alignItems: 'center',
                       marginBottom: 20,
                     }}>
+                      {console.log("moduleScren---data",moduleScren)}
                     <TouchableOpacity
                       style={{
                         backgroundColor: Color.PRIMARY,
@@ -510,7 +514,7 @@ const ModuleScreen = ({navigation, route}) => {
                           moduleScren?.quiz_url,
                           moduleScren,
                           (type = 'quiz'),
-                          route?.params?.courseId,
+                          route?.params?.courseId != undefined ? route?.params?.courseId : moduleScren?.quizzes[0].module_id,
                         );
                       }}>
                       <Text

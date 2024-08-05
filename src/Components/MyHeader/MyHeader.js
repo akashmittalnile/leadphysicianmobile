@@ -23,7 +23,7 @@ import Color, { dimensions } from '../../Global/Color';
 import { styles } from './MyHeaderStyle';
 //redux
 import { useSelector, useDispatch } from 'react-redux';
-import { setAdminCount, setUser, setUserNotifications, } from '../../reduxToolkit/reducer/user';
+import { setAdminCount, setUser, setUserNotifications, userisSubscribedHandler, } from '../../reduxToolkit/reducer/user';
 import { logOutUser } from 'src/reduxToolkit/reducer/user';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
@@ -81,13 +81,15 @@ const MyHeader = ({
     // animated code
 
     useEffect(() => {
-        
         const unsubscribe = navigation.addListener('focus', () => {
-           
-            gotoUnseenMessageCount();
             getGreetingMessage();
             getCartCount();
-            
+            gotoUnseenMessageCount();
+            // const interval = setInterval(() => {
+            //     // gotoUnseenMessageCount();
+            //     // console.log('This will run every  3 second!');
+            //   }, 3000);
+            //   return () => clearInterval(interval);
           });
           // Return the function to unsubscribe from the event so it gets removed on unmount
           return unsubscribe;
@@ -102,7 +104,7 @@ const MyHeader = ({
               if (resp.data) {
                 console.error(
                   'your plan has expired plz upgra===========>>>>>>>>>>*********resp.data?.is_plan_expired',
-                  resp.data,
+                  resp.data?.plan_status,
                 );
                
                 if (resp.data?.plan_status != true ) {
@@ -114,7 +116,13 @@ const MyHeader = ({
                   const jsonValue = JSON.stringify(resp.data.data);
                   await AsyncStorage.setItem('userInfo', jsonValue);
                   dispatch(setUser(resp.data.data));
-                } 
+                } else if(resp.data?.plan_status == true ) {
+                    dispatch(
+                        userisSubscribedHandler({
+                          isSubscribed: true,
+                        }),
+                      );
+                }
                 // else if (resp?.data?.status == 'N') {
                   
                 //   Toast.show({text1: `Your account is temporary inactive please contact the owner for same.`});
@@ -155,7 +163,7 @@ const MyHeader = ({
     // setShowLoader(true);
    try {
      const resp = await getApiWithToken(userToken, UNSEEN_MESSAGE);
-     console.log('DRAWR---admincount-', resp?.data?.unseen_message_count);
+    //  console.log('DRAWR---admincount-', resp?.data?.unseen_message_count);
      if (resp?.data?.status) {
     //    setAdminChatCount(resp?.data?.unseen_message_count);
         
@@ -166,7 +174,7 @@ const MyHeader = ({
     //    setShowLoader(false);
      }
    } catch (error) {
-     console.log('error in getCartCount', resp);
+     console.log('error in gotoUnseenMessageCount', resp);
     //  setShowLoader(false);
    } finally {
     //  setShowLoader(false);
@@ -265,11 +273,13 @@ const MyHeader = ({
     //function : navigation function
     const openDrawer = () => navigation.dispatch(DrawerActions.openDrawer());
     const goBack = () => {
+        console.log("shouldNavigateToModuleScreen..",shouldNavigateToModuleScreen);
         Keyboard.dismiss();
         // navigation.canGoBack() ? navigation.goBack() : console.log("can't go back");
         if (shouldNavigateToModuleScreen) {
             navigation.navigate('ModuleListing', toNavigParams); // Replace 'ModuleScreen' with the actual name of your module screen
         } else {
+            console.log("goBack-elsepart",navigation.canGoBack());
             if (navigation.canGoBack()) {
                 navigation.goBack();
             } else {

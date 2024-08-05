@@ -68,9 +68,11 @@ export const FORGET_PASSWORD = `forget-password`;
 export const FORGET_PASSWORD_VERIFY = `forget-password-verify`;
 export const CHECK_SUBSCRIPTION = `subscription`;
 export const CREATE_SUBSCRIPTION = `create-subscription`;
+export const CANCEL_SUBSCRIPTION = `cancel-subscription`;
+export const QUERY_LIST = `query-list`;
+export const CONTACT_US = `contact-us`;
 
-
-export const ALL_TYPE_LISTING = `all-type-listing`;
+export const CANCEL_SU = `all-type-listing`;
 export const LIKE_OBJECT_TYPE = `add-wishlist`;
 export const UNLIKE_OBJECT_TYPE = `remove-wishlist`;
 export const ALL_CATEGORY = `all-category`;
@@ -188,6 +190,8 @@ export const getApiWithToken = (token, endPoint) =>
             },
         })
         .then(res => {
+            // console.log("getApiWithToken",`${BASE_URL}${endPoint}`);
+            
             return res;
         })
         .catch(error => {

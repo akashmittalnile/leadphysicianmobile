@@ -175,12 +175,6 @@ const Saved = ({ navigation }) => {
                         fontSize={14}
                         textColor={Color.LIGHT_BLACK}
                         fontFamily="Roboto"
-
-                        style={{
-
-
-
-                        }}
                     />
                     <MyText
                         text={item?.step}
@@ -188,7 +182,8 @@ const Saved = ({ navigation }) => {
                         fontSize={14}
                         textColor={Color.LIGHT_BLACK}
                         fontFamily="Roboto"
-                        marginHorizontal={12}
+                        marginLeft={5}
+                        // marginHorizontal={12}
                         style={{
 
                             alignSelf: 'center',

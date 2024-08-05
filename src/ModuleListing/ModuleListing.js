@@ -218,7 +218,7 @@ const ModuleListing = ({navigation, dispatch, route}) => {
     var url = GET_MODULEDETAIL;
     var murl = `/` + route?.params?.id;
     url = url + murl;
-    console.log('mu murl===>', url);
+    console.log('mu murlmodule===>', url);
     try {
       setLoading(true);
       const resp = await getApiWithToken(userToken, url);
@@ -374,6 +374,7 @@ const ModuleListing = ({navigation, dispatch, route}) => {
         <MyHeader
           Title="List of Sections"
           isBackButton
+          // shouldNavigateToModuleScreen={true}
           scrolling={scrolling}
           scrollY={scrollY}
           style={scrolling ? {zIndex: 99} : null}

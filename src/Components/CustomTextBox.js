@@ -14,19 +14,25 @@ import {useState, React} from 'react';
 import Eye from '../Global/Images/eye.svg';
 //Import : third parties
 import Feather from 'react-native-vector-icons/Feather';
+import { number } from 'yup';
 
 // global
 const H = Dimensions.get('screen').height;
 const W = Dimensions.get('screen').width;
 const CustomTextBox = ({
+  contanerStyle,
+  textinputStyle,
   imageComponent,
   placeholder,
   value,
   onChangeText,
   err,
+  editable = true,
   secureTextEntry = false,
   keyboardType = '',
   maxLength = undefined,
+  multiline = false,
+  textAlignVertical ='auto'
 }) => {
   const [isSecureTextEntry, setIsSecureTextEntry] = useState(secureTextEntry);
 
@@ -39,14 +45,14 @@ const CustomTextBox = ({
     <View
       style={[
         styles.input,
-        value?.trim()?.length > 0 ? styles.selectedinput : null,
+        value?.trim()?.length > 0 ? styles.selectedinput : null,contanerStyle
       ]}>
       {imageComponent && (
         <View style={styles.imageContainer}>{imageComponent}</View>
       )}
       <TextInput
         maxLength={maxLength}
-        style={[styles.text, secureTextEntry && {paddingRight: 40}]}
+        style={[styles.text,textinputStyle ,secureTextEntry && {paddingRight: 40},]}
         value={value}
         secureTextEntry={
           !secureTextEntry
@@ -59,6 +65,9 @@ const CustomTextBox = ({
         onChangeText={onChangeText}
         placeholder={placeholder}
         keyboardType={keyboardType}
+        editable={editable}
+        multiline={multiline}
+         textAlignVertical={textAlignVertical}
       />
       {/* {secureTextEntry && (
                 <TouchableOpacity style={styles.togglePassword} onPress={toggleSecureEntry}>
@@ -96,6 +105,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderWidth: 1,
     color: 'black',
+    
   },
   text: {height: 40, color: '#292929', width: '90%'},
   togglePassword: {

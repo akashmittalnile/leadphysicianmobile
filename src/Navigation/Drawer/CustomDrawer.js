@@ -41,6 +41,7 @@ import Facebook from '../../Global/Images/facebook.svg';
 import Insta from '../../Global/Images/instagram.svg';
 import Youtube from '../../Global/Images/youtube.svg';
 import Headphone from '../../Global/Images/headphone.svg';
+import Contactus from '../../Global/Images/Contactus.svg';
 import Sticky from '../../Global/Images/stickynote.svg';
 import Privacy from '../../Global/Images/PrivacySticky.svg';
 import Loader from '../../Components/Loader';
@@ -140,6 +141,9 @@ const CustomDrawer = ({navigation}) => {
   const gotoPrivacy = () => {
     navigation.navigate('TermsCondition', {params: 'Privacy'});
   };
+  const gotoContactUs = ()=>{
+    navigation.navigate('Contact');
+  }
   const gotoPolicy = () => {
     navigation.navigate('TermsCondition', {params: 'Policy'});
   };
@@ -370,6 +374,14 @@ const CustomDrawer = ({navigation}) => {
                  
                 </View>
               ) : null}
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Contactus></Contactus>
+              <DrawerItemList
+                Title="Contact Us"
+                onPress={gotoContactUs}
+             
+              />
             </View>
             <View style={{flexDirection: 'row'}}>
               <Sticky></Sticky>

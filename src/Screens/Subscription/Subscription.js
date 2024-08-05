@@ -20,7 +20,7 @@ import {styles} from './SubscriptionStyle';
 import Loader from '../../Components/Loader';
 import MyText from '../../Components/MyText/MyText';
 import MyAlert from '../../Global/MyAlert';
-import {GET_CARDS, getApiWithToken, GET_PLANS} from '../../Global/Service';
+import {GET_CARDS, getApiWithToken, GET_PLANS, CHECK_SUBSCRIPTION} from '../../Global/Service';
 
 import {useIsFocused} from '@react-navigation/native';
 import {connect, useSelector, useDispatch} from 'react-redux';
@@ -39,6 +39,7 @@ const Subscription = ({navigation, route}) => {
   const isFocus = useIsFocused();
   const userToken = useSelector(state => state.user.userToken);
   const isSubscribed = useSelector(state => state.user?.isSubscribed?.isSubscribed);
+  const[subscrptnStatusCheck,setSubscrptnStatusCheck]=useState(false);
   console.log("isSubscribed======",isSubscribed);
 
   const H = Dimensions.get('screen').height;
@@ -105,7 +106,7 @@ const Subscription = ({navigation, route}) => {
       <View style={{marginBottom: 90}}>
         <View style={styles.mainView}>
           <MyText
-            text={`$ ${item?.monthly_price}`}
+            text={`$${item?.monthly_price}/${item?.plan_type}`}
             fontWeight="bold"
             fontSize={28}
             textColor={Color.WHITE}
@@ -223,10 +224,15 @@ const Subscription = ({navigation, route}) => {
               // zIndex: 1
             }}
             // hitSlop={{  bottom: 100}}
-
+ 
             onPress={() => {
-              navigation.navigate('PurchaseReview', {item: item,type:"Subscription"})
-              // navigation.navigate('Payment', {item: item});
+              if(subscrptnStatusCheck != true){
+                navigation.navigate('PurchaseReview', {item: item,type:"Subscription"})
+                // navigation.navigate('Payment', {item: item});
+              }else{
+                Toast.show({text1: 'Please Cancel Previews Subscription!'});
+              }
+              
             }}>
             <MyText
               text={
@@ -272,8 +278,9 @@ const Subscription = ({navigation, route}) => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log('my subscruption iscaleed');
+      // console.log('my subscruption iscaleed');
       getCartCount();
+      getSubscription();
     });
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
@@ -303,6 +310,29 @@ const Subscription = ({navigation, route}) => {
       console.log('error in getCartCount', error);
     }
     setLoading(false);
+  };
+  const getSubscription = async () => {
+    try {
+      const resp = await getApiWithToken(userToken, CHECK_SUBSCRIPTION);
+      if (resp.data) {
+        // if (resp.data?.plan_status != true ) {
+        //   dispatch(
+        //     userisSubscribedHandler({
+        //       isSubscribed: false,
+        //     }),
+        //   );
+        //   const jsonValue = JSON.stringify(resp.data.data);
+        //   await AsyncStorage.setItem('userInfo', jsonValue);
+        //   dispatch(setUser(resp.data.data));
+        //   navigation.navigate('Subscription');
+        // }
+        console.error('CHECK_SUBSCRIPTION', resp.data);
+        setSubscrptnStatusCheck(resp.data?.plan_status);
+      }
+    } catch (error) {
+      console.error('error in getCount', error);
+      //   setUnreadCount(0);
+    }
   };
   const [selectedCountryCode, setSelectedCountryCode] = useState(
     countryCodes[0].code,

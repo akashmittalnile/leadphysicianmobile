@@ -973,61 +973,61 @@ const Schedule = ({navigation}) => {
       console.log('error in GET_SCHDULE', error);
     }
   };
-  const dateformates2 = (month, day, year) => {
-    if (month == 'Jan') {
-      return year + '-01-' + day;
-    } else if (month == 'Feb') {
-      return year + '-02-' + day;
-    } else if (month == 'Mar') {
-      return year + '-03-' + day;
-    } else if (month == 'Apr') {
-      return year + '-04-' + day;
-    } else if (month == 'May') {
-      return year + '-05-' + day;
-    } else if (month == 'Jun') {
-      return year + '-06-' + day;
-    } else if (month == 'Jul') {
-      return year + '-07-' + day;
-    } else if (month == 'Aug') {
-      return year + '-08-' + day;
-    } else if (month == 'Sep') {
-      return year + '-09-' + day;
-    } else if (month == 'Oct') {
-      return year + '-10-' + day;
-    } else if (month == 'Nov') {
-      return year + '-11-' + day;
-    } else if (month == 'Dec') {
-      return year + '-12-' + day;
-    }
-  };
-  const dateformates = (month, day, year) => {
-    console.log('my dates--->>', month, day, year);
-    if (month == 'Jan') {
-      return '01-' + day + '-' + year;
-    } else if (month == 'Feb') {
-      return '02-' + day + '-' + year;
-    } else if (month == 'Mar') {
-      return '03-' + day + '-' + year;
-    } else if (month == 'Apr') {
-      return '04-' + day + '-' + year;
-    } else if (month == 'May') {
-      return '05-' + day + '-' + year;
-    } else if (month == 'Jun') {
-      return '06-' + day + '-' + year;
-    } else if (month == 'Jul') {
-      return '07-' + day + '-' + year;
-    } else if (month == 'Aug') {
-      return '08-' + day + '-' + year;
-    } else if (month == 'Sep') {
-      return '09-' + day + '-' + year;
-    } else if (month == 'Oct') {
-      return '10-' + day + '-' + year;
-    } else if (month == 'Nov') {
-      return '11-' + day + '-' + year;
-    } else if (month == 'Dec') {
-      return '12-' + day + '-' + year;
-    }
-  };
+  // const dateformates2 = (month, day, year) => {
+  //   if (month == 'Jan') {
+  //     return year + '-01-' + day;
+  //   } else if (month == 'Feb') {
+  //     return year + '-02-' + day;
+  //   } else if (month == 'Mar') {
+  //     return year + '-03-' + day;
+  //   } else if (month == 'Apr') {
+  //     return year + '-04-' + day;
+  //   } else if (month == 'May') {
+  //     return year + '-05-' + day;
+  //   } else if (month == 'Jun') {
+  //     return year + '-06-' + day;
+  //   } else if (month == 'Jul') {
+  //     return year + '-07-' + day;
+  //   } else if (month == 'Aug') {
+  //     return year + '-08-' + day;
+  //   } else if (month == 'Sep') {
+  //     return year + '-09-' + day;
+  //   } else if (month == 'Oct') {
+  //     return year + '-10-' + day;
+  //   } else if (month == 'Nov') {
+  //     return year + '-11-' + day;
+  //   } else if (month == 'Dec') {
+  //     return year + '-12-' + day;
+  //   }
+  // };
+  // const dateformates = (month, day, year) => {
+  //   console.log('my dates--->>', month, day, year);
+  //   if (month == 'Jan') {
+  //     return '01-' + day + '-' + year;
+  //   } else if (month == 'Feb') {
+  //     return '02-' + day + '-' + year;
+  //   } else if (month == 'Mar') {
+  //     return '03-' + day + '-' + year;
+  //   } else if (month == 'Apr') {
+  //     return '04-' + day + '-' + year;
+  //   } else if (month == 'May') {
+  //     return '05-' + day + '-' + year;
+  //   } else if (month == 'Jun') {
+  //     return '06-' + day + '-' + year;
+  //   } else if (month == 'Jul') {
+  //     return '07-' + day + '-' + year;
+  //   } else if (month == 'Aug') {
+  //     return '08-' + day + '-' + year;
+  //   } else if (month == 'Sep') {
+  //     return '09-' + day + '-' + year;
+  //   } else if (month == 'Oct') {
+  //     return '10-' + day + '-' + year;
+  //   } else if (month == 'Nov') {
+  //     return '11-' + day + '-' + year;
+  //   } else if (month == 'Dec') {
+  //     return '12-' + day + '-' + year;
+  //   }
+  // };
 
   // const onChange = (event, selectedDate) => {
   //   console.log('my selected date--->>', selectedDate);
@@ -1267,7 +1267,7 @@ const Schedule = ({navigation}) => {
                             }}></View>
                           <View style={{marginHorizontal: 14}}>
                             <MyText
-                              text={item.meeting_title}
+                              text={item?.meeting_title}
                               fontFamily="Roboto"
                               fontWeight="700"
                               fontSize={14}
@@ -1278,10 +1278,8 @@ const Schedule = ({navigation}) => {
                             <View style={{flexDirection: 'row'}}>
                               <OnGoing></OnGoing>
                               <MyText
-                                text={`${moment(
-                                  item.schedule_start_date,
-                                ).format('MM/DD/YYYY')}, ${moment(
-                                  item.schedule_start_time,
+                                text={`${item?.schedule_start_date}, ${moment(
+                                  item?.schedule_start_time,
                                   'HH:mm:ss',
                                 ).format('hh:mm A')}`}
                                 fontFamily="Roboto"
