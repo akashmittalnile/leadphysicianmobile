@@ -15,6 +15,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A9042FBE9E0AD809842987BE /* Pods_leadPhysician_leadPhysicianTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73F9B4866B93C76C1ECEF1BA /* Pods_leadPhysician_leadPhysicianTests.framework */; };
+		AC2C51A92C539FA900EC9A00 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC2C51A82C539FA900EC9A00 /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = leadPhysician/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98DF16BA0EDBA471D35924D4 /* Pods_leadPhysician.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_leadPhysician.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B9BBB3D5B21B56DC914693E /* Pods-leadPhysician-leadPhysicianTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-leadPhysician-leadPhysicianTests.debug.xcconfig"; path = "Target Support Files/Pods-leadPhysician-leadPhysicianTests/Pods-leadPhysician-leadPhysicianTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AC2C51A82C539FA900EC9A00 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		BD299DBF75F7C0451B2FFBFA /* Pods-leadPhysician-leadPhysicianTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-leadPhysician-leadPhysicianTests.release.xcconfig"; path = "Target Support Files/Pods-leadPhysician-leadPhysicianTests/Pods-leadPhysician-leadPhysicianTests.release.xcconfig"; sourceTree = "<group>"; };
 		CB8CED79B76637815659C4BE /* Pods-leadPhysician.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-leadPhysician.debug.xcconfig"; path = "Target Support Files/Pods-leadPhysician/Pods-leadPhysician.debug.xcconfig"; sourceTree = "<group>"; };
 		D376850808CD59DB7D784032 /* Pods-leadPhysician.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-leadPhysician.release.xcconfig"; path = "Target Support Files/Pods-leadPhysician/Pods-leadPhysician.release.xcconfig"; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D7F48BFAC39320B1C07FAB2 /* Pods_leadPhysician.framework in Frameworks */,
+				AC2C51A92C539FA900EC9A00 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +104,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AC2C51A82C539FA900EC9A00 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				98DF16BA0EDBA471D35924D4 /* Pods_leadPhysician.framework */,
 				73F9B4866B93C76C1ECEF1BA /* Pods_leadPhysician_leadPhysicianTests.framework */,
@@ -484,6 +488,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ATA5B72HV6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = leadPhysician/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -511,6 +516,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ATA5B72HV6;
 				INFOPLIST_FILE = leadPhysician/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

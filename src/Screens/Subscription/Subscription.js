@@ -14,13 +14,27 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   ImageBackground,
+  Platform,
 } from 'react-native';
-import Toast from 'react-native-toast-message';
+import {
+  endConnection,
+  getSubscriptions,
+  initConnection,
+  getAvailablePurchases,
+  requestSubscription,
+  clearTransactionIOS
+} from 'react-native-iap';
 import {styles} from './SubscriptionStyle';
 import Loader from '../../Components/Loader';
 import MyText from '../../Components/MyText/MyText';
 import MyAlert from '../../Global/MyAlert';
-import {GET_CARDS, getApiWithToken, GET_PLANS} from '../../Global/Service';
+import {
+  GET_CARDS,
+  getApiWithToken,
+  GET_PLANS,
+  postApiWithToken,
+  IOS_SUBSCRIPTION,
+} from '../../Global/Service';
 
 import {useIsFocused} from '@react-navigation/native';
 import {connect, useSelector, useDispatch} from 'react-redux';
@@ -34,12 +48,18 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import CustomHeader from '../../Components/CustomHeader';
 // svg image
 import Tick from '../../Global/Images/subscriptionTick.svg';
+import Toast from 'react-native-toast-message';
 const Subscription = ({navigation, route}) => {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
   const userToken = useSelector(state => state.user.userToken);
-  const isSubscribed = useSelector(state => state.user?.isSubscribed?.isSubscribed);
-  console.log("isSubscribed======",isSubscribed);
+  const isSubscribed = useSelector(
+    state => state.user?.isSubscribed?.isSubscribed,
+  );
+  const [iosSubscription, setIosSubscription] = React.useState(undefined);
+  const [inAppLoader, setInAppLoader] = React.useState(false);
+  const [selectedSubscription, setSelectedSubscription] = React.useState();
+  // console.log('isSubscribed======', isSubscribed);
 
   const H = Dimensions.get('screen').height;
   const W = Dimensions.get('screen').width;
@@ -49,6 +69,66 @@ const Subscription = ({navigation, route}) => {
     {code: '+91', label: 'India'},
     // Add more country codes as needed
   ];
+
+  React.useEffect(() => {
+    // let IosInAppListener = null;
+    if (Platform.OS === 'ios') {
+      getSubscriptionsPlans();
+      // .then(result => {
+      //   IosInAppListener = result;
+      // })
+      // .catch(err => {
+      //   console.log('err in getting Ios subscription', err);
+      // })
+      // .finally(() => {
+      //   // Ensure listener is cleared even if an error occurs
+      //   if (IosInAppListener) {
+      //     IosInAppListener.remove();
+      //   }
+      // });
+    }
+
+    // return () => {
+    //   if (IosInAppListener) {
+    //     console.log('chal hi gya', IosInAppListener);
+    //     IosInAppListener.remove();
+    //   }
+    // };
+
+    // return () => {
+    //   console.log('end connection')
+    //   endConnection();
+    // };
+  }, []);
+
+  const getSubscriptionsPlans = async () => {
+    try {
+      await initConnection();
+      const subscriptions = await getSubscriptions({
+        skus: ['SilverMembership', 'GoldMembership', 'PlatinumMembership'],
+      });
+      setIosSubscription(subscriptions);
+      // const inappListener = purchaseUpdatedListener(async purchase => {
+      //   try {
+      //     const receipt = purchase.transactionReceipt;
+      //     if (receipt) {
+      //       await finishTransaction({
+      //         purchase,
+      //       });
+      //     } else {
+      //       // console.log('No transaction receipt found');
+      //     }
+      //   } catch (err) {
+      //     inappListener?.remove();
+      //     console.log('err in finishing transaction', err);
+      //   }
+      // });
+      // return inappListener;
+    } catch (err) {
+      console.log('err in getting subscription list ios', err);
+    }
+  };
+  // console.log('iosSubscription', iosSubscription);
   const banner = [
     {
       id: '1',
@@ -98,6 +178,40 @@ const Subscription = ({navigation, route}) => {
   const renderNextButton = () => null;
   const renderDoneButton = () => null;
 
+  const requestIosSubscription = async sku => {
+    console.log('1')
+    try {
+      const transaction = await requestSubscription({sku});
+      // console.log('shoaib', transaction);
+      if (transaction?.transactionReceipt) {
+        console.log('hit ios_subscription')
+        await postApiWithToken(userToken, IOS_SUBSCRIPTION, {
+          subscription_id: transaction?.originalTransactionIdentifierIOS,
+          plan_id: selectedSubscription?.id,
+          transaction_id: transaction?.transactionId,
+          type: '2',
+        });
+      }
+    } catch (err) {
+      console.log('err in requesting ios subscription', err);
+    } finally {
+      clearTransactionIOS();
+      setInAppLoader(false);
+    }
+  };
+
+  const iosSubscriptionHandler = async _item => {
+    setInAppLoader(true);
+    if (iosSubscription?.length > 0) {
+      const item = iosSubscription?.filter(
+        item => item?.title?.toLowerCase() === _item?.name?.toLowerCase(),
+      );
+      const shoaib = await getAvailablePurchases();
+      console.log('shoaib nile', shoaib?.length);
+      requestIosSubscription(item[0]?.productId);
+    }
+  };
+  // console.log('selectedSubscription', selectedSubscription?.id);
   const RenderItem = ({item}) => {
     // console.log('item slider7777----->', item);
     // setSeletcedItem(item)
@@ -225,7 +339,15 @@ const Subscription = ({navigation, route}) => {
             // hitSlop={{  bottom: 100}}
 
             onPress={() => {
-              navigation.navigate('PurchaseReview', {item: item,type:"Subscription"})
+              setSelectedSubscription(item);
+              if (Platform.OS === 'ios') {
+                iosSubscriptionHandler(item);
+                return;
+              }
+              navigation.navigate('PurchaseReview', {
+                item: item,
+                type: 'Subscription',
+              });
               // navigation.navigate('Payment', {item: item});
             }}>
             <MyText
@@ -272,7 +394,7 @@ const Subscription = ({navigation, route}) => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log('my subscruption iscaleed');
+      // console.log('my subscruption iscaleed');
       getCartCount();
     });
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -281,23 +403,23 @@ const Subscription = ({navigation, route}) => {
 
   //get deatails
   const getCartCount = async () => {
-    console.log('get cart count subscrpition userToken', userToken);
+    // console.log('get cart count subscrpition userToken', userToken);
     // var url = GET_PLANS;
 
     // console.log('mu murl worksheet===>', url);
     try {
       setLoading(true);
-      console.log('api is hit for ----->>>');
+      // console.log('api is hit for ----->>>');
       const resp = await getApiWithToken(userToken, GET_PLANS);
       // resp?.data?.data?.steps
-      console.log('my plans----->>>', resp);
+      // console.log('my plans----->>>', resp);
       if (resp?.data?.status) {
         setPlans(resp?.data?.data);
         setLoading(false);
       } else {
         setLoading(false);
         // Toast.show({ text1: resp.data.message });
-        console.log('hi adi', resp);
+        // console.log('hi adi', resp);
       }
     } catch (error) {
       console.log('error in getCartCount', error);
@@ -314,6 +436,7 @@ const Subscription = ({navigation, route}) => {
   const [alert_sms, setalert_sms] = useState('');
 
   const [selectedItem, setSeletcedItem] = useState('');
+  // console.log('plans', plans);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Color.LIGHT_BLACK}}>
       {/* <ScrollView contentContainerStyle={{flexGrow: 1}}> */}
@@ -379,7 +502,7 @@ const Subscription = ({navigation, route}) => {
       ) : null}
       {/* </ScrollView> */}
 
-      {loading ? <Loader /> : null}
+      {loading || inAppLoader ? <Loader /> : null}
     </SafeAreaView>
   );
 };

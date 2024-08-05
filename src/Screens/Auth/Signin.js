@@ -68,6 +68,7 @@ const SignIn = ({navigation}) => {
   const checkToken = async () => {
     try {
       const token = await messaging().getToken();
+      console.log(token)
       if (token) {
         console.log('fcm token', token);
         setFcmToken(token);
@@ -221,10 +222,11 @@ const SignIn = ({navigation}) => {
 
             <TouchableOpacity
               onPress={() => {
+                console.log('dftgyhujikol');
                 LoginPressed();
               }}
               style={{marginTop: 20}}>
-              <CustomButtonBlue name="Login"></CustomButtonBlue>
+              <CustomButtonBlue name="Login"/>
             </TouchableOpacity>
             <View
               style={{
@@ -245,7 +247,7 @@ const SignIn = ({navigation}) => {
             </View>
           </View>
         </ImageBackground>
-        <View style={{height:210}}/>
+        {/* <View style={{height:210}}/> */}
       </ScrollView>
       </KeyboardAvoidingView>
       {My_Alert ? (

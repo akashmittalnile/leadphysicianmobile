@@ -112,6 +112,7 @@ export const GET_SHIPPING_RATES = 'get-shipping-rates';
 export const CHOOSE_SHIPPING_OPTION = 'choose-shipping-option';
 export const COUPON_APPLIED_COURSE = 'coupon-applied-course';
 export const REMOVE_APPLIED_COUPON_COURSE = 'remove-applied-coupon-course';
+export const IOS_SUBSCRIPTION = 'ios-subscription'
 
 
 //function : post API
