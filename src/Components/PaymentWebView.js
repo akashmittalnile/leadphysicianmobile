@@ -71,7 +71,7 @@ const PaymentWebView = props => {
       'Screen-Type-check',
       props?.route?.params?.type,
     );
-    console.log('STATUS-Check-captureId', webViewState?.url);
+    // console.log('STATUS-Check-captureId', webViewState?.url);
     // console.log('PaymentUrl----', PaymentUrl);
     const isSuccessful = webViewState?.url.includes('success');
     const isCanceled = webViewState?.url.includes('cancel');

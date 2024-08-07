@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 35,
+        paddingBottom:40,
         // paddingBottom: 63,
         backgroundColor: Color.LIGHT_BLACK,
 

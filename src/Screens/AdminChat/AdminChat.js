@@ -225,7 +225,7 @@ const AdminChat = () => {
             });
             const TempMsg = chat;
             setChat('');
-          
+            getCartCount();
           try {
             const data = {
               msg: TempMsg,
@@ -299,6 +299,7 @@ const AdminChat = () => {
               });
             console.log('doc uploadedddddddddddddddd!!11');
             setChat('');
+            getCartCount();
             setChatImage('');
             setChatDocument('');
             setLoading(false);

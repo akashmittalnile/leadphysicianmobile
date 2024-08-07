@@ -689,7 +689,7 @@ import {styles} from './HomeStyle';
 import MyHeader from '../../Components/MyHeader/MyHeader';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import {Calendar} from 'react-native-calendars';
-import {getApiWithToken, GET_HOME} from '../../Global/Service';
+import {getApiWithToken, GET_HOME, CHECK_SUBSCRIPTION} from '../../Global/Service';
 import {useSelector, useDispatch} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
@@ -708,6 +708,8 @@ import Zoom from '../../Global/Images/Zoom.svg';
 // import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Modal from 'react-native-modal';
 import ArrowLeft from '../../Global/Images/arrowLeft.svg';
+import { setUser, userisSubscribedHandler } from '../../reduxToolkit/reducer/user';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
@@ -752,11 +754,44 @@ const Home = ({navigation}) => {
   React.useEffect(() => {
     setShowSkeleton(true);
     const unsubscribe = navigation.addListener('focus', () => {
+      getSubscription();
       getCartCount();
+     
     });
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [isFocus]);
+
+  const getSubscription = async () => {
+    setLoading(true);
+    try {
+      const resp = await getApiWithToken(userToken, CHECK_SUBSCRIPTION);
+      console.log("HOME-screen-getSubscription",resp.data);
+      if (resp.data) {
+        if (resp.data?.plan_status != true) {
+          setLoading(false);
+          dispatch(
+            userisSubscribedHandler({
+              isSubscribed: false,
+            }),
+          );
+          const jsonValue = JSON.stringify(resp.data.data);
+          await AsyncStorage.setItem('userInfo', jsonValue);
+          dispatch(setUser(resp.data.data));
+          navigation.navigate('Subscription');
+        }
+        else{
+          console.error('getSubscription-else part', resp.data);
+          setLoading(false);
+        }
+    
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('error in getCount', error);
+      
+    }
+  };
 
   const handleScroll = event => {
     const yOffset = event.nativeEvent.contentOffset.y;

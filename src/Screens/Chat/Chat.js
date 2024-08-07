@@ -155,8 +155,8 @@ const Chat = ({navigation}) => {
             <View>
               <MyText
                 text={item?.name}
-                fontWeight="500"
-                fontSize={14}
+                fontWeight="600"
+                fontSize={16}
                 textColor={Color.BLACK}
                 fontFamily="Roboto"
                 style={{textAlign: 'center', marginHorizontal: 16}}
@@ -196,7 +196,7 @@ const Chat = ({navigation}) => {
             <MyText
               text={`${item?.users?.length} members`}
               fontWeight="bold"
-              fontSize={13}
+              fontSize={14}
               textColor={Color.BLACK}
               fontFamily="Roboto"
               style={{marginHorizontal: 12, marginVertical: 5}}
@@ -205,7 +205,7 @@ const Chat = ({navigation}) => {
           <MyText
             text={'Please connect and respond here…'}
             fontWeight="400"
-            fontSize={13}
+            fontSize={14}
             textColor={'#959FA6'}
             fontFamily="Roboto"
             style={{marginHorizontal: 24, marginVertical: 8}}

@@ -274,7 +274,7 @@ export const styles = StyleSheet.create({
         // color: Color.THEME_BLACK,
         fontSize: 20,
         fontWeight: '500',
-        textAlign: 'center',
+        // textAlign: 'center',
     },
     showMeImageView: {
         justifyContent: "center",

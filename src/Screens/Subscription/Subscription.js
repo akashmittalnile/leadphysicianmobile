@@ -219,7 +219,7 @@ const Subscription = ({navigation, route}) => {
       <View style={{marginBottom: 90}}>
         <View style={styles.mainView}>
           <MyText
-            text={`$ ${item?.monthly_price}`}
+            text={`$${item?.monthly_price}/${item?.plan_type}`}
             fontWeight="bold"
             fontSize={28}
             textColor={Color.WHITE}
@@ -337,7 +337,7 @@ const Subscription = ({navigation, route}) => {
               // zIndex: 1
             }}
             // hitSlop={{  bottom: 100}}
-
+ 
             onPress={() => {
               setSelectedSubscription(item);
               if (Platform.OS === 'ios') {
@@ -396,6 +396,7 @@ const Subscription = ({navigation, route}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       // console.log('my subscruption iscaleed');
       getCartCount();
+      getSubscription();
     });
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
@@ -425,6 +426,29 @@ const Subscription = ({navigation, route}) => {
       console.log('error in getCartCount', error);
     }
     setLoading(false);
+  };
+  const getSubscription = async () => {
+    try {
+      const resp = await getApiWithToken(userToken, CHECK_SUBSCRIPTION);
+      if (resp.data) {
+        // if (resp.data?.plan_status != true ) {
+        //   dispatch(
+        //     userisSubscribedHandler({
+        //       isSubscribed: false,
+        //     }),
+        //   );
+        //   const jsonValue = JSON.stringify(resp.data.data);
+        //   await AsyncStorage.setItem('userInfo', jsonValue);
+        //   dispatch(setUser(resp.data.data));
+        //   navigation.navigate('Subscription');
+        // }
+        console.error('CHECK_SUBSCRIPTION', resp.data);
+        setSubscrptnStatusCheck(resp.data?.plan_status);
+      }
+    } catch (error) {
+      console.error('error in getCount', error);
+      //   setUnreadCount(0);
+    }
   };
   const [selectedCountryCode, setSelectedCountryCode] = useState(
     countryCodes[0].code,

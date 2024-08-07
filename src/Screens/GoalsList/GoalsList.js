@@ -128,7 +128,7 @@ const GoalsList = ({navigation}) => {
   const RenderItemLead = ({item}) => {
     return (
       <View style={[styles.viewContainer, {backgroundColor: 'white'}]}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row',width:'90%', }}>
           <View style={styles.roundView}>
             <MyGoals
               width={27}
@@ -205,7 +205,7 @@ const GoalsList = ({navigation}) => {
             }}>
             <Editbtn/>
             <MyText
-              text={'Update'}
+              text={'Edit'}
               fontWeight="500"
               fontSize={14}
               textColor={Color.WHITE}

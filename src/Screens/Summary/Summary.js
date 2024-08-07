@@ -319,8 +319,9 @@ const Summary = ({navigation, dispatch, route}) => {
     );
   };
   //retkae quiz
-  const gotoSideMenuLinks = (name, link, detail, type) => {
-    navigation.navigate('SideMenuLinks', {name, link, detail, type});
+  const gotoSideMenuLinks = (name, link, detail, type,id) => {
+    console.log("gotoSideMenuLinks-insummaryscreen",name, link,type,id);
+    navigation.navigate('SideMenuLinks', {name, link, detail, type,id});
   };
   //UI
   return (
@@ -518,6 +519,7 @@ const Summary = ({navigation, dispatch, route}) => {
                   moduleScreen?.quiz_url,
                   moduleScreen,
                   (type = 'quiz'),
+                  route?.params?.detail?.id
                 );
               }}>
               {/* <Arrow></Arrow> */}

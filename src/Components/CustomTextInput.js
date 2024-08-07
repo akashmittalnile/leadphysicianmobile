@@ -5,14 +5,19 @@ import {
     View,
     Animated, Dimensions, StyleSheet, Image
 } from 'react-native';
-import Color from '../global/Color';
+import Color from '../Global/Color';
+import {
+    responsiveFontSize,
+    responsiveHeight,
+    responsiveWidth,
+  } from 'react-native-responsive-dimensions';
 
 // styles
 
 // global
 const H = Dimensions.get('screen').height;
 const W = Dimensions.get('screen').width;
-const CustomTextInput = ({ placeholder, value, onChangeText, err, secureTextEntry = false, editable = true, keyboardType = '' }) => {
+const CustomTextInput = ({ placeholder, value, onChangeText, err, secureTextEntry = false, editable = true, keyboardType = '' ,onBlur,errorText = '',}) => {
     // console.log('error------>', err, placeholder);
     return (
         // { ...styles.input, borderColor: err == 2  ? '#133072' : '#FFFFFF' }
@@ -26,8 +31,11 @@ const CustomTextInput = ({ placeholder, value, onChangeText, err, secureTextEntr
                 placeholder={placeholder}
                 editable={editable}
                 keyboardType={keyboardType}
+                onBlur={onBlur}
             />
-
+  <View style={styles.errContainer}>
+        {errorText && <Text style={styles.errText}>{errorText}</Text>}
+      </View>
         </View>)
 }
 export default CustomTextInput;
@@ -71,5 +79,14 @@ const styles = StyleSheet.create({
     TextInput: {
 
         borderRadius: 10
-    }
+    },
+    errContainer: {
+        height: '25%',
+        paddingLeft: responsiveWidth(2),
+        paddingTop: responsiveHeight(0.1),
+      },
+      errText: {
+        color: 'red',
+        fontSize: responsiveFontSize(1.5),
+      },
 })

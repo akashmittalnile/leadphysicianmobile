@@ -529,7 +529,8 @@ const EditGoal = ({navigation, route}) => {
             signUpUser();
           }}>
           <MyText
-            text="Save & Set Your Goal"
+            // text="Save & Set Your Goal"
+            text="Update"
             fontWeight="700"
             fontSize={14}
             textColor={Color.WHITE}

@@ -175,7 +175,7 @@ const wait = timeout => {
   };
   ////clear oification
   const clearAll = async () => {
-    console.log('my clear notification function');
+    // console.log('my clear notification function');
 
     try {
       setLoading(true);
@@ -185,10 +185,11 @@ const wait = timeout => {
         'DELETE',
         userToken,
       );
-      // console.log('on clear notification', resp?.responseJson?.message);
+      console.log('on clear notification', resp?.responseJson);
       if (resp?.responseJson?.status) {
+        Toast.show({test1:"All notifications cleared successfully"});
         setLoading(false);
-        Toast.show({test1:"All notifications cleared successfully"})
+        
         // Toast.show({text1: resp?.responseJson?.message});
         // getCartCount();
         const isNotificaton = '0';

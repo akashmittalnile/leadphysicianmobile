@@ -166,15 +166,15 @@ const CalendarListing = ({navigation, route}) => {
     if (item != '' || item != undefined) {
       url = url + murl;
     }
-    console.log('my url after adding the datte----->>>', url);
+    console.log('my url aftergetCartCount adding the datte----->>>', url);
     try {
       setLoading(true);
       const resp = await getApiWithToken(userToken, url);
-      // console.log('get calendar listingg--->>>', resp?.data?.data);
+      console.log('get GET_CALENDARLISTING listingg--->>>', resp?.data?.data);
       if (resp?.data?.status) {
         // setProfile(resp?.data?.data)
         setLoading(false);
-        setNoData(false);
+        // setNoData(false);
         setMyCourses(resp?.data?.data);
       } else {
         Toast.show({text1: resp.data.message});
@@ -193,7 +193,7 @@ const CalendarListing = ({navigation, route}) => {
     if (item != '' || item != undefined) {
       url = url + murl;
     }
-    console.log('my url after adding the datte----->>>', url);
+    console.log('my url after addinggetCartCountSearch the datte----->>>', url);
     try {
       setLoading(true);
       const resp = await getApiWithToken(userToken, url);
@@ -457,7 +457,7 @@ const CalendarListing = ({navigation, route}) => {
           <MyText
             text={`${
               item?.meeting_title === null
-                ? ''
+                ? 'None'
                 : item.meeting_title.length > 38
                 ? `${item?.meeting_title.substring(0, 38)}..`
                 : `${item?.meeting_title.substring(0, 38)}`
@@ -480,7 +480,7 @@ const CalendarListing = ({navigation, route}) => {
         <MyText
           text={`${
             item?.note === null
-              ? ''
+              ? 'None'
               : item.note.length > 100
               ? `${item?.note.substring(0, 100)}..`
               : `${item?.note.substring(0, 100)}`
@@ -774,10 +774,10 @@ const CalendarListing = ({navigation, route}) => {
       </TouchableOpacity>
     );
   };
-  
+
   const handleOnLinkPress = id => {
-    console.log("ONLCIKCK meeting link------");
-    navigation.navigate('SchduleDetails', {id: id})
+    console.log('ONLCIKCK meeting link------');
+    navigation.navigate('SchduleDetails', {id: id});
     // return (
     //   <View
     //     style={{
@@ -911,7 +911,7 @@ const CalendarListing = ({navigation, route}) => {
                           alignItems: 'center',
                         }}>
                         <Text style={{fontSize: 15, color: '#000000'}}>
-                        {moment(displaydate).format(`MM-DD-YYYY`)}
+                          {moment(displaydate).format(`MM-DD-YYYY`)}
                         </Text>
                         <TouchableOpacity
                           onPress={() => {
@@ -980,7 +980,12 @@ const CalendarListing = ({navigation, route}) => {
                   fontSize={16}
                   textColor={'#959FA6'}
                   fontFamily="Roboto"
-                  style={styles.noDataSubText}
+                  style={{
+                    alignSelf: 'center',
+                    textAlign: 'center',
+                    width: dimensions.SCREEN_WIDTH * 0.6,
+                    top: 4,
+                  }}
                 />
               </View>
             ) : null}
@@ -1088,21 +1093,21 @@ const CalendarListing = ({navigation, route}) => {
           </View>
         </ScrollView>
         <DatePicker
-        modal
-        open={open}
-        date={date}
-        mode="date"
-        onConfirm={date => {
-          console.log(date);
-          setDate(date);
-          setOpen(false);
-          setdisplaydate(date);
-          getCartCountDateSearch(date);
-        }}
-        onCancel={() => {
-          setOpen(false);
-        }}
-      />
+          modal
+          open={open}
+          date={date}
+          mode="date"
+          onConfirm={date => {
+            console.log(date);
+            setDate(date);
+            setOpen(false);
+            setdisplaydate(date);
+            getCartCountDateSearch(date);
+          }}
+          onCancel={() => {
+            setOpen(false);
+          }}
+        />
         {/* {loading ? <Loader /> : null} */}
         {loading && <SkeletonContainer />}
         <View
@@ -1113,43 +1118,45 @@ const CalendarListing = ({navigation, route}) => {
             alignSelf: 'center',
           }}>
           {/* {console.log('result found---->>', noData)} */}
-          {noData ? (
-            <View
-              style={{
-                alignSelf: 'center',
-                justifyContent: 'center',
-                width: dimensions.SCREEN_WIDTH * 0.9,
-                flex: 1,
-                alignItems: 'center',
-                height: dimensions.SCREEN_HEIGHT * 0.6,
-              }}>
-              <Nodata
-                style={{alignSelf: 'center'}}
-                height={119}
-                width={119}></Nodata>
-              <MyText
-                text={'No data found !'}
-                fontWeight="500"
-                fontSize={24}
-                textColor={Color.LIGHT_BLACK}
-                fontFamily="Roboto"
-                style={{alignSelf: 'center', top: 4}}
-              />
-              <MyText
-                text={'Oops! this information is not available for a moment'}
-                fontWeight="400"
-                fontSize={16}
-                textColor={'#959FA6'}
-                fontFamily="Roboto"
-                style={{
-                  alignSelf: 'center',
-                  textAlign: 'center',
-                  width: dimensions.SCREEN_WIDTH * 0.6,
-                  top: 4,
-                }}
-              />
-            </View>
-          ) : null}
+          {noData
+            ? null
+            : // <View
+              //   style={{
+              //     alignSelf: 'center',
+              //     justifyContent: 'center',
+              //     width: dimensions.SCREEN_WIDTH * 0.9,
+              //     flex: 1,
+              //     alignItems: 'center',
+              //     height: dimensions.SCREEN_HEIGHT * 0.6,
+              //     marginTop:80
+              //   }}>
+              //   <Nodata
+              //     style={{alignSelf: 'center'}}
+              //     height={119}
+              //     width={119}></Nodata>
+              //   <MyText
+              //     text={'No data found !'}
+              //     fontWeight="500"
+              //     fontSize={24}
+              //     textColor={Color.LIGHT_BLACK}
+              //     fontFamily="Roboto"
+              //     style={{alignSelf: 'center', top: 4}}
+              //   />
+              //   <MyText
+              //     text={'Oops! this information is not available for a moment'}
+              //     fontWeight="400"
+              //     fontSize={16}
+              //     textColor={'#959FA6'}
+              //     fontFamily="Roboto"
+              //     style={{
+              //       alignSelf: 'center',
+              //       textAlign: 'center',
+              //       width: dimensions.SCREEN_WIDTH * 0.6,
+              //       top: 4,
+              //     }}
+              //   />
+              // </View>
+              null}
         </View>
         {/* <CustomLoader showLoader={showLoader} /> */}
 
@@ -1221,7 +1228,7 @@ const CalendarListing = ({navigation, route}) => {
                 {/* {console.log('my meeting details---->>', meetingModalData)} */}
                 <View style={{marginHorizontal: 12}}>
                   <MyText
-                    text={meetingModalData?.meeting_title}
+                    text={meetingModalData?.meeting_title != null ?meetingModalData?.meeting_title : 'None'}
                     fontWeight="500"
                     fontSize={14}
                     textColor={Color.LIGHT_BLACK}
@@ -1294,9 +1301,7 @@ const CalendarListing = ({navigation, route}) => {
                     marginHorizontal: 12,
                     justifyContent: 'space-between',
                   }}>
-                    {
-                      console.log(meetingModalData)
-                    }
+                  {console.log(meetingModalData)}
                   <TouchableOpacity
                     onPress={() => {
                       handleOnLinkPress(meetingModalData?.id);
@@ -1316,9 +1321,7 @@ const CalendarListing = ({navigation, route}) => {
                   <View style={{flexDirection: 'row', marginTop: 6}}>
                     <Calendar></Calendar>
                     <MyText
-                      text={`${moment(goalModalData.schedule_start_date).format(
-                        'MM-DD-YYYY',
-                      )}  ${moment(
+                      text={`${meetingModalData?.schedule_start_date}  ${moment(
                         meetingModalData.schedule_start_time,
                         'HH:mm:ss',
                       ).format('hh:mm A')}`}
@@ -1355,7 +1358,7 @@ const CalendarListing = ({navigation, route}) => {
           }}>
           <View
             style={{
-              height: '70%',
+              height: '80%',
               backgroundColor: 'white',
               borderTopLeftRadius: 30,
               borderTopRightRadius: 30,
@@ -1388,16 +1391,35 @@ const CalendarListing = ({navigation, route}) => {
                     {alignSelf: 'center', marginTop: 4},
                   ]}
                 />
-                <View style={[styles.containerView, {}]}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={[styles.containerView, {shadowColor: '#000000',
+                      shadowOffset: {
+                        width: 3,
+                        height: 3,
+                      },
+                      shadowRadius: 10,
+                      shadowOpacity: 1,
+                      margin: 4,
+                      elevation: 5,
+                      marginTop:10
+                      }]}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      
+                    }}>
                     <Calendar
                       style={{marginRight: 4}}
                       height={34}
                       width={34}></Calendar>
-                    <View>
+                    <View
+                      style={{
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-start',
+                      }}>
                       <MyText
                         text={'Date'}
-                        fontWeight="400"
+                        fontWeight="500"
                         fontSize={14}
                         textColor={Color.LIGHT_BLACK}
                         fontFamily="Roboto"
@@ -1417,16 +1439,30 @@ const CalendarListing = ({navigation, route}) => {
                   </View>
                 </View>
 
-                <View style={styles.containerView}>
+                <View style={[styles.containerView,{shadowColor: '#000000',
+                      shadowOffset: {
+                        width: 3,
+                        height: 3,
+                      },
+                      shadowRadius: 10,
+                      shadowOpacity: 1,
+                      margin: 4,
+                      elevation: 5,
+                      marginBottom:20
+                      }]}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Target
                       style={{marginRight: 4}}
                       height={34}
                       width={34}></Target>
-                    <View>
+                    <View
+                      style={{
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-start',
+                      }}>
                       <MyText
                         text={'Type'}
-                        fontWeight="400"
+                        fontWeight="500"
                         fontSize={14}
                         textColor={Color.LIGHT_BLACK}
                         fontFamily="Roboto"
@@ -1445,12 +1481,25 @@ const CalendarListing = ({navigation, route}) => {
                   </View>
                 </View>
 
-                <View style={[styles.containerBottomView, {}]}>
+                <View style={[styles.containerBottomView, {shadowColor: '#000000',
+                      shadowOffset: {
+                        width: 3,
+                        height: 3,
+                      },
+                      shadowRadius: 10,
+                      shadowOpacity: 1,
+                      margin: 5,
+                      elevation: 5,}]}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={{paddingHorizontal: 14}}>
+                    <View
+                      style={{
+                        paddingHorizontal: 14,
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-start',
+                      }}>
                       <MyText
                         text={'My Statement'}
-                        fontWeight="bold"
+                        fontWeight="700"
                         fontSize={14}
                         textColor={Color.LIGHT_BLACK}
                         fontFamily="Roboto"
@@ -1459,15 +1508,24 @@ const CalendarListing = ({navigation, route}) => {
                       <MyText
                         text={goalModalData?.goal_statement}
                         fontWeight="400"
-                        fontSize={14}
+                        fontSize={13}
                         textColor={'#959FA6'}
                         fontFamily="Roboto"
+                        lineHeight={24}
                         style={[styles.noDataText, {lineHeight: 24}]}
                       />
                     </View>
                   </View>
                 </View>
-                <View style={[styles.containerBottomView, {}]}>
+                <View style={[styles.containerBottomView, {shadowColor: '#000000',
+                      shadowOffset: {
+                        width: 3,
+                        height: 3,
+                      },
+                      shadowRadius: 10,
+                      shadowOpacity: 1,
+                      margin: 5,
+                      elevation: 5,}]}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View style={{paddingHorizontal: 14}}>
                       <MyText
@@ -1490,7 +1548,15 @@ const CalendarListing = ({navigation, route}) => {
                   </View>
                 </View>
                 {goalModalData?.goal_type !== 'A-Type Goal' ? (
-                  <View style={[styles.containerBottomView, {}]}>
+                  <View style={[styles.containerBottomView, {shadowColor: '#000000',
+                    shadowOffset: {
+                      width: 3,
+                      height: 3,
+                    },
+                    shadowRadius: 10,
+                    shadowOpacity: 1,
+                    margin: 5,
+                    elevation: 5,}]}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <View style={{paddingHorizontal: 14}}>
                         <MyText
@@ -1522,7 +1588,15 @@ const CalendarListing = ({navigation, route}) => {
                   </View>
                 ) : null}
                 {goalModalData?.goal_type !== 'A-Type Goal' ? (
-                  <View style={[styles.containerBottomView, {}]}>
+                  <View style={[styles.containerBottomView, {shadowColor: '#000000',
+                    shadowOffset: {
+                      width: 3,
+                      height: 3,
+                    },
+                    shadowRadius: 10,
+                    shadowOpacity: 1,
+                    margin: 5,
+                    elevation: 5,}]}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <View style={{paddingHorizontal: 14}}>
                         <MyText
@@ -1553,7 +1627,15 @@ const CalendarListing = ({navigation, route}) => {
                     </View>
                   </View>
                 ) : null}
-                <View style={[styles.containerBottomView, {}]}>
+                <View style={[styles.containerBottomView, {shadowColor: '#000000',
+                      shadowOffset: {
+                        width: 3,
+                        height: 3,
+                      },
+                      shadowRadius: 10,
+                      shadowOpacity: 1,
+                      margin: 5,
+                      elevation: 5,}]}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View style={{paddingHorizontal: 14}}>
                       <MyText

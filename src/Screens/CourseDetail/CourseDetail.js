@@ -680,9 +680,7 @@ console.log("allReview",url);
             length={reviews?.length}
             style={{marginBottom: 17, color: 'white', textColor: 'white'}}
           />
-{
-  console.log("reviews?.reviews",avgRating)
-}
+ 
           {reviews?.length > 0 ? (
             reviews?.map((item, index) => (
               <View key={item.index?.toString()} style={styles.reviewContainer}>
