@@ -166,7 +166,7 @@ const ContactForQuery = () => {
     setSelectedButton(number);
   };
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View style={{flex: 1}}>
       <Container
         headerText="Contact us"
         reloadOnScroll={false}
@@ -324,7 +324,7 @@ Please Note That We Aim To Address All Inquiries Within The Next 24-48 Hours. Yo
           modalHandler={modalHandler}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

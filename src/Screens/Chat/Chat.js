@@ -144,14 +144,10 @@ const Chat = ({navigation}) => {
           <View style={{flexDirection: 'row'}}>
             {/* <GroupChat></GroupChat> */}
             {/* <Image style={{height:45,width:45,borderRadius:100/2}} source={{uri:`${item?.image}`}}/> */}
-            <View style={{backgroundColor:Color.GREY,borderRadius:100/2}}>
-            <SvgUri
-              width={50}
-              height={50}
-              uri={`${item?.image}`}
-            />
+            <View style={{backgroundColor: Color.GREY, borderRadius: 100 / 2}}>
+              <SvgUri width={50} height={50} uri={`${item?.image}`} />
             </View>
-            
+
             <View>
               <MyText
                 text={item?.name}
@@ -265,7 +261,7 @@ const Chat = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <>
       <StatusBar backgroundColor={Color.LIGHT_BLACK} />
       <View
         style={{
@@ -393,7 +389,7 @@ const Chat = ({navigation}) => {
           ) : null}
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </>
   );
 };
 

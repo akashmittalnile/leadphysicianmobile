@@ -22,7 +22,7 @@ import {
   initConnection,
   getAvailablePurchases,
   requestSubscription,
-  clearTransactionIOS
+  clearTransactionIOS,
 } from 'react-native-iap';
 import {styles} from './SubscriptionStyle';
 import Loader from '../../Components/Loader';
@@ -179,12 +179,12 @@ const Subscription = ({navigation, route}) => {
   const renderDoneButton = () => null;
 
   const requestIosSubscription = async sku => {
-    console.log('1')
+    console.log('1');
     try {
       const transaction = await requestSubscription({sku});
       // console.log('shoaib', transaction);
       if (transaction?.transactionReceipt) {
-        console.log('hit ios_subscription')
+        console.log('hit ios_subscription');
         await postApiWithToken(userToken, IOS_SUBSCRIPTION, {
           subscription_id: transaction?.originalTransactionIdentifierIOS,
           plan_id: selectedSubscription?.id,
@@ -337,7 +337,7 @@ const Subscription = ({navigation, route}) => {
               // zIndex: 1
             }}
             // hitSlop={{  bottom: 100}}
- 
+
             onPress={() => {
               setSelectedSubscription(item);
               if (Platform.OS === 'ios') {
@@ -462,7 +462,7 @@ const Subscription = ({navigation, route}) => {
   const [selectedItem, setSeletcedItem] = useState('');
   // console.log('plans', plans);
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: Color.LIGHT_BLACK}}>
+    <View style={{flex: 1, backgroundColor: Color.LIGHT_BLACK}}>
       {/* <ScrollView contentContainerStyle={{flexGrow: 1}}> */}
       <CustomHeader
         navigation={navigation}
@@ -527,7 +527,7 @@ const Subscription = ({navigation, route}) => {
       {/* </ScrollView> */}
 
       {loading || inAppLoader ? <Loader /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 

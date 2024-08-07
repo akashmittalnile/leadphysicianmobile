@@ -261,8 +261,8 @@ const Favorites = ({ navigation }) => {
     }
     //UI
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <StatusBar backgroundColor={Color.LIGHT_BLACK} />
+        <View style={{ flex: 1 }}>
+            {/* <StatusBar backgroundColor={Color.LIGHT_BLACK} /> */}
             <View style={{
                 flex: 1,
                 backgroundColor: '#F7FAEB',
@@ -305,7 +305,7 @@ const Favorites = ({ navigation }) => {
                 {loading ? <Loader /> : null}
                 {/* <CustomLoader showLoader={showLoader} /> */}
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 export default Favorites

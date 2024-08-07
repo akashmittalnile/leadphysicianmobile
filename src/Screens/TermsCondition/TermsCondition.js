@@ -13,6 +13,7 @@ import {
   TextInput,
   Platform,
   Modal,
+  NativeModules
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import {dimensions} from '../../Global/Color';
@@ -82,9 +83,9 @@ const TermsCondition = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: '#E8ECF2', flex: 1}}>
+    <View style={{backgroundColor: '#E8ECF2', flex: 1}}>
       <Modal visible={webViewVisible} animationType="slide" transparent={false}>
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, paddingTop: NativeModules.StatusBarManager?.HEIGHT, backgroundColor :Color.LIGHT_BLACK}}>
           {console.log('my webview url---?>>', JSON.stringify(title))}
           <WebView
             source={
@@ -146,7 +147,7 @@ const TermsCondition = ({navigation, route}) => {
       {/* </View>*/}
       {/* {My_Alert ? <MyAlert sms={alert_sms} okPress={() => { setMy_Alert(false) }} /> : null} */}
       {/* {loading ? <Loader /> : null} */}
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -270,7 +270,7 @@ const GoalsList = ({navigation}) => {
   };
   //UI
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View style={{flex: 1}}>
       <StatusBar backgroundColor={Color.LIGHT_BLACK} />
       <View
         style={{
@@ -339,7 +339,7 @@ const GoalsList = ({navigation}) => {
         {/* <CustomLoader showLoader={showLoader} /> */}
       </View>
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 export default GoalsList;

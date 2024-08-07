@@ -25,7 +25,7 @@ import CustomButtonBlue from '../../Components/CustomButtonBlue';
 import CustomTextBox from '../../Components/CustomTextBox';
 import Color from '../../Global/Color';
 import {dimensions} from '../../Global/Color';
-import {requestPostApi,FORGOT_PASSWORD} from '../../Global/Service';
+import {requestPostApi, FORGOT_PASSWORD} from '../../Global/Service';
 import {CommonActions} from '@react-navigation/native';
 // svg image
 import {useDispatch} from 'react-redux';
@@ -45,13 +45,12 @@ const ForgotPassword = ({navigation}) => {
   const H = Dimensions.get('screen').height;
   const W = Dimensions.get('screen').width;
   const dispatch = useDispatch();
-// states
+  // states
   const [emailid, setEmailid] = useState('');
   const [loading, setLoading] = useState('');
   const [My_Alert, setMy_Alert] = useState(false);
   const [alert_sms, setalert_sms] = useState('');
-  
-   
+
   const Validation = () => {
     var EmailReg =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -62,8 +61,8 @@ const ForgotPassword = ({navigation}) => {
     } else if (!EmailReg.test(emailid)) {
       Toast.show({type: 'error', text1: 'Please enter valid email address'});
       return false;
-    } 
-    
+    }
+
     return true;
   };
 
@@ -77,14 +76,21 @@ const ForgotPassword = ({navigation}) => {
       };
       console.log('LoginPressed- forgot data---->>>', data);
       setLoading(true);
-      const {responseJson, err} = await requestPostApi(FORGOT_PASSWORD, data, 'POST', '');
-      console.log('LoginPressed?????????', responseJson );
+      const {responseJson, err} = await requestPostApi(
+        FORGOT_PASSWORD,
+        data,
+        'POST',
+        '',
+      );
+      console.log('LoginPressed?????????', responseJson);
       if (responseJson.status == true) {
         // console.log("true");
         setLoading(false);
-        navigation.navigate('VerifyCode',{email:emailid,otp:responseJson?.otp});
-       
-     
+        navigation.navigate('VerifyCode', {
+          email: emailid,
+          otp: responseJson?.otp,
+        });
+
         // Toast.show({type: 'success', text1: 'Loggedin successfull'});
       } else {
         setLoading(false);
@@ -104,7 +110,7 @@ const ForgotPassword = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -133,8 +139,8 @@ const ForgotPassword = ({navigation}) => {
                   marginTop: 10,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  width:'94%',
-                  marginHorizontal:10
+                  width: '94%',
+                  marginHorizontal: 10,
                 }}>
                 <Text
                   style={{
@@ -142,7 +148,7 @@ const ForgotPassword = ({navigation}) => {
                     fontWeight: '700',
                     fontSize: 24,
                     color: Color.BLACK,
-                    lineHeight:30
+                    lineHeight: 30,
                   }}>
                   Forgot password
                 </Text>
@@ -152,9 +158,11 @@ const ForgotPassword = ({navigation}) => {
                     fontWeight: '400',
                     fontSize: 13,
                     color: Color.GREY,
-                    textAlign:'center',
-                  marginTop:10
-                  }}>Please enter the email address you'd like your password reset information sent to
+                    textAlign: 'center',
+                    marginTop: 10,
+                  }}>
+                  Please enter the email address you'd like your password reset
+                  information sent to
                 </Text>
               </View>
               <View style={{marginTop: 30}}>
@@ -169,14 +177,14 @@ const ForgotPassword = ({navigation}) => {
               </View>
               <TouchableOpacity
                 onPress={() => {
-                    LoginPressed();
+                  LoginPressed();
                 }}
                 style={{marginTop: 20}}>
                 <CustomButtonBlue name="Send"></CustomButtonBlue>
               </TouchableOpacity>
             </View>
           </ImageBackground>
-          <View style={{height: 210}} />
+          {/* <View style={{height: 210}} /> */}
         </ScrollView>
       </KeyboardAvoidingView>
       {My_Alert ? (
@@ -188,7 +196,7 @@ const ForgotPassword = ({navigation}) => {
         />
       ) : null}
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

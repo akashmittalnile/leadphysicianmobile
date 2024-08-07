@@ -116,8 +116,8 @@ const AdminChat = () => {
                 senderId: snapshot?._docs[0]?._data?.sendBy,
                 text: snapshot?._docs[0]?._data?.text,
                 _id: snapshot?._docs[0]?._data?._id,
-                image:snapshot?._docs[0]?._data?.image,
-                image_url:snapshot?._docs[0]?._data?.image_url
+                image: snapshot?._docs[0]?._data?.image,
+                image_url: snapshot?._docs[0]?._data?.image_url,
               },
               ...preData,
             ]);
@@ -137,15 +137,15 @@ const AdminChat = () => {
     }
     try {
       const arr = data?.map(item => {
-        console.log("chat array----------------",item);
+        console.log('chat array----------------', item);
         const time = item?._data?.createdAt.toDate();
         return {
           text: item?._data?.text,
           createdAt: time,
           senderId: item?._data?.sendBy,
           _id: item?._data?._id,
-          image:item?._data?.image,
-          image_url:item?._data?.image_url
+          image: item?._data?.image,
+          image_url: item?._data?.image_url,
         };
       });
       if (arr?.length > 0) {
@@ -223,9 +223,9 @@ const AdminChat = () => {
               // _id: messageId,
               createdAt: new Date(),
             });
-            const TempMsg = chat;
-            setChat('');
-            getCartCount();
+          const TempMsg = chat;
+          setChat('');
+          getCartCount();
           try {
             const data = {
               msg: TempMsg,
@@ -251,7 +251,6 @@ const AdminChat = () => {
             uri: ChatImage.path,
           });
         } else {
- 
           let documentPath = ChatDocument[0].uri;
           const docsName = ChatDocument[0].name;
           formData.append('image', {
@@ -270,7 +269,6 @@ const AdminChat = () => {
           );
           console.log('api CHAT_DOC_UPLOAD resp------', resp.data);
           if (resp.data.status) {
-           
             const Data = {
               text: chat,
               image: resp.data.url,
@@ -286,7 +284,7 @@ const AdminChat = () => {
               // _id: messageId,
               createdAt: new Date(),
             };
-            console.log("send data with document----<",Data);
+            console.log('send data with document----<', Data);
             firestore()
               .collection('jwj_chats')
               // .doc(adminId.toString() + userInfo?.id?.toString())
@@ -295,7 +293,6 @@ const AdminChat = () => {
               .add({
                 ...Data,
                 createdAt: firestore.FieldValue.serverTimestamp(),
-                 
               });
             console.log('doc uploadedddddddddddddddd!!11');
             setChat('');
@@ -331,7 +328,7 @@ const AdminChat = () => {
   //     console.log('document picker err', err.message);
   //   }
   // };
- 
+
   const renderChat = ({item, index}) => {
     console.log('my item--->>', userData);
     return (
@@ -393,7 +390,7 @@ const AdminChat = () => {
     setLoading(false);
   };
   return (
-    <SafeAreaView style={styles.conatiner}>
+    <>
       <View style={styles.conatiner}>
         {/* <View style={styles.headerContainer}> */}
         {/* <ImageBackground
@@ -499,7 +496,7 @@ const AdminChat = () => {
         </KeyboardAwareScrollView>
       </View>
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -543,7 +540,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: '3%',
-    paddingBottom:20
+    paddingBottom: 20,
     // height: responsiveHeight(15)
   },
   textInputContainer: {

@@ -196,7 +196,7 @@ const AllReviews = ({ navigation, dispatch, route }) => {
 
     //UI
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <StatusBar backgroundColor={Color.THEME_BROWN} />
             <View style={styles.container}>
                 {/* <MyHeader Title="All Reviews" isBackButton /> */}
@@ -305,7 +305,7 @@ const AllReviews = ({ navigation, dispatch, route }) => {
                     submitReview={submitReview}
                 />
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 const mapDispatchToProps = dispatch => ({

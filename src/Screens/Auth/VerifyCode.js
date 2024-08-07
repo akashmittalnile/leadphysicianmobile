@@ -1,4 +1,4 @@
-import React, {useState, useEffect,useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Text,
   View,
@@ -15,7 +15,7 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
   Platform,
-  Keyboard
+  Keyboard,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Loader from '../../Components/Loader';
@@ -26,7 +26,12 @@ import CustomButtonBlue from '../../Components/CustomButtonBlue';
 import CustomTextBox from '../../Components/CustomTextBox';
 import Color from '../../Global/Color';
 import {dimensions} from '../../Global/Color';
-import {requestPostApi, LOGIN, VERIFY_OTP_AUTH, FORGOT_PASSWORD} from '../../Global/Service';
+import {
+  requestPostApi,
+  LOGIN,
+  VERIFY_OTP_AUTH,
+  FORGOT_PASSWORD,
+} from '../../Global/Service';
 import {CommonActions} from '@react-navigation/native';
 // svg image
 import {useDispatch} from 'react-redux';
@@ -42,15 +47,15 @@ import messaging from '@react-native-firebase/messaging';
 import Logo from '../../Global/Images/logo.svg';
 import {Fonts} from '../../Global/Index';
 
-const VerifyCode = ({navigation,route}) => {
- //variables : useRef
- const firstCodeRef = useRef();
- const secondCodeRef = useRef();
- const thirdCodeRef = useRef();
- const forthCodeRef = useRef();
+const VerifyCode = ({navigation, route}) => {
+  //variables : useRef
+  const firstCodeRef = useRef();
+  const secondCodeRef = useRef();
+  const thirdCodeRef = useRef();
+  const forthCodeRef = useRef();
 
- //states
- const [firstCode, setfirstCode] = useState('');
+  //states
+  const [firstCode, setfirstCode] = useState('');
   const [secondCode, setsecondCode] = useState('');
   const [thirdCode, setthirdCode] = useState('');
   const [forthCode, setforthCode] = useState('');
@@ -69,16 +74,14 @@ const VerifyCode = ({navigation,route}) => {
     countryCodes[0].code,
   );
   const [emailid, setEmailid] = useState(route?.params?.email);
-//   const [password, setPassword] = useState('Ssuser@123');
+  //   const [password, setPassword] = useState('Ssuser@123');
   const [loading, setLoading] = useState('');
   const [My_Alert, setMy_Alert] = useState(false);
   const [alert_sms, setalert_sms] = useState('');
- 
-  
+
   //useEffect
   useEffect(() => {
     // console.log("params.---data ata verifycode screen",route?.params);
- 
   }, []);
 
   const clearText = () => {
@@ -92,10 +95,9 @@ const VerifyCode = ({navigation,route}) => {
     if (code.length != 4) {
       Toast.show({type: 'error', text1: 'Please enter OTP'});
       // Alert.alert('Please enter valid OTP number');
-    }else if(code != otp ){
+    } else if (code != otp) {
       Toast.show({type: 'error', text1: 'Please enter valid OTP number'});
-    } 
-    else return true;
+    } else return true;
   };
 
   const VerifyCode = async () => {
@@ -103,19 +105,27 @@ const VerifyCode = ({navigation,route}) => {
       return false;
     }
     try {
-        const code = firstCode + secondCode + thirdCode + forthCode;
-        const data = {
-          email: route?.params?.email,
-          otp: code,
-        };
+      const code = firstCode + secondCode + thirdCode + forthCode;
+      const data = {
+        email: route?.params?.email,
+        otp: code,
+      };
       console.log('VerifyCode----->>>', data);
       setLoading(true);
-      const {responseJson, err} = await requestPostApi(VERIFY_OTP_AUTH, data, 'POST', '');
+      const {responseJson, err} = await requestPostApi(
+        VERIFY_OTP_AUTH,
+        data,
+        'POST',
+        '',
+      );
       // console.log('login?????????', responseJson.authorization.token);
       if (responseJson.status == true) {
         // console.log("true");
         setLoading(false);
-        navigation.navigate('UpdatePassword',{email:route?.params?.email,otp:route?.params?.otp})
+        navigation.navigate('UpdatePassword', {
+          email: route?.params?.email,
+          otp: route?.params?.otp,
+        });
         clearText();
         // Toast.show({type: 'success', text1: 'Loggedin successfull'});
       } else {
@@ -144,8 +154,8 @@ const VerifyCode = ({navigation,route}) => {
     } else if (!EmailReg.test(emailid)) {
       Toast.show({type: 'error', text1: 'Plase enter Valid Emailid'});
       return false;
-    } 
-    
+    }
+
     return true;
   };
 
@@ -156,16 +166,20 @@ const VerifyCode = ({navigation,route}) => {
     try {
       var data = {
         email: route?.params?.email,
-        
       };
       console.log('ResendOtp- forgot data---->>>', data);
       setLoading(true);
-      const {responseJson, err} = await requestPostApi(FORGOT_PASSWORD, data, 'POST', '');
-      console.log('ResendOtp?????????', responseJson );
+      const {responseJson, err} = await requestPostApi(
+        FORGOT_PASSWORD,
+        data,
+        'POST',
+        '',
+      );
+      console.log('ResendOtp?????????', responseJson);
       if (responseJson.status == true) {
         // console.log("true");
         setLoading(false);
-        setOTP(responseJson?.otp)
+        setOTP(responseJson?.otp);
         // navigation.navigate('VerifyCode',{email:emailid,otp:responseJson?.otp});
         Toast.show({type: 'success', text1: 'Resend OTP successfull'});
       } else {
@@ -184,9 +198,9 @@ const VerifyCode = ({navigation,route}) => {
       });
     }
   };
-  
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -217,8 +231,8 @@ const VerifyCode = ({navigation,route}) => {
                   marginTop: 10,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  width:'94%',
-                  marginHorizontal:10
+                  width: '94%',
+                  marginHorizontal: 10,
                 }}>
                 <Text
                   style={{
@@ -226,7 +240,7 @@ const VerifyCode = ({navigation,route}) => {
                     fontWeight: '700',
                     fontSize: 24,
                     color: Color.BLACK,
-                    lineHeight:30
+                    lineHeight: 30,
                   }}>
                   Enter Verification Code
                 </Text>
@@ -236,9 +250,11 @@ const VerifyCode = ({navigation,route}) => {
                     fontWeight: '400',
                     fontSize: 13,
                     color: Color.GREY,
-                    textAlign:'center',
-                  marginTop:10
-                  }}>Please enter verification code received in your registered email {otp}
+                    textAlign: 'center',
+                    marginTop: 10,
+                  }}>
+                  Please enter verification code received in your registered
+                  email {otp}
                 </Text>
               </View>
               <View style={styles.TextInputView}>
@@ -312,10 +328,8 @@ const VerifyCode = ({navigation,route}) => {
                 />
               </View>
 
-            
               <TouchableOpacity
                 onPress={() => {
-                    
                   VerifyCode();
                 }}
                 style={{marginTop: 20}}>
@@ -330,11 +344,11 @@ const VerifyCode = ({navigation,route}) => {
                 <Text style={styles.myText}>Didn’t you receive the OTP?</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    ResendOtp()
+                    ResendOtp();
                   }}>
                   <Text style={[styles.myText, {color: Color.PRIMARY}]}>
                     {' '}
-                   Resend OTP
+                    Resend OTP
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -352,7 +366,7 @@ const VerifyCode = ({navigation,route}) => {
         />
       ) : null}
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -464,23 +478,23 @@ const styles = StyleSheet.create({
     width: dimensions.SCREEN_WIDTH,
     alignSelf: 'center',
   },
-  TextInputView:{
-    borderRadius:5,
-    marginBottom:20,
-    flexDirection:"row",
-    justifyContent:"center",
-    alignItems:"center",
-    paddingLeft:10,
-    marginTop:20
-},
-textInput:{
-    borderWidth:1,
-    borderColor:Color.PRIMARY,
-    textAlign:"center",
-    width:"15%",
-    margin:5,
-    height:50,
-    color:Color.BLACK
-}
+  TextInputView: {
+    borderRadius: 5,
+    marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 10,
+    marginTop: 20,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: Color.PRIMARY,
+    textAlign: 'center',
+    width: '15%',
+    margin: 5,
+    height: 50,
+    color: Color.BLACK,
+  },
 });
 export default VerifyCode;

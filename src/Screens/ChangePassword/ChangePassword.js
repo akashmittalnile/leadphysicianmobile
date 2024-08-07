@@ -175,7 +175,7 @@ const ChangePassword = ({ navigation }) => {
     };
     return (
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyboardShouldPersistTaps="handled"
@@ -259,7 +259,7 @@ const ChangePassword = ({ navigation }) => {
 
             {loading ? <Loader /> : null}
 
-        </SafeAreaView >
+        </View >
 
 
     )

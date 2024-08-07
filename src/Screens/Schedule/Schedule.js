@@ -1075,7 +1075,7 @@ const Schedule = ({navigation}) => {
   //     setLoading(false);
   // };
   return (
-    <SafeAreaView style={{backgroundColor: '#E8ECF2', flex: 1}}>
+    <View style={{backgroundColor: '#E8ECF2', flex: 1}}>
       <MyHeader
         title={'My Services'}
         onPress={() => {
@@ -1470,7 +1470,7 @@ const Schedule = ({navigation}) => {
         />
       ) : null}
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 

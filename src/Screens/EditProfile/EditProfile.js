@@ -334,7 +334,7 @@ const EditProfile = ({ navigation }) => {
 
     return (
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyboardShouldPersistTaps="handled"
@@ -502,7 +502,7 @@ const EditProfile = ({ navigation }) => {
                 openLibrary={openLibrary}
                 openCamera={checkCameraPermission}
             />
-        </SafeAreaView >
+        </View >
 
 
     )

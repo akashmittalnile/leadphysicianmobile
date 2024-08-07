@@ -268,7 +268,7 @@ const Profile = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#F7FAEB'}}>
+    <View style={{flex: 1, backgroundColor: '#F7FAEB'}}>
       <StatusBar backgroundColor={Color.LIGHT_BLACK} />
       <View
         style={{
@@ -577,7 +577,7 @@ const Profile = ({navigation}) => {
       </View>
 
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 

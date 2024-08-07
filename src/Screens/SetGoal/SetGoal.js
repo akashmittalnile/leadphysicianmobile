@@ -254,7 +254,7 @@ const SetGoal = ({navigation}) => {
     toggleCalendar(); // Close calendar after selecting a date
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
@@ -594,7 +594,7 @@ const SetGoal = ({navigation}) => {
       </View>
 
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 

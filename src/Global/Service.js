@@ -1,5 +1,5 @@
 //import : react components
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 //third parties
 //import : axios
 import axios from 'axios';
@@ -50,9 +50,10 @@ export const GET_CETIFICATE = `course/certificates`;
 export const CLEAR_NOTIFICATION = `clear-notifications`;
 export const READ_NOTIFICATION = `seen-notifications`;
 export const FORGOT_PASSWORD = `forgot-password`;
-export const VERIFY_OTP_AUTH =`verify-otp`;
+export const VERIFY_OTP_AUTH = `verify-otp`;
 export const RESET_PASSWORD = `reset-password`;
 export const CHAT_DOC_UPLOAD = `chat/image`;
+export const DELETE_SINGLE_NOTIFICATION = 'delete-notification';
 
 export const DETAILS = `chat/image`;
 export const SUGGESTED_LIST = `suggested-list`;
@@ -114,347 +115,359 @@ export const GET_SHIPPING_RATES = 'get-shipping-rates';
 export const CHOOSE_SHIPPING_OPTION = 'choose-shipping-option';
 export const COUPON_APPLIED_COURSE = 'coupon-applied-course';
 export const REMOVE_APPLIED_COUPON_COURSE = 'remove-applied-coupon-course';
-export const IOS_SUBSCRIPTION = 'ios-subscription'
+export const IOS_SUBSCRIPTION = 'ios-subscription';
+import {CommonActions} from '@react-navigation/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const loginHandler = async () => {
+  await AsyncStorage.clear('userToken');
+  CommonActions?.navigate('SignIn');
+};
 
 //function : post API
 export const postAPI = async (endPoint, postData, token = '') => {
-    const url = BASE_URL + endPoint;
-    return await axios
-        .post(url, postData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                Accept: '*/*',
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        .then(response => {
-            return {
-                response: response?.data,
-                status: response?.data?.status,
-                msg: response?.data?.msg,
-            };
-        })
-        .catch(error => {
-            return {
-                response: error,
-                status: false,
-                msg: error.response.data.msg,
-            };
-        });
+  const url = BASE_URL + endPoint;
+  return await axios
+    .post(url, postData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Accept: '*/*',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(response => {
+      return {
+        response: response?.data,
+        status: response?.data?.status,
+        msg: response?.data?.msg,
+      };
+    })
+    .catch(error => {
+      return {
+        response: error,
+        status: false,
+        msg: error.response.data.msg,
+      };
+    });
 };
 
 //function :  get api
 export const getApi = endPoint =>
-    axios
-        .get(`${BASE_URL}${endPoint}`)
-        .then(res => {
-            return res;
-        })
-        .catch(error => {
-            if (error?.response?.status === 422) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-                console.log(error.response.headers);
-            } else if (error?.response?.status === 404) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else if (error?.response?.status === 401) {
-                // Alert.alert('', `${error.response.data.message}`);
-                // Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else if (error?.response?.status === 500) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            }
-        });
+  axios
+    .get(`${BASE_URL}${endPoint}`)
+    .then(res => {
+      return res;
+    })
+    .catch(error => {
+      if (error?.response?.status === 422) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+        console.log(error.response.headers);
+      } else if (error?.response?.status === 404) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else if (error?.response?.status === 401) {
+        // Alert.alert('', `${error.response.data.message}`);
+        // Toast.show({ text1: error.response.data.message });
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else if (error?.response?.status === 500) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      }
+    });
 //function :  get api with token
 export const getApiWithToken = (token, endPoint) =>
-    axios
-        .get(`${BASE_URL}${endPoint}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        .then(res => {
-            // console.log("getApiWithToken",`${BASE_URL}${endPoint}`);
-            
-            return res;
-        })
-        .catch(error => {
-            console.log(endPoint,"getApiWithToken", error);
-            if (error?.response?.status === 422) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-                console.log(error.response.headers);
-            } else if (error?.response?.status === 404) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else if (error?.response?.status === 401) {
-                // Alert.alert('', `${error.response.data.message}`);
-                // Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else if (error?.response?.status === 500) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else {
-                // Alert.alert('', `${error.response.data.message}`);
-                // Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            }
-        });
+  axios
+    .get(`${BASE_URL}${endPoint}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(res => {
+      // console.log("getApiWithToken",`${BASE_URL}${endPoint}`);
+
+      return res;
+    })
+    .catch(error => {
+      console.log(endPoint, 'getApiWithToken', error);
+      if (error?.response?.status === 422) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+        console.log(error.response.headers);
+      } else if (error?.response?.status === 404) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else if (error?.response?.status === 401) {
+        loginHandler();
+        // Alert.alert('', `${error.response.data.message}`);
+        // Toast.show({ text1: error.response.data.message });
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else if (error?.response?.status === 500) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else {
+        // Alert.alert('', `${error.response.data.message}`);
+        // Toast.show({ text1: error.response.data.message });
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      }
+    });
 //function :  post api
 export const postApi = (endPoint, data) =>
-    axios
-        .post(`${BASE_URL}${endPoint}`, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                Accept: '*/*',
-            },
-        })
-        .then(res => {
-            return res;
-        })
-        .catch(error => {
-            console.log('data', error.response);
-            console.log('status', error.response);
-            console.log('header', error.response);
-            if (error?.response?.status === 422) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
-            } else if (error?.response?.status === 404) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
-            } else if (error?.response?.status === 401) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
-            } else if (error?.response?.status === 500) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
-            } else if (error?.response?.status === 0) {
-                // Alert.alert(
-                //   '',
-                //   `Internet connection appears to be offline. Please check your internet connection and try again.`,
-                // );
-                Toast.show({
-                    text1:
-                        'Internet connection appears to be offline. Please check your internet connection and try again.',
-                });
-            } else {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
-            }
+  axios
+    .post(`${BASE_URL}${endPoint}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Accept: '*/*',
+      },
+    })
+    .then(res => {
+      return res;
+    })
+    .catch(error => {
+      console.log('data', error.response);
+      console.log('status', error.response);
+      console.log('header', error.response);
+      if (error?.response?.status === 422) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      } else if (error?.response?.status === 404) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      } else if (error?.response?.status === 401) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      } else if (error?.response?.status === 500) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      } else if (error?.response?.status === 0) {
+        // Alert.alert(
+        //   '',
+        //   `Internet connection appears to be offline. Please check your internet connection and try again.`,
+        // );
+        Toast.show({
+          text1:
+            'Internet connection appears to be offline. Please check your internet connection and try again.',
         });
+      } else {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      }
+    });
 
 //function : post api with token
 export const postApiWithToken = (token, endPoint, data) =>
-    axios
-        .post(`${BASE_URL}${endPoint}`, data, {
-            headers:
-                Object.keys(data).length > 0
-                    ? {
-                        'Content-Type': 'multipart/form-data',
-                        Accept: '*/*',
-                        Authorization: `Bearer ${token}`,
-                    }
-                    : {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-        })
-        .then(res => {
-            return res;
-        })
-        .catch(error => {
-            console.log("postApiWithToken",endPoint,data)
-            console.log('error', error);
-            if (error?.response?.status === 422) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-                console.log(error.response.headers);
-            } else if (error?.response?.status === 404) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
-            } else if (error?.response?.status === 401) {
-                // Alert.alert('', `${error.response.data.message}`);
-                // Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
-            } else if (error?.response?.status === 500) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
-            } else {
-                // Alert.alert('', `${error}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('error status', error?.response?.status);
-                console.log('error message', error.response.data.message);
+  axios
+    .post(`${BASE_URL}${endPoint}`, data, {
+      headers:
+        Object.keys(data).length > 0
+          ? {
+              'Content-Type': 'multipart/form-data',
+              Accept: '*/*',
+              Authorization: `Bearer ${token}`,
             }
-        });
+          : {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+    })
+    .then(res => {
+      return res;
+    })
+    .catch(error => {
+      console.log('postApiWithToken', endPoint, data);
+      console.log('error', error);
+      if (error?.response?.status === 422) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+        console.log(error.response.headers);
+      } else if (error?.response?.status === 404) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      } else if (error?.response?.status === 401) {
+        // Alert.alert('', `${error.response.data.message}`);
+        // Toast.show({ text1: error.response.data.message });
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      } else if (error?.response?.status === 500) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      } else {
+        // Alert.alert('', `${error}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('error status', error?.response?.status);
+        console.log('error message', error.response.data.message);
+      }
+    });
 //function : post api with json data
 export const postJsonApiWithToken = (token, endPoint, data) =>
-    axios
-        .post(`${BASE_URL}${endPoint}`, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: '*/*',
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        .then(res => {
-            return res;
-        })
-        .catch(error => {
-            if (error?.response?.status === 422) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-                console.log(error.response.headers);
-            } else if (error?.response?.status === 404) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else if (error?.response?.status === 401) {
-                // Alert.alert('', `${error.response.data.message}`);
-                // Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else if (error?.response?.status === 500) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else {
-                // Alert.alert('', `${error}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            }
-        });
-
+  axios
+    .post(`${BASE_URL}${endPoint}`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(res => {
+      return res;
+    })
+    .catch(error => {
+      if (error?.response?.status === 422) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+        console.log(error.response.headers);
+      } else if (error?.response?.status === 404) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else if (error?.response?.status === 401) {
+        // Alert.alert('', `${error.response.data.message}`);
+        // Toast.show({ text1: error.response.data.message });
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else if (error?.response?.status === 500) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else {
+        // Alert.alert('', `${error}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      }
+    });
 
 export const deleteApi = (token, endPoint, id) =>
-    axios
-        .delete(`${BASE_URL}${endPoint}/${id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: '*/*',
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        .then(res => {
-            return res;
-        })
-        .catch(error => {
-            if (error?.response?.status === 422) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-                console.log(error.response.headers);
-            } else if (error?.response?.status === 404) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else if (error?.response?.status === 401) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else if (error?.response?.status === 500) {
-                // Alert.alert('', `${error.response.data.message}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            } else {
-                // Alert.alert('', `${error}`);
-                Toast.show({ text1: error.response.data.message });
-                console.log('data', error.response.data);
-                console.log('status', error.response.status);
-            }
-        });
+  axios
+    .delete(`${BASE_URL}${endPoint}/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(res => {
+      return res;
+    })
+    .catch(error => {
+      if (error?.response?.status === 422) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+        console.log(error.response.headers);
+      } else if (error?.response?.status === 404) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else if (error?.response?.status === 401) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else if (error?.response?.status === 500) {
+        // Alert.alert('', `${error.response.data.message}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      } else {
+        // Alert.alert('', `${error}`);
+        Toast.show({text1: error.response.data.message});
+        console.log('data', error.response.data);
+        console.log('status', error.response.status);
+      }
+    });
 
 export const requestPostApi = async (endPoint, body, method, token) => {
-    console.log('the token is :-', token)
-    var header = {}
-    if (token != '' && token != undefined) {
-        header = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token, 'Cache-Control': 'no-cache' }
+  console.log('the token is :-', token);
+  var header = {};
+  if (token != '' && token != undefined) {
+    header = {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
+      'Cache-Control': 'no-cache',
+    };
+  } else {
+    header = {'Content-Type': 'application/json', Accept: 'application/json'};
+  }
+  var url = BASE_URL + endPoint;
+  console.log('post Request Url:-' + url + '\n');
+  console.log('the body data', body);
+  // console.log(header + '\n')
+  try {
+    let response = await fetch(url, {
+      method: method,
+      body: body == '' ? '' : JSON.stringify(body),
+      headers: header,
+    });
+    let code = await response.status;
+    console.log('the api responce is------------->>', url, code);
+    //  let responseJ = await response.json();
+    //  console.log('the api responce is',responseJ.headers)
+    if (code == 200) {
+      let responseJson = await response.json();
+      // console.log(responseJson, '-------------kkkkkkkkkkkkkkkkk')
+      return {responseJson: responseJson, err: null};
+    } else if (code == 400 || code == 402 || code == 401) {
+      let responseJson = await response.json();
+      //Completion block
+      console.log({responseJson});
+      return {responseJson: responseJson, err: responseJson.message};
     } else {
-        header = { "Content-Type": "application/json", 'Accept': 'application/json' }
+      let responseJson = await response.json();
+      // console.log(responson)
+      return {responseJson: responseJson, err: responseJson.message};
     }
-    var url = BASE_URL + endPoint
-    console.log('post Request Url:-' + url + '\n')
-    console.log('the body data', body)
-    // console.log(header + '\n')
-    try {
-        let response = await fetch(url, {
-            method: method,
-            body: body == '' ? '' : JSON.stringify(body),
-            headers: header,
-        }
-        )
-        let code = await response.status
-        console.log('the api responce is------------->>', url, code)
-        //  let responseJ = await response.json();
-        //  console.log('the api responce is',responseJ.headers)
-        if (code == 200) {
-            let responseJson = await response.json();
-            // console.log(responseJson, '-------------kkkkkkkkkkkkkkkkk')
-            return { responseJson: responseJson, err: null }
-        } else if (code == 400 || code == 402 || code == 401) {
-            let responseJson = await response.json();
-            //Completion block 
-            console.log({responseJson});
-            return { responseJson: responseJson, err: responseJson.message }
-        } else {
-            let responseJson = await response.json();
-            // console.log(responson)
-            return { responseJson: responseJson, err: responseJson.message }
-        }
-    } catch (error) {
-        console.log('the error is', error)
-        return { responseJson: null, err: 'Something Went Wrong! Please check your internet connection.' }
-        // return {responseJson:null,err:error}
-    }
-}
+  } catch (error) {
+    console.log('the error is', error);
+    return {
+      responseJson: null,
+      err: 'Something Went Wrong! Please check your internet connection.',
+    };
+    // return {responseJson:null,err:error}
+  }
+};

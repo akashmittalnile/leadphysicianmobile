@@ -8,11 +8,15 @@ import {
   Keyboard,
   StyleSheet,
   SafeAreaView,
+  NativeModules
 } from 'react-native';
 import Color, {dimensions} from '../Global/Color';
 import LeftArrow from '../Global/Images/arrowLeft.svg';
 import MyText from './MyText/MyText';
 import {CommonActions} from '@react-navigation/native';
+
+const {HEIGHT} = NativeModules.StatusBarManager
+
 const CustomHeader = ({navigation, text, type,backButton = true,}) => {
   console.log('my text coponent--->>', text);
   // const resetIndexGoToBottomTab = CommonActions.reset({
@@ -20,7 +24,7 @@ const CustomHeader = ({navigation, text, type,backButton = true,}) => {
   //     routes: [{ name: 'Welcome' }],
   // });
   return (
-    <SafeAreaView style={{}}>
+    <>
       <View style={styles.customView}>
         {backButton && (<TouchableOpacity
           onPress={() => {
@@ -44,7 +48,7 @@ const CustomHeader = ({navigation, text, type,backButton = true,}) => {
           style={{flex: 1, textAlign: 'center'}}
         />
       </View>
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -53,6 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // Center items vertically
     // Center items horizontally
+    paddingTop: HEIGHT,
     paddingVertical: 40,
     paddingHorizontal: 20,
   },

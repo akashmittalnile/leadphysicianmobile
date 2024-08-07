@@ -38,7 +38,10 @@ import {
   CLEAR_NOTIFICATION,
   requestPostApi,
   READ_NOTIFICATION,
+  DELETE_SINGLE_NOTIFICATION,
+  deleteApi,
 } from '../Global/Service';
+import NotificationCard from '../Components/Notification.js/Notification';
 
 ///svg
 import Notofication from '../Global/Images/notificationNoData.svg';
@@ -114,13 +117,13 @@ const Notification = ({navigation}) => {
 
   const checkcon = () => {
     setLoading(true);
-      getCartCount();
-      readNotification();
-      setLoading(false);
-};
-const wait = timeout => {
+    getCartCount();
+    readNotification();
+    setLoading(false);
+  };
+  const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
-};
+  };
   const onRefresh = React.useCallback(() => {
     checkcon();
     wait(2000).then(() => {
@@ -187,9 +190,9 @@ const wait = timeout => {
       );
       console.log('on clear notification', resp?.responseJson);
       if (resp?.responseJson?.status) {
-        Toast.show({test1:"All notifications cleared successfully"});
+        Toast.show({test1: 'All notifications cleared successfully'});
         setLoading(false);
-        
+
         // Toast.show({text1: resp?.responseJson?.message});
         // getCartCount();
         const isNotificaton = '0';
@@ -210,64 +213,30 @@ const wait = timeout => {
   };
 
   //ui for schdule
+
+  const onSwipeHandler = async id => {
+    try {
+      if (!id) {
+        return;
+      }
+      const temp = notification?.filter(item => item?.id !== id);
+      console.log(temp)
+      setNotification(temp);
+      await deleteApi(userToken, `${DELETE_SINGLE_NOTIFICATION}`, id);
+    } catch (err) {
+      console.log('err in deleting particular notification', err?.message);
+    }
+  };
+
   const RenderSchdule = ({item}) => {
     return (
-      <TouchableOpacity style={styles.scduleView}>
-        <View style={{flexDirection: 'row'}}>
-          <View
-            style={{
-              width: 63,
-              height: 63,
-              backgroundColor: '#F7FAEB',
-              borderRadius: 50,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            {/* {console.log('my image--->>', item?.image)}
-                        {item.image === null ?
-                            <Notofication height={41} width={41}></Notofication> : <Image source={{ uri: item?.image }} style={{
-                                he
-                                    : 41, width: 41, alignSelf: 'center'
-                            }}></Image>} */}
-            <Image
-              source={
-                item?.image
-                  ? {uri: item?.image}
-                  : require('../Global/Images/notification.png')
-              }
-              style={{height: 41, width: 41, borderRadius: 50}}
-            />
-          </View>
-          <View>
-            <MyText
-              text={item.title}
-              fontWeight="400"
-              fontSize={14}
-              textColor={Color.LIGHT_BLACK}
-              fontFamily="Roboto"
-              style={{
-                textAlign: 'left',
-                marginHorizontal: 16,
-                width: dimensions.SCREEN_WIDTH * 0.6,
-              }}
-            />
-            <MyText
-              text={moment(item.created_at).format('YYYY-MM-DD')}
-              fontWeight="400"
-              fontSize={14}
-              textColor={'#959FA6'}
-              fontFamily="Roboto"
-              style={{
-                textAlign: 'left',
-                marginHorizontal: 16,
-                width: dimensions.SCREEN_WIDTH * 0.6,
-                marginTop: 9,
-              }}
-            />
-          </View>
-        </View>
-      </TouchableOpacity>
+      <NotificationCard
+        id={item?.id}
+        title={item?.title}
+        imageUri={item?.image}
+        date={moment(item.created_at).format('YYYY-MM-DD')}
+        onSwipe={onSwipeHandler}
+      />
     );
   };
   // useEffect(() => {
@@ -286,7 +255,7 @@ const wait = timeout => {
   // }, []);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#F7FAEB'}}>
+    <>
       <StatusBar backgroundColor={Color.LIGHT_BLACK} />
       <View
         style={{
@@ -312,20 +281,18 @@ const wait = timeout => {
           {!scrolling ? <></> : null}
 
           <View style={{marginTop: 50}}>
-         
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                 {notification.length !== 0 ? (
-              <MyText
-                text={`Notifications`}
-                fontWeight="500"
-                fontSize={16}
-                textColor={Color.LIGHT_BLACK}
-                fontFamily="Roboto"
-                style={{textAlign: 'center'}}
-              />)
-              :
-              null}
+              {notification.length !== 0 ? (
+                <MyText
+                  text={`Notifications`}
+                  fontWeight="500"
+                  fontSize={16}
+                  textColor={Color.LIGHT_BLACK}
+                  fontFamily="Roboto"
+                  style={{textAlign: 'center'}}
+                />
+              ) : null}
 
               {notification.length !== 0 ? (
                 <TouchableOpacity
@@ -343,13 +310,13 @@ const wait = timeout => {
                 </TouchableOpacity>
               ) : null}
             </View>
-            
+
             <FlatList
               horizontal={false}
               data={notification}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
+              // keyExtractor={(item, index) => index.toString()}
               renderItem={RenderSchdule}
               ListEmptyComponent={() => (
                 <View
@@ -414,12 +381,13 @@ const wait = timeout => {
                   </TouchableOpacity>
                 </View>
               )}
+              style={{flex: 1}}
             />
           </View>
         </ScrollView>
       </View>
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </>
   );
 };
 

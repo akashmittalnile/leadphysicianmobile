@@ -409,7 +409,7 @@ const MyCourse = ({navigation}) => {
   };
   //UI
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View style={{flex: 1}}>
       <StatusBar backgroundColor={Color.LIGHT_BLACK} />
       <View
         style={{
@@ -657,7 +657,7 @@ const MyCourse = ({navigation}) => {
           </View>
         ) : null} */}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 export default MyCourse;

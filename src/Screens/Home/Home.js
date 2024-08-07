@@ -674,6 +674,7 @@ import {
   RefreshControl,
   ImageBackground,
   FlatList,
+  Modal,
 } from 'react-native';
 import moment from 'moment';
 import Toast from 'react-native-toast-message';
@@ -689,10 +690,19 @@ import {styles} from './HomeStyle';
 import MyHeader from '../../Components/MyHeader/MyHeader';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import {Calendar} from 'react-native-calendars';
-import {getApiWithToken, GET_HOME, CHECK_SUBSCRIPTION} from '../../Global/Service';
+import {
+  getApiWithToken,
+  GET_HOME,
+  CHECK_SUBSCRIPTION,
+} from '../../Global/Service';
 import {useSelector, useDispatch} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 /////svgs
 import Arrow from '../../Global/Images/arrowRight.svg';
@@ -705,11 +715,16 @@ import messaging from '@react-native-firebase/messaging';
 import IconClendar from '../../Global/Images/calendarHome.svg';
 import VideoChat from '../../Global/Images/videoChat.svg';
 import Zoom from '../../Global/Images/Zoom.svg';
+import BorderBtn from '../ContactUs/BorderBtn';
 // import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import Modal from 'react-native-modal';
+import _Modal from 'react-native-modal';
 import ArrowLeft from '../../Global/Images/arrowLeft.svg';
-import { setUser, userisSubscribedHandler } from '../../reduxToolkit/reducer/user';
+import {
+  setUser,
+  userisSubscribedHandler,
+} from '../../reduxToolkit/reducer/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ReviewModal from '../../Components/Modal/ReviewModal';
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
@@ -725,6 +740,7 @@ const Home = ({navigation}) => {
   const [dataModal, setDataModal] = useState('');
   const [dateData, setDateData] = useState({});
   const [colorData, setColorData] = useState({});
+  const [showReviewModal, setShowReviewModal] = React.useState(false);
   const [markedDates, setMarkedDates] = useState({});
   const scrollY = useSharedValue(0);
   const renderNextButton = () => null;
@@ -756,7 +772,6 @@ const Home = ({navigation}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       getSubscription();
       getCartCount();
-     
     });
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
@@ -766,7 +781,7 @@ const Home = ({navigation}) => {
     setLoading(true);
     try {
       const resp = await getApiWithToken(userToken, CHECK_SUBSCRIPTION);
-      console.log("HOME-screen-getSubscription",resp.data);
+      console.log('HOME-screen-getSubscription', resp.data);
       if (resp.data) {
         if (resp.data?.plan_status != true) {
           setLoading(false);
@@ -779,17 +794,14 @@ const Home = ({navigation}) => {
           await AsyncStorage.setItem('userInfo', jsonValue);
           dispatch(setUser(resp.data.data));
           navigation.navigate('Subscription');
-        }
-        else{
+        } else {
           console.error('getSubscription-else part', resp.data);
           setLoading(false);
         }
-    
       }
     } catch (error) {
       setLoading(false);
       console.error('error in getCount', error);
-      
     }
   };
 
@@ -822,7 +834,7 @@ const Home = ({navigation}) => {
     setLoading(true);
     try {
       const resp = await getApiWithToken(userToken, GET_HOME);
- 
+
       if (resp?.data?.status) {
         setLoading(false);
         setHome(resp?.data?.data);
@@ -961,7 +973,18 @@ const Home = ({navigation}) => {
             marginHorizontal: 5,
             marginVertical: 10,
           }}>
-          <MyText
+          <Text
+            style={{
+              flex: 1,
+              fontWeight: 'bold',
+              fontSize: 14,
+              textColor: Color.LIGHT_BLACK,
+              fontFamily: 'Inter',
+            }}
+            numberOfLines={1}>
+            {item?.title === null ? '' : item?.title}
+          </Text>
+          {/* <MyText
             text={`${
               item?.title === null
                 ? ''
@@ -974,7 +997,7 @@ const Home = ({navigation}) => {
             textColor={Color.LIGHT_BLACK}
             fontFamily="Inter"
             style={{}}
-          />
+          /> */}
           <View style={{flexDirection: 'row', top: 2}}>
             {/* course_complete_percentag */}
             <Star height={20} width={20}></Star>
@@ -984,6 +1007,7 @@ const Home = ({navigation}) => {
                   ? parseFloat(item?.avg_review).toFixed(1)
                   : 0, // Default value if avg_rating is not a number or undefined
               )}
+              style={{width: 'auto'}}
             />
           </View>
         </View>
@@ -1298,9 +1322,12 @@ const Home = ({navigation}) => {
   //     return markedDates;
   // };
 
+  const reviewHandler = () => {
+    setShowReviewModal(value => !value);
+  };
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <StatusBar backgroundColor={Color.LIGHT_BLACK} />
+    <>
+      {/* <StatusBar backgroundColor={Color.LIGHT_BLACK} /> */}
       <View
         style={{
           flex: 1,
@@ -1437,50 +1464,115 @@ const Home = ({navigation}) => {
               <Arrow></Arrow>
             </TouchableOpacity>
           </TouchableOpacity>
-          <View style={{ marginTop: 15, borderRadius: 10, overflow: 'hidden', backgroundColor: '#fff', padding: 10 }}>
-          <Calendar
+          <View
             style={{
-            //   borderWidth: 1,
-            //   borderColor: 'gray',
-            //   height: 390,
-            }}
-            markingType="custom"
-            theme={{
-              backgroundColor: '#ffffff',
-              calendarBackground: '#ffffff',
-              textSectionTitleColor: Color.LIGHT_BLACK,
-              selectedDayBackgroundColor: Color.PRIMARY,
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: Color.PRIMARY,
-              dayTextColor: Color.LIGHT_BLACK,
-              textDisabledColor: 'grey',
-            }}
-            onDayPress={handleDayPress}
-            markedDates={markedDates}
-          />
-             <View style={{ width: '100%',   flexDirection: 'row', marginTop: 25,flexWrap:'wrap',gap:6 }}>
-            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#EE82EE', paddingHorizontal: 15 }}
-               >
-              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 10 }}>Goals and Schedule</Text>
+              marginTop: 15,
+              borderRadius: 10,
+              overflow: 'hidden',
+              backgroundColor: '#fff',
+              padding: 10,
+            }}>
+            <Calendar
+              style={
+                {
+                  //   borderWidth: 1,
+                  //   borderColor: 'gray',
+                  //   height: 390,
+                }
+              }
+              markingType="custom"
+              theme={{
+                backgroundColor: '#ffffff',
+                calendarBackground: '#ffffff',
+                textSectionTitleColor: Color.LIGHT_BLACK,
+                selectedDayBackgroundColor: Color.PRIMARY,
+                selectedDayTextColor: '#ffffff',
+                todayTextColor: Color.PRIMARY,
+                dayTextColor: Color.LIGHT_BLACK,
+                textDisabledColor: 'grey',
+              }}
+              onDayPress={handleDayPress}
+              markedDates={markedDates}
+            />
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                marginTop: 25,
+                flexWrap: 'wrap',
+                gap: 6,
+              }}>
+              <View
+                style={{
+                  paddingVertical: 6,
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  backgroundColor: '#EE82EE',
+                  paddingHorizontal: 15,
+                }}>
+                <Text
+                  style={{color: '#fff', textAlign: 'center', fontSize: 10}}>
+                  Goals and Schedule
+                </Text>
+              </View>
+              <View
+                style={{
+                  paddingVertical: 6,
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  backgroundColor: '#008000',
+                  paddingHorizontal: 15,
+                  marginLeft: 0,
+                }}>
+                <Text
+                  style={{color: '#fff', textAlign: 'center', fontSize: 10}}>
+                  All Types Goals
+                </Text>
+              </View>
+              <View
+                style={{
+                  paddingVertical: 6,
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  backgroundColor: '#FFA500',
+                  paddingHorizontal: 15,
+                  marginLeft: 0,
+                }}>
+                <Text
+                  style={{color: '#fff', textAlign: 'center', fontSize: 10}}>
+                  Schedule
+                </Text>
+              </View>
+              <View
+                style={{
+                  paddingVertical: 6,
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  backgroundColor: '#FFFF00',
+                  paddingHorizontal: 15,
+                  marginLeft: 0,
+                }}>
+                <Text
+                  style={{color: '#000', textAlign: 'center', fontSize: 10}}>
+                  Only A-Type Goal
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  paddingVertical: 6,
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  backgroundColor: '#0000FF',
+                  paddingHorizontal: 15,
+                  marginLeft: 0,
+                }}>
+                <Text
+                  style={{color: '#fff', textAlign: 'center', fontSize: 10}}>
+                  A-Type and B-Type Goals
+                </Text>
+              </View>
             </View>
-            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#008000', paddingHorizontal: 15, marginLeft: 0 }}
-              >
-              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 10 }}>All Types Goals</Text>
-            </View>
-            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#FFA500', paddingHorizontal: 15, marginLeft: 0 }}
-              >
-              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 10 }}>Schedule</Text>
-            </View>
-            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#FFFF00', paddingHorizontal: 15, marginLeft: 0 }}
-              >
-              <Text style={{ color: '#000', textAlign: 'center', fontSize: 10 }}>Only A-Type Goal</Text>
-            </View>
-           
-            <View style={{ paddingVertical: 6, borderRadius: 5, justifyContent: 'center', backgroundColor: '#0000FF', paddingHorizontal: 15, marginLeft: 0 }}
-              >
-              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 10 }}>A-Type and B-Type Goals</Text>
-            </View>
-          </View>
           </View>
           {/* my selected date calendar  */}
           <View
@@ -1564,9 +1656,91 @@ const Home = ({navigation}) => {
               )}
             />
           </View>
+          {true && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: responsiveHeight(2),
+                borderRadius: responsiveWidth(2),
+                backgroundColor: 'white',
+                // width: responsiveWidth(95),
+              }}>
+              <View style={{flex: 3, paddingLeft: responsiveWidth(5)}}>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontSize: responsiveFontSize(2.5),
+                  }}>
+                  Rate Us
+                </Text>
+                <Text
+                  style={{
+                    // color: globalStyles.textGray,
+                    fontSize: responsiveFontSize(1.6),
+                  }}>
+                  Your Valuable Feedback!!
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: responsiveHeight(1),
+                  }}>
+                  <Image
+                    source={require('../../Global/Images/disable-star.png')}
+                    resizeMode="contain"
+                    style={_styles.starIcon}
+                  />
+                  <Image
+                    source={require('../../Global/Images/disable-star.png')}
+                    resizeMode="contain"
+                    style={_styles.starIcon}
+                  />
+                  <Image
+                    source={require('../../Global/Images/disable-star.png')}
+                    resizeMode="contain"
+                    style={_styles.starIcon}
+                  />
+                  <Image
+                    source={require('../../Global/Images/disable-star.png')}
+                    resizeMode="contain"
+                    style={_styles.starIcon}
+                  />
+                  <Image
+                    source={require('../../Global/Images/disable-star.png')}
+                    resizeMode="contain"
+                    style={_styles.starIcon}
+                  />
+                </View>
+                <BorderBtn
+                  onClick={reviewHandler}
+                  buttonText="Submit Rating"
+                  containerStyle={{
+                    marginTop: responsiveHeight(1.2),
+                    marginBottom: responsiveHeight(3),
+                  }}
+                  buttonTextStyle={{
+                    fontSize: responsiveFontSize(1.6),
+                    fontWeight: '600',
+                    paddingHorizontal: responsiveWidth(5),
+                  }}
+                />
+              </View>
+              <View style={{flex: 2, justifyContent: 'center'}}>
+                <Image
+                  source={require('../../Global/Images/review.png')}
+                  resizeMode="contain"
+                  style={{
+                    height: responsiveHeight(18),
+                    width: responsiveWidth(25),
+                  }}
+                />
+              </View>
+            </View>
+          )}
         </ScrollView>
 
-        <Modal
+        <_Modal
           isVisible={editModal}
           swipeDirection="down"
           onBackdropPress={() => setEditModal(false)}
@@ -1651,11 +1825,28 @@ const Home = ({navigation}) => {
               </TouchableOpacity>
             </ScrollView>
           </View>
-        </Modal>
+        </_Modal>
       </View>
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+      {true && (
+        <Modal
+          visible={showReviewModal}
+          animationType="slide"
+          transparent={true}>
+          {<ReviewModal hideModal={reviewHandler} />}
+        </Modal>
+      )}
+      {/* Rating */}
+    </>
   );
 };
 
 export default Home;
+
+const _styles = StyleSheet.create({
+  starIcon: {
+    marginRight: responsiveWidth(1.2),
+    height: responsiveHeight(2),
+    width: responsiveHeight(2),
+  },
+});

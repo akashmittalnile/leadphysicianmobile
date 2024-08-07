@@ -1,5 +1,6 @@
 //react components
 import React from 'react';
+import { NativeModules, View } from 'react-native';
 //navigation
 import { createDrawerNavigator } from '@react-navigation/drawer';
 //global
@@ -21,9 +22,9 @@ const Drawer = () => {
     // useNetworkError();
     //function : render function
     const renderCustomDrawer = ({ navigation }) => (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1, paddingTop: NativeModules.StatusBarManager.HEIGHT, backgroundColor: Color.LIGHT_BLACK }}>
             <CustomDrawer navigation={navigation} />
-        </SafeAreaView>
+        </View>
     );
     return (
         <Drawer.Navigator

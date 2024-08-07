@@ -26,7 +26,12 @@ import CustomButtonBlue from '../../Components/CustomButtonBlue';
 import CustomTextBox from '../../Components/CustomTextBox';
 import Color from '../../Global/Color';
 import {dimensions} from '../../Global/Color';
-import {requestPostApi, LOGIN, LOGOUT, postApiWithToken} from '../../Global/Service';
+import {
+  requestPostApi,
+  LOGIN,
+  LOGOUT,
+  postApiWithToken,
+} from '../../Global/Service';
 import {CommonActions} from '@react-navigation/native';
 // svg image
 import {useDispatch} from 'react-redux';
@@ -69,10 +74,10 @@ const SignIn = ({navigation}) => {
   const checkToken = async () => {
     try {
       const token = await messaging().getToken();
-      console.log(token)
+      console.log('token', token);
       if (token) {
         console.log('fcm token', token);
-        setFcmToken(token);
+        return token;
       } else {
         console.log('could not get fcm token');
       }
@@ -82,7 +87,8 @@ const SignIn = ({navigation}) => {
   };
   //useEffect
   useEffect(() => {
-    checkToken();
+    const token = checkToken();
+    setFcmToken(token);
   }, []);
   const Validation = () => {
     var EmailReg =
@@ -106,7 +112,7 @@ const SignIn = ({navigation}) => {
     }
     return true;
   };
-  const logout = async (token) => {
+  const logout = async token => {
     setLoading(true);
     try {
       const resp = await postApiWithToken(token, LOGOUT, {});
@@ -125,10 +131,13 @@ const SignIn = ({navigation}) => {
       return false;
     }
     try {
+      if (!fcmToken) {
+        const token = checkToken();
+      }
       var data = {
         email: emailid.trim(),
         password: password,
-        device_id: fcmToken,
+        device_id: fcmToken || token,
       };
       console.log('clllll----->>>', data);
       setLoading(true);
@@ -151,8 +160,8 @@ const SignIn = ({navigation}) => {
         dispatch(setUser(responseJson.user));
         setLoading(false);
         navigation.dispatch(resetIndexGoToBottomTab);
-        Toast.show({ type: 'success', text1: 'Loggedin successfully' });
-      }  else {
+        Toast.show({type: 'success', text1: 'Loggedin successfully'});
+      } else {
         if (responseJson?.token) {
           Alert.alert('', `${responseJson.message}`, [
             {
@@ -163,7 +172,7 @@ const SignIn = ({navigation}) => {
             {text: 'Reset', onPress: () => logout(responseJson?.token)},
           ]);
         } else {
-          Toast.show({ type: 'error', text1: responseJson?.message });
+          Toast.show({type: 'error', text1: responseJson?.message});
           setLoading(false);
         }
       }
@@ -185,110 +194,114 @@ const SignIn = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <KeyboardAvoidingView style={{flex:1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ScrollView keyboardShouldPersistTaps="always" bounces={false} contentContainerStyle={{flexGrow: 1}}>
-        <ImageBackground
-          source={require('../../Global/Images/BackgroundAuth.png')}
-          style={styles.backgroundImg}>
-          <CustomHeader navigation={navigation} text="Sign In" />
-          <Logo
-            width={300}
-            height={80}
-            style={{alignSelf: 'center', marginVertical: 30}}></Logo>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '90%',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              marginTop: 120,
-            }}>
-            {/* <Logo width={300} height={100} style={{ alignSelf: 'center', marginVertical: 30 }} ></Logo> */}
-
-            <View style={{marginTop: 10}}>
-              <CustomTextBox
-                imageComponent={<EmailSvg width={24} height={24} />}
-                //  placeholder='Email address'
-                value={emailid}
-                onChangeText={text => {
-                  setEmailid(text);
-                }}
-                placeholder={'Email Address'}></CustomTextBox>
-            </View>
-
-            <View style={{marginTop: 12}}>
-              <CustomTextBox
-                imageComponent={<Lock width={24} height={24} />}
-                placeholder="Password"
-                value={password}
-                onChangeText={text => {
-                  setPassword(text);
-                }}
-                secureTextEntry={true}
-                style={{color: 'black', backgroundColor: 'red'}}
-                placeholderTextColor="black"></CustomTextBox>
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                console.log('did i reach here');
-                navigation.navigate('ForgotPassword');
-              }}>
-              <MyText
-                text="Forgot Password?"
-                fontWeight="normal"
-                fontSize={14}
-                textColor={Color.LIGHT_BLACK}
-                fontFamily="Roboto"
-                style={{
-                  fontWeight: '400',
-                  textAlign: 'right',
-                  marginVertical: 13,
-                }}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                console.log('dftgyhujikol');
-                LoginPressed();
-              }}
-              style={{marginTop: 20}}>
-              <CustomButtonBlue name="Login"/>
-            </TouchableOpacity>
+    <>
+      <KeyboardAvoidingView
+        style={{flex: 1, backgroundColor: 'white'}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          bounces={false}
+          contentContainerStyle={{flexGrow: 1}}>
+          <ImageBackground
+            source={require('../../Global/Images/BackgroundAuth.png')}
+            style={styles.backgroundImg}>
+            <CustomHeader navigation={navigation} text="Sign In" />
+            <Logo
+              width={300}
+              height={80}
+              style={{alignSelf: 'center', marginVertical: 30}}></Logo>
             <View
               style={{
-                alignSelf: 'center',
-                marginTop: '14%',
-                flexDirection: 'row',
+                backgroundColor: 'white',
+                width: '90%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginTop: 80,
               }}>
-              <Text style={styles.myText}>Don’t have an account?</Text>
+              {/* <Logo width={300} height={100} style={{ alignSelf: 'center', marginVertical: 30 }} ></Logo> */}
+
+              <View style={{marginTop: 10}}>
+                <CustomTextBox
+                  imageComponent={<EmailSvg width={24} height={24} />}
+                  //  placeholder='Email address'
+                  value={emailid}
+                  onChangeText={text => {
+                    setEmailid(text);
+                  }}
+                  placeholder={'Email Address'}></CustomTextBox>
+              </View>
+
+              <View style={{marginTop: 12}}>
+                <CustomTextBox
+                  imageComponent={<Lock width={24} height={24} />}
+                  placeholder="Password"
+                  value={password}
+                  onChangeText={text => {
+                    setPassword(text);
+                  }}
+                  secureTextEntry={true}
+                  style={{color: 'black', backgroundColor: 'red'}}
+                  placeholderTextColor="black"></CustomTextBox>
+              </View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('Signup');
+                  console.log('did i reach here');
+                  navigation.navigate('ForgotPassword');
                 }}>
-                <Text style={[styles.myText, {color: Color.PRIMARY}]}>
-                  {' '}
-                  Signup
-                </Text>
+                <MyText
+                  text="Forgot Password?"
+                  fontWeight="normal"
+                  fontSize={14}
+                  textColor={Color.LIGHT_BLACK}
+                  fontFamily="Roboto"
+                  style={{
+                    fontWeight: '400',
+                    textAlign: 'right',
+                    marginVertical: 13,
+                  }}
+                />
               </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  console.log('dftgyhujikol');
+                  LoginPressed();
+                }}
+                style={{marginTop: 20}}>
+                <CustomButtonBlue name="Login" />
+              </TouchableOpacity>
+              <View
+                style={{
+                  alignSelf: 'center',
+                  marginTop: '14%',
+                  flexDirection: 'row',
+                }}>
+                <Text style={styles.myText}>Don’t have an account?</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Signup');
+                  }}>
+                  <Text style={[styles.myText, {color: Color.PRIMARY}]}>
+                    {' '}
+                    Signup
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </ImageBackground>
-        {/* <View style={{height:210}}/> */}
-      </ScrollView>
+          </ImageBackground>
+          {/* <View style={{height:210}}/> */}
+        </ScrollView>
       </KeyboardAvoidingView>
       {My_Alert ? (
-          <MyAlert
-            sms={alert_sms}
-            okPress={() => {
-              setMy_Alert(false);
-            }}
-          />
-        ) : null}
+        <MyAlert
+          sms={alert_sms}
+          okPress={() => {
+            setMy_Alert(false);
+          }}
+        />
+      ) : null}
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </>
   );
 };
 const styles = StyleSheet.create({

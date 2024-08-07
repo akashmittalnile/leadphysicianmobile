@@ -20,7 +20,11 @@ import {requestPostApi, REGISTER, postAPI} from '../../Global/Service';
 import {useDispatch} from 'react-redux';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setUser, setUserToken, userisSubscribedHandler} from '../../reduxToolkit/reducer/user';
+import {
+  setUser,
+  setUserToken,
+  userisSubscribedHandler,
+} from '../../reduxToolkit/reducer/user';
 import Toast from 'react-native-toast-message';
 import Loader from '../../Components/Loader';
 import axios from 'axios';
@@ -89,7 +93,7 @@ const Signup = ({navigation}) => {
     setPhoneno(formatPhoneNumber(value));
   };
   const Validation = () => {
-    console.log("phoneno.length0000",phoneno.length);
+    console.log('phoneno.length0000', phoneno.length);
     var EmailReg =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
@@ -317,7 +321,7 @@ const Signup = ({navigation}) => {
     setLoading(false);
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       {/* <ScrollView
                 contentContainerStyle={{ flexGrow: 1, }}
                 keyboardShouldPersistTaps="always" bounces={false}
@@ -501,7 +505,7 @@ const Signup = ({navigation}) => {
         openLibrary={openLibrary}
         openCamera={checkCameraPermission}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

@@ -437,7 +437,7 @@ console.log("allReview",url);
 
   //UI
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View style={{flex: 1}}>
       <StatusBar backgroundColor={Color.LIGHT_BLACK} />
       <View style={styles.container}>
         <MyHeader
@@ -839,7 +839,7 @@ console.log("allReview",url);
         submitReview={submitReview}
         isReviewed={reviewbutton}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

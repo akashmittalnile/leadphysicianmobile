@@ -257,7 +257,7 @@ const EditGoal = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
@@ -542,7 +542,7 @@ const EditGoal = ({navigation, route}) => {
       </View>
 
       {loading ? <Loader /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 

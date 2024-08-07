@@ -599,7 +599,7 @@ const Certificate = ({ navigation }) => {
     }
     //UI
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <StatusBar backgroundColor={Color.LIGHT_BLACK} />
             <View style={{
                 flex: 1,
@@ -653,7 +653,7 @@ const Certificate = ({ navigation }) => {
                     }}
                 />
             ) : null}
-        </SafeAreaView>
+        </View>
     );
 };
 export default Certificate
