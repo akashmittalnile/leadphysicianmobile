@@ -14,7 +14,7 @@ import React from 'react';
 
 // import {globalStyles} from '../../utils/constant';
 import CustomCalendar from './CustomCalendar';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation,useIsFocused} from '@react-navigation/native';
 // import ScreenNames from '../../utils/ScreenNames';
 import SkeletonContainer from './SkeletonContainer';
 import {
@@ -30,12 +30,15 @@ import moment from 'moment';
 // import Header from '../../components/Header/Header';
 import BorderLessBtn from './BorderLessBtn';
 import Nodata from '../../Global/Images/lock-circle.svg';
-import Color from '../../Global/Color';
+import Color, {dimensions} from '../../Global/Color';
 import Calendar from '../../Global/Images/calendarWhite.svg';
 import MyHeader from '../../Components/MyHeader/MyHeader';
 import {getApiWithToken, QUERY_LIST} from '../../Global/Service';
 import {useSelector} from 'react-redux';
 import BorderBtn from './BorderBtn';
+import MyText from '../../Components/MyText/MyText';
+ 
+
 let pagination = {
   currentPage: 1,
   lastPage: 1,
@@ -43,10 +46,11 @@ let pagination = {
 };
 
 const Contact = () => {
+  const isFocus = useIsFocused();
   const navigation = useNavigation();
   // const reload = useAppSelector(state => state.reload.Contact);
   // const token = useAppSelector(state => state.auth.token);
-  const userToken = useSelector(state => state.user.userToken);
+  const userToken = useSelector<any>(state => state.user.userToken);
   const [modal, setModal] = React.useState<boolean>(false);
   const [date, setDate] = React.useState<string>(moment().format('YYYY-MM-DD'));
   const [showSkeleton, setShowSkeleton] = React.useState<boolean>(false);
@@ -87,22 +91,28 @@ const Contact = () => {
   const [paginatonLoader, setPaginationLoader] = React.useState<boolean>(false);
   const [shouldRefresh, setshouldRefresh] = React.useState<boolean>(false);
 
-  const dateHandler = (date: any) => {
+  const dateHandler = (date: any) => { 
     setDate(`${date}`);
     setModal(value => !value);
     getQueryList(`?date=${date}`);
   };
 
   React.useEffect(() => {
-    pagination = {
-      currentPage: 1,
-      lastPage: 1,
-      loader: false,
-    };
-    setDate(moment().format('YYYY-MM-DD'));
-    // getQueryList('');
-    getQueryList(`?date=${moment(new Date()).format('YYYY-MM-DD')}`);
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      setDate(moment().format('YYYY-MM-DD'));
+      // getQueryList('');
+      getQueryList(`?date=${moment(new Date()).format('YYYY-MM-DD')}`);
+     
+    });
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+    // pagination = {
+    //   currentPage: 1,
+    //   lastPage: 1,
+    //   loader: false,
+    // };
+    
+  }, [isFocus]);
 
   const getQueryList = async (param: string | {}) => {
     setShowSkeleton(true);
@@ -209,9 +219,22 @@ const Contact = () => {
   );
 
   const noDataFound = (
-    <View style={{alignItems: 'center',justifyContent:'center'}}>
+    <View style={{alignItems: 'center', justifyContent: 'center',height:dimensions.SCREEN_HEIGHT * 0.7}}>
       <Nodata style={{alignSelf: 'center'}} height={119} width={119}></Nodata>
       <Text style={styles.noDataText}>No Data Found</Text>
+      <MyText
+        text={'Oops! this information is not available for a moment'}
+        fontWeight="400"
+        fontSize={16}
+        textColor={'#959FA6'}
+        fontFamily="Roboto"
+        style={{
+          alignSelf: 'center',
+          textAlign: 'center',
+          width: dimensions.SCREEN_WIDTH * 0.6,
+          top: 4,
+        }}
+      />
     </View>
   );
 
@@ -245,7 +268,8 @@ const Contact = () => {
     // pagination.lastPage = 1;
     // pagination.loader = false;
     setDate(`${moment(new Date()).format('YYYY-MM-DD')}`);
-    getQueryList('');
+    getQueryList(`?date=${moment(new Date()).format('YYYY-MM-DD')}`);
+    // getQueryList('');
   };
 
   return (
@@ -263,7 +287,7 @@ const Contact = () => {
               {data?.length === 0 ? noDataFound : null}
             </>
           }
-          style={{paddingBottom:30}}
+          style={{paddingBottom: 30}}
           data={data}
           renderItem={renderData}
           keyExtractor={(_, index) => index?.toString()}
@@ -283,15 +307,14 @@ const Contact = () => {
           }
         />
       )}
-    
-    
+
       {modal && (
-        <View style={styles.calendarContainer}>
+        <TouchableOpacity onPress={()=>{setModal(false)}} style={styles.calendarContainer}>
           <CustomCalendar
             containerStyle={styles.calendar}
             dateHandler={dateHandler}
           />
-        </View>
+        </TouchableOpacity>
       )}
     </>
   );
@@ -327,7 +350,7 @@ const styles = StyleSheet.create({
   },
   addText: {
     marginLeft: responsiveWidth(2),
-    color: Color.GREY,
+    color: Color.BLACK,
   },
   buttonStyle: {
     width: '15%',

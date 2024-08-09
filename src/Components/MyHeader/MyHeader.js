@@ -86,7 +86,7 @@ const MyHeader = ({
             getCartCount();
             gotoUnseenMessageCount();
             // const interval = setInterval(() => {
-            //     // gotoUnseenMessageCount();
+            //     gotoUnseenMessageCount();
             //     // console.log('This will run every  3 second!');
             //   }, 3000);
             //   return () => clearInterval(interval);

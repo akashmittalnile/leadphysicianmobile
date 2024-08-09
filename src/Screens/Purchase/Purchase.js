@@ -7,6 +7,7 @@ import {
   Image,
   Pressable,
   Text,
+  Platform,
 } from 'react-native';
 //import : custom components
 import Loader from '../../Components/Loader';
@@ -24,6 +25,7 @@ import Color, { dimensions } from '../../Global/Color';
 import MyText from '../../Components/MyText/MyText';
 import CustomHeader from '../../Components/CustomHeader';
 import { CREATE_SUBSCRIPTION, postApiWithToken } from '../../Global/Service';
+import { userSubscribedId } from '../../reduxToolkit/reducer/user';
 
 const PurchaseReview = props => {
   const userToken = useSelector(state => state.user.userToken);
@@ -164,11 +166,15 @@ console.log("ROUTE-PARAMA-data------",props?.route?.params?.item?.id);
       // formdata.append('tax',props?.route?.params?.tax)
       const data = {
         plan_id: props?.route?.params?.item?.id,
+        type : Platform.OS == 'android' ? 1 : 2 
       };
       const resp = await postApiWithToken(userToken,CREATE_SUBSCRIPTION,data);
     console.log("CREATE_SUBSCRIPTION",resp.data);
         if (resp.data.status == true) {
           gotoPaymentWebView(resp?.data.data.link);
+          dispatch(
+            userSubscribedId(resp?.data?.data?.subscription_id),
+          );
         } else {
           Toast.show({text1: resp.data.message}); 
         }

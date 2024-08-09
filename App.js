@@ -177,6 +177,7 @@ import {
   StyleSheet,
   LogBox,
   Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
@@ -213,7 +214,17 @@ const App = () => {
 
   const dispatch = useDispatch();
 
+    React.useEffect(() => {
+    getDeviceToken()
+    // Check if user is logged in
+    // Set isLoggedIn accordingly
+  }, []);
+  const getDeviceToken = async () => {
+    let token = await messaging().getToken();
+    console.log('my device token---->>', token);
+  }
   useEffect(() => {
+  
     const requestUserPermission = async () => {
       const authStatus = await messaging().requestPermission();
       const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -221,7 +232,7 @@ const App = () => {
         console.log('Authorization status:', authStatus);
       }
     };
-
+    
     requestUserPermission();
 
     const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
@@ -255,6 +266,33 @@ const App = () => {
       unsubscribeOnNotificationOpenedApp();
     };
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   requestPermission();
+   
+  // return () => {
+  //   requestPermission()
+  // };
+  // }, []);
+  // const requestPermission = async () => {
+  //   try {
+  //     console.log('asking for permission')
+  //     const granted = await PermissionsAndroid.requestMultiple(
+  //       [PermissionsAndroid.PERMISSIONS.CAMERA,
+  //         PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+  //         PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED,
+  //       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE]
+  //     )
+  //     if (granted['android.permission.CAMERA'] && granted['android.permission.WRITE_EXTERNAL_STORAGE']) {
+  //       console.log("You can use the camera");
+  //     } else {
+  //       console.log("Camera permission denied");
+  //     }
+  //   } catch (error) {
+  //     console.log('permission error', error)
+  //   }
+  // }
+ 
 
   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
     const { data, messageId } = remoteMessage;

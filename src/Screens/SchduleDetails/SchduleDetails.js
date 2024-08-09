@@ -229,9 +229,7 @@ const SchduleDetails = ({navigation, route}) => {
                     <View style={{flexDirection: 'row', marginTop: 9}}>
                       <Calendar></Calendar>
                       <MyText
-                        text={`${moment(profile.schedule_start_date).format(
-                          'MM-DD-YYYY',
-                        )}`}
+                        text={`${profile.schedule_start_date}`}
                         fontFamily="Roboto"
                         fontWeight="400"
                         fontSize={13}

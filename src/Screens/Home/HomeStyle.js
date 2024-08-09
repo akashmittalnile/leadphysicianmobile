@@ -311,7 +311,7 @@ export const styles = StyleSheet.create({
     },
     buttonView: {
         width: dimensions.SCREEN_WIDTH * 0.80, height: 50,
-        backgroundColor: '#959FA6',
+        backgroundColor:Color.PRIMARY,
         position: 'absolute',
         bottom: 0,
         alignSelf: 'center',

@@ -15,12 +15,12 @@ const ContactMainTab: React.FC<ContactMainTabProps> = ({data}) => {
   return (
     <ContactTabContainer
       status={data?.status?.toLowerCase()}
-      showButton={data?.admin}
+      showButton={data?.admin_reply}
       onPress={() => {
         setStatusCompletedAdminTab(value => !value);
       }}>
       <ContactTab
-        profile={data?.profile}
+        profile={data?.user_profile}
         name={data?.user_name}
         text={data?.description}
         date={data?.updated_at}

@@ -106,6 +106,8 @@ const SignIn = ({navigation}) => {
     return true;
   };
   const logout = async (token) => {
+    console.log("logout--token",token);
+    
     setLoading(true);
     try {
       const resp = await postApiWithToken(token, LOGOUT, {});
@@ -181,6 +183,7 @@ const SignIn = ({navigation}) => {
         text1: 'An error occurred. Please try again later.',
       });
     }
+    setLoading(false);
   };
 
   return (

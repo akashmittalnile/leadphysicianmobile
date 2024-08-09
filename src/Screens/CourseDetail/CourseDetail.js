@@ -188,13 +188,13 @@ const CourseDetail = ({navigation, route}) => {
     var url = GET_COURSEDETAIL;
     var murl = `/` + route?.params?.id;
     url = url + murl;
-
+    console.log("Cousre details resp data------>",url);
     try {
       setLoading(true);
       const resp = await getApiWithToken(userToken, url);
-
+      
       if (resp?.data?.status) {
-        console.log("Cousre details resp data------>".resp?.data?.data);
+        
         // setReviewbutton(resp?.data?.data?.is_reviewed);
         // setProfile(resp?.data?.data)
         setMyCoursesDetail(resp?.data?.data);

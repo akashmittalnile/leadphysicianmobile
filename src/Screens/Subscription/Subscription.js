@@ -20,7 +20,12 @@ import {styles} from './SubscriptionStyle';
 import Loader from '../../Components/Loader';
 import MyText from '../../Components/MyText/MyText';
 import MyAlert from '../../Global/MyAlert';
-import {GET_CARDS, getApiWithToken, GET_PLANS, CHECK_SUBSCRIPTION} from '../../Global/Service';
+import {
+  GET_CARDS,
+  getApiWithToken,
+  GET_PLANS,
+  CHECK_SUBSCRIPTION,
+} from '../../Global/Service';
 
 import {useIsFocused} from '@react-navigation/native';
 import {connect, useSelector, useDispatch} from 'react-redux';
@@ -38,9 +43,12 @@ const Subscription = ({navigation, route}) => {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
   const userToken = useSelector(state => state.user.userToken);
-  const isSubscribed = useSelector(state => state.user?.isSubscribed?.isSubscribed);
-  const[subscrptnStatusCheck,setSubscrptnStatusCheck]=useState(false);
-  console.log("isSubscribed======",isSubscribed);
+  const isSubscribed = useSelector(
+    state => state.user?.isSubscribed?.isSubscribed,
+  );
+  const subscriptionid = useSelector(state => state.user?.subscription_id);
+  const [subscrptnStatusCheck, setSubscrptnStatusCheck] = useState(false);
+  console.log(subscriptionid, 'isSubscribed====subscriptionid==', isSubscribed);
 
   const H = Dimensions.get('screen').height;
   const W = Dimensions.get('screen').width;
@@ -204,7 +212,7 @@ const Subscription = ({navigation, route}) => {
             }}
           />
         </View>
-
+        {console.log("daasdadad0000".checkCurrentUserPlan?.is_subscription_active,checkCurrentUserPlan?.subscription_status)}
         {/* {console.log('klklk tytyyy---->>>', item)} */}
         {item?.current_plan === false ? (
           <TouchableOpacity
@@ -224,15 +232,35 @@ const Subscription = ({navigation, route}) => {
               // zIndex: 1
             }}
             // hitSlop={{  bottom: 100}}
- 
+
             onPress={() => {
-              if(subscrptnStatusCheck != true){
-                navigation.navigate('PurchaseReview', {item: item,type:"Subscription"})
+              if (subscrptnStatusCheck != true) {
+                if (checkCurrentUserPlan?.is_subscription_active != true) {
+                  navigation.navigate('PurchaseReview', {
+                    item: item,
+                    type: 'Subscription',
+                  });
+                } else if (checkCurrentUserPlan?.is_subscription_active == true) {
+                  if (checkCurrentUserPlan?.subscription_status == 'active') {
+                    Toast.show({text1: 'Please cancel the previous subscription'});
+                    // getSubscription();
+                  }
+                  else if(checkCurrentUserPlan?.subscription_status == 'pending'){
+                    getSubscription();
+                  }else{
+                    navigation.navigate('PurchaseReview', {
+                      item: item,
+                      type: 'Subscription',
+                    });
+                  }
+                } else {
+                  getSubscription();
+                }
+
                 // navigation.navigate('Payment', {item: item});
-              }else{
-                Toast.show({text1: 'Please Cancel Previews Subscription!'});
+              } else {
+                Toast.show({text1: 'Please cancel the previous subscription'});
               }
-              
             }}>
             <MyText
               text={
@@ -297,8 +325,9 @@ const Subscription = ({navigation, route}) => {
       console.log('api is hit for ----->>>');
       const resp = await getApiWithToken(userToken, GET_PLANS);
       // resp?.data?.data?.steps
-      console.log('my plans----->>>', resp);
+      console.log('my plans----->>>', resp?.data);
       if (resp?.data?.status) {
+        setCheckCurrentUserPlan(resp?.data);
         setPlans(resp?.data?.data);
         setLoading(false);
       } else {
@@ -313,7 +342,13 @@ const Subscription = ({navigation, route}) => {
   };
   const getSubscription = async () => {
     try {
-      const resp = await getApiWithToken(userToken, CHECK_SUBSCRIPTION);
+      var url = CHECK_SUBSCRIPTION;
+      var subs = `?subscription_id=` + subscriptionid;
+      url = url + subs;
+
+      console.log('getSubscription-000', url);
+
+      const resp = await getApiWithToken(userToken, url);
       if (resp.data) {
         // if (resp.data?.plan_status != true ) {
         //   dispatch(
@@ -326,7 +361,7 @@ const Subscription = ({navigation, route}) => {
         //   dispatch(setUser(resp.data.data));
         //   navigation.navigate('Subscription');
         // }
-        console.error('CHECK_SUBSCRIPTION', resp.data);
+        console.error('CHECK_SUBSCRIPTION', resp.data?.plan_status);
         setSubscrptnStatusCheck(resp.data?.plan_status);
       }
     } catch (error) {
@@ -339,6 +374,7 @@ const Subscription = ({navigation, route}) => {
   );
 
   const [loading, setLoading] = useState('');
+  const [checkCurrentUserPlan, setCheckCurrentUserPlan] = useState('');
   const [plans, setPlans] = useState([]);
   const [My_Alert, setMy_Alert] = useState(false);
   const [alert_sms, setalert_sms] = useState('');

@@ -363,7 +363,7 @@ export const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.13,
         shadowRadius: 10,
-        // marginVertical: 6,
+        marginVertical: 7,
         margin:3,
         elevation: 5,
         alignSelf: 'center'

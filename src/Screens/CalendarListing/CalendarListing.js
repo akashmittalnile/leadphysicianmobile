@@ -993,7 +993,7 @@ const CalendarListing = ({navigation, route}) => {
               <View style={styles.noDataContainer}>
                 {!noData ? (
                   <></>
-                ) : (
+                ) : (null
                   //   <View
                   //       style={{
                   //         width: '100%',
@@ -1023,7 +1023,7 @@ const CalendarListing = ({navigation, route}) => {
                   //         style={styles.noDataSubText}
                   //       />
                   //     </View>
-                  <Text style={styles.noDataText}>No result found</Text>
+                  // <Text style={styles.noDataText}>No result found</Text>
                 )}
               </View>
             ) : (
@@ -1094,6 +1094,7 @@ const CalendarListing = ({navigation, route}) => {
         </ScrollView>
         <DatePicker
           modal
+          minimumDate={new Date()}
           open={open}
           date={date}
           mode="date"

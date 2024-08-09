@@ -729,7 +729,7 @@ const Home = ({navigation}) => {
   const scrollY = useSharedValue(0);
   const renderNextButton = () => null;
   const renderDoneButton = () => null;
-
+  const[subscrptnStatusCheck,setSubscrptnStatusCheck]=useState(false);
   const banner = [
     {
       id: '1',
@@ -756,6 +756,11 @@ const Home = ({navigation}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       getSubscription();
       getCartCount();
+      // const interval = setInterval(() => {
+      //   getSubscription();
+      //       // console.log('This will run every  3 second!');
+      //     }, 10000);
+      //     return () => clearInterval(interval);
      
     });
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -766,8 +771,9 @@ const Home = ({navigation}) => {
     setLoading(true);
     try {
       const resp = await getApiWithToken(userToken, CHECK_SUBSCRIPTION);
-      console.log("HOME-screen-getSubscription",resp.data);
+      console.log("HOME-screen-getSubscription",resp.data?.plan_status);
       if (resp.data) {
+        setSubscrptnStatusCheck(resp.data?.plan_status);
         if (resp.data?.plan_status != true) {
           setLoading(false);
           dispatch(
@@ -775,11 +781,15 @@ const Home = ({navigation}) => {
               isSubscribed: false,
             }),
           );
+         
           const jsonValue = JSON.stringify(resp.data.data);
           await AsyncStorage.setItem('userInfo', jsonValue);
           dispatch(setUser(resp.data.data));
           navigation.navigate('Subscription');
         }
+        // else if(resp.data?.plan_status == false){
+        //   Toast.show({text1:"Please wait for a while"});
+        // }
         else{
           console.error('getSubscription-else part', resp.data);
           setLoading(false);
@@ -822,6 +832,7 @@ const Home = ({navigation}) => {
     setLoading(true);
     try {
       const resp = await getApiWithToken(userToken, GET_HOME);
+ console.log("HOME Api-resp-->",resp?.data?.data);
  
       if (resp?.data?.status) {
         setLoading(false);
@@ -975,9 +986,9 @@ const Home = ({navigation}) => {
             fontFamily="Inter"
             style={{}}
           />
-          <View style={{flexDirection: 'row', top: 2}}>
+          <View style={{flexDirection: 'row', top:0}}>
             {/* course_complete_percentag */}
-            <Star height={20} width={20}></Star>
+            <Star height={18} width={18}></Star>
             <MyText
               text={Number(
                 !isNaN(parseFloat(item?.avg_review))
@@ -987,6 +998,7 @@ const Home = ({navigation}) => {
             />
           </View>
         </View>
+        <View style={{width: dimensions.SCREEN_WIDTH * 0.8,}} >
         <MyText
           text={`${
             item?.description === null
@@ -1005,6 +1017,8 @@ const Home = ({navigation}) => {
             width: dimensions.SCREEN_WIDTH * 0.8,
           }}
         />
+        </View>
+       
         <View
           style={{
             height: 40,
@@ -1248,7 +1262,7 @@ const Home = ({navigation}) => {
 
           markedDates[formattedDate] = {
             selected: true,
-            disableTouchEvent: false,
+            disableTouchEvent: false, 
             customStyles: {
               container: {
                 backgroundColor: colorObject.color,
@@ -1395,6 +1409,19 @@ const Home = ({navigation}) => {
                     fontFamily="Roboto"
                     style={{alignSelf: 'center'}}
                   />
+                  {/* <MyText
+                  text={'Oops! this information is not available for a moment'}
+                  fontWeight="400"
+                  fontSize={16}
+                  textColor={'#959FA6'}
+                  fontFamily="Roboto"
+                  style={{
+                    alignSelf: 'center',
+                    textAlign: 'center',
+                    width: dimensions.SCREEN_WIDTH * 0.6,
+                    top: 4,
+                  }}
+                /> */}
                 </View>
               )}
             />
@@ -1454,7 +1481,9 @@ const Home = ({navigation}) => {
               todayTextColor: Color.PRIMARY,
               dayTextColor: Color.LIGHT_BLACK,
               textDisabledColor: 'grey',
+          
             }}
+            current={'2024-08-05'}
             onDayPress={handleDayPress}
             markedDates={markedDates}
           />
@@ -1585,7 +1614,7 @@ const Home = ({navigation}) => {
           }}>
           <View
             style={{
-              height: '70%',
+              height: '60%',
               backgroundColor: '#fff5f7',
               borderTopLeftRadius: 30,
               borderTopRightRadius: 30,
@@ -1608,6 +1637,19 @@ const Home = ({navigation}) => {
                   fontFamily="Roboto"
                   style={{alignSelf: 'center'}}
                 />
+                <View style={{marginTop:15,justifyContent:'center',alignItems:'center'}}>
+                 <MyText
+                  text={dataModal?.title}
+                  fontWeight="700"
+                  fontSize={16}
+                  textColor={'#66757F'}
+                  fontFamily="Roboto"
+                  style={{
+                    alignSelf: 'center',
+                    textAlign: 'center',
+                  }}
+                />
+                </View>
                 <Image
                   source={
                     dataModal?.image

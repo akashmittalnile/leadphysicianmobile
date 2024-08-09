@@ -99,32 +99,32 @@ const Chat = ({navigation}) => {
     // });
   }, []);
 
-  const RenderTabs = ({item, activeTab, setActiveTab}) => {
-    return (
-      <TouchableOpacity
-        style={[
-          {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: dimensions.SCREEN_WIDTH * 0.48,
-            marginVertical: 18,
-          },
-          item.id === activeTab && {}, // Change background color if this tab is active
-        ]}
-        onPress={() => setActiveTab(item.id)}>
-        <View
-          style={[
-            styles.tabView,
-            item.id === activeTab && {backgroundColor: Color.PRIMARY},
-          ]}>
-          <Text
-            style={[styles.txtTab, item.id === activeTab && {color: 'white'}]}>
-            {item.title}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  // const RenderTabs = ({item, activeTab, setActiveTab}) => {
+  //   return (
+  //     <TouchableOpacity
+  //       style={[
+  //         {
+  //           flexDirection: 'row',
+  //           justifyContent: 'space-between',
+  //           width: dimensions.SCREEN_WIDTH * 0.48,
+  //           marginVertical: 18,
+  //         },
+  //         item.id === activeTab && {}, // Change background color if this tab is active
+  //       ]}
+  //       onPress={() => setActiveTab(item.id)}>
+  //       <View
+  //         style={[
+  //           styles.tabView,
+  //           item.id === activeTab && {backgroundColor: Color.PRIMARY},
+  //         ]}>
+  //         <Text
+  //           style={[styles.txtTab, item.id === activeTab && {color: 'white'}]}>
+  //           {item.title}
+  //         </Text>
+  //       </View>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   const RenderChat = ({item}) => {
     // console.log('item ');
@@ -132,7 +132,12 @@ const Chat = ({navigation}) => {
       <TouchableOpacity
         style={styles.chatView}
         onPress={() => {
-          navigation.navigate('ChatDetail', {id: item.id});
+          if(item?.plan_buyed == true){
+            navigation.navigate('ChatDetail', {id: item.id});
+          }else{
+            Toast.show({text1:"You dont have access"});
+          }
+         
         }}>
         <View
           style={{

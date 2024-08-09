@@ -241,14 +241,23 @@ const AdminChat = () => {
         setLoading(true);
         const formData = new FormData();
         if (ChatDocument == '') {
-          const imageName = ChatImage.path.slice(
-            ChatImage.path.lastIndexOf('/'),
-            ChatImage.path.length,
+          // const imageName = ChatImage.path.slice(
+          //   ChatImage.path.lastIndexOf('/'),
+          //   ChatImage.path.length,
+          // );
+          // formData.append('image', {
+          //   name: imageName,
+          //   type: ChatImage.mime,
+          //   uri: ChatImage.path,
+          // });
+          const imageName = ChatImage?.uri?.slice(
+            ChatImage?.uri?.lastIndexOf('/'),
+            ChatImage?.uri?.length,
           );
           formData.append('image', {
             name: imageName,
-            type: ChatImage.mime,
-            uri: ChatImage.path,
+            type: ChatImage?.type,
+            uri: ChatImage?.uri,
           });
         } else {
  
@@ -461,7 +470,7 @@ const AdminChat = () => {
                 {ChatImage || ChatDocument ? (
                   <Image
                     source={{
-                      uri: ChatImage == '' ? pdfImageUrl : ChatImage.path,
+                      uri: ChatImage == '' ? pdfImageUrl : ChatImage.uri,
                     }}
                     style={{
                       height: 40,

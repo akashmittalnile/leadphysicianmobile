@@ -787,10 +787,10 @@ import {getApiWithToken, GET_SCHDULE} from '../../Global/Service';
 import {connect, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {
-    useSharedValue,
-    useDerivedValue,
-    withSpring,
-  } from 'react-native-reanimated';
+  useSharedValue,
+  useDerivedValue,
+  withSpring,
+} from 'react-native-reanimated';
 //svg image
 import Nodata from '../../Global/Images/lock-circle.svg';
 import Pending from '../../Global/Images/timer.svg';
@@ -827,6 +827,7 @@ const Schedule = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [displaydate, setdisplaydate] = useState('Choose Date');
+  const selectedDate = moment(date).format('YYYY-MM-DD')
   const [apiDate, setapiDate] = useState(
     moment(new Date()).format('YYYY-MM-DD'),
   );
@@ -873,7 +874,6 @@ const Schedule = ({navigation}) => {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [isFocus, date]);
-
 
   const handleScroll = event => {
     const yOffset = event.nativeEvent.contentOffset.y;
@@ -943,12 +943,11 @@ const Schedule = ({navigation}) => {
   //   return mydate;
   // };
 
-  const getHome = async (dat) => {
-
-    console.log("dat--------",dat);
+  const getHome = async dat => {
+    console.log('dat--------', dat);
     setLoading(true);
-    const SelectedDate = moment(dat).format(`YYYY-MM-DD`);
-    console.log('first time getHome date check-----', SelectedDate)
+    const SelectedDate = moment(dat).format(`MM-DD-YYYY`);
+    console.log('first time getHome date check-----', SelectedDate);
     var url = GET_SCHDULE;
     var dates = `?start_date=` + SelectedDate;
     url = url + dates;
@@ -962,11 +961,10 @@ const Schedule = ({navigation}) => {
       if (resp?.data?.status) {
         console.log('my events-----???', resp?.data?.data);
         setEvents(resp?.data?.data);
-         setLoading(false);
+        setLoading(false);
       } else {
         Toast.show({text1: resp.data.message});
         setLoading(false);
-        ;
       }
     } catch (error) {
       setLoading(false);
@@ -1112,7 +1110,7 @@ const Schedule = ({navigation}) => {
               textAlign: 'center',
               fontWeight: '300',
             }}>
-           {moment(date).format('MM-DD-YYYY')}
+            {moment(date).format('MM-DD-YYYY')}
           </Text>
         </View>
         <TouchableOpacity
@@ -1145,253 +1143,364 @@ const Schedule = ({navigation}) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
         style={styles.mainView}>
-        
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: 1,
+          }}>
           <View
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-            }}>
-            <View
-              style={{
-                width: '100%',
-                height: 45,
-                position: 'absolute',
-                backgroundColor: events.length !== 0 ? '#fff' : '#E8ECF2',
-                zIndex: 999,
-                top: 4,
-              }}
-            />
-            {events.length !== 0 ? (
-              <EventCalendar
-                width={dimensions.SCREEN_WIDTH}
-                size={60}
-                events={events}
-                eventTapped={eventClicked}
-                // events={events}
-                // width={dimensions.SCREEN_WIDTH}
-                // size={60}
+              width: '100%',
+              height: 45,
+              position: 'absolute',
+              backgroundColor: events.length !== 0 ? '#fff' : '#E8ECF2',
+              zIndex: 999,
+              top: 4,
+            }}
+          />
+          {events.length !== 0 ? (
+            <EventCalendar
+              width={dimensions.SCREEN_WIDTH}
+              initDate={selectedDate}
+              size={60}
+              events={events}
+              eventTapped={eventClicked}
+              // events={events}
+              // width={dimensions.SCREEN_WIDTH}
+              // size={60}
 
-                renderEvent={item => {
-                  // const startTime = new Date(`${item.start}`);
-                  // const endTime = new Date(`${item.end}`);
-                  // const timeDifference = endTime - startTime;
-                  // var diff = (endTime.getTime() - startTime.getTime()) / 1000
-                  // diff /= (60 * 60)
-                  // console.log(Math.abs(Math.round(diff)))
-                  // console.log('timediiidd1111', Math.abs(Math.round(diff)));
-                  const startDate = new Date(`${item.start}`);
-                  const endDate = new Date(`${item.end}`);
+              renderEvent={item => {
+                // const startTime = new Date(`${item.start}`);
+                // const endTime = new Date(`${item.end}`);
+                // const timeDifference = endTime - startTime;
+                // var diff = (endTime.getTime() - startTime.getTime()) / 1000
+                // diff /= (60 * 60)
+                // console.log(Math.abs(Math.round(diff)))
+                // console.log('timediiidd1111', Math.abs(Math.round(diff)));
+                const startDate = new Date(`${item.start}`);
+                const endDate = new Date(`${item.end}`);
 
-                  // Calculate the difference in milliseconds
-                  const diffInMilliseconds = endDate - startDate;
+                // Calculate the difference in milliseconds
+                const diffInMilliseconds = endDate - startDate;
 
-                  // Convert the difference from milliseconds to hours
-                  const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
-                  console.log(
-                    Math.abs(Math.round(diffInHours)),
-                    'round off data',
-                  );
-                  const roundoff = Math.abs(Math.round(diffInHours));
-                  // Log the result
-                  console.log(diffInHours, 'diif in hourssss');
-                  if (roundoff >= 2) {
-                    console.log('if hsould be correct', roundoff > 2);
-                    return (
-                      <TouchableOpacity
+                // Convert the difference from milliseconds to hours
+                const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+                console.log(
+                  Math.abs(Math.round(diffInHours)),
+                  'round off data',
+                );
+                const roundoff = Math.abs(Math.round(diffInHours));
+                // Log the result
+                console.log(diffInHours, 'diif in hourssss');
+                // if (roundoff >= 2) {
+                  if (true) {
+                  // console.log('if hsould be correct', roundoff > 2);
+                  return (
+                    <TouchableOpacity
+                      style={{
+                        width: '98%',
+                        borderRadius: 4,
+                        alignSelf: 'center',
+                        backgroundColor: '#fff',
+                        shadowColor: '#000',
+                        shadowRadius: 2,
+                        shadowOpacity: 0.2,
+                        elevation: 3,
+                        paddingVertical: 10,
+                        marginTop: 9,
+                      }}
+                      onPress={() => {
+                        navigation.navigate('SchduleDetails', {id: item?.id});
+                      }}>
+                      <View
                         style={{
-                          width: '98%',
-                          borderRadius: 4,
+                          width: '100%',
                           alignSelf: 'center',
-                          backgroundColor: '#fff',
-                          shadowColor: '#000',
-                          shadowRadius: 2,
-                          shadowOpacity: 0.2,
-                          elevation: 3,
-                          paddingVertical: 10,
-                          marginTop: 9,
+                          height: 'auto',
                         }}
-                        onPress={() => {
-                          navigation.navigate('SchduleDetails', {id: item?.id});
-                        }}>
+                        onPress={() => {}}>
                         <View
                           style={{
-                            width: '100%',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            width: dimensions.SCREEN_WIDTH * 0.72,
                             alignSelf: 'center',
-                            height: 'auto',
-                          }}
-                          onPress={() => {}}>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                              width: dimensions.SCREEN_WIDTH * 0.72,
-                              alignSelf: 'center',
-                            }}>
-                            <View style={styles.circleView}>
-                              <MyText
-                                text={'LP'}
-                                fontFamily="Roboto"
-                                fontWeight="500"
-                                fontSize={14}
-                                textColor={Color.PRIMARY}
-                                style={{alignSelf: 'center'}}
-                              />
-                            </View>
+                          }}>
+                          <View style={styles.circleView}>
                             <MyText
-                              text={'Dr. Elsie Koh, MD MHL'}
+                              text={'LP'}
                               fontFamily="Roboto"
-                              fontWeight="bold"
+                              fontWeight="500"
                               fontSize={14}
-                              textColor={Color.LIGHT_BLACK}
+                              textColor={Color.PRIMARY}
                               style={{alignSelf: 'center'}}
                             />
-                            <View style={styles.buttonBi}>
-                              <MyText
-                                text={item.meeting_type}
-                                fontFamily="Roboto"
-                                fontWeight="700"
-                                fontSize={12}
-                                textColor={Color.WHITE}
-                                style={{alignSelf: 'center'}}
-                              />
-                            </View>
                           </View>
-
-                          <View
-                            style={{
-                              width: dimensions.SCREEN_WIDTH,
-                              height: 1,
-                              backgroundColor: '#E7EAF1',
-                              marginVertical: 5,
-                            }}></View>
-                          <View style={{marginHorizontal: 14}}>
+                          <MyText
+                            text={'Dr. Elsie Koh, MD MHL'}
+                            fontFamily="Roboto"
+                            fontWeight="bold"
+                            fontSize={14}
+                            textColor={Color.LIGHT_BLACK}
+                            style={{alignSelf: 'center'}}
+                          />
+                          <View style={styles.buttonBi}>
                             <MyText
-                              text={item?.meeting_title}
+                              text={item.meeting_type}
                               fontFamily="Roboto"
                               fontWeight="700"
-                              fontSize={14}
-                              textColor={Color.LIGHT_BLACK}
-                              style={{}}
-                            />
-
-                            <View style={{flexDirection: 'row'}}>
-                              <OnGoing></OnGoing>
-                              <MyText
-                                text={`${item?.schedule_start_date}, ${moment(
-                                  item?.schedule_start_time,
-                                  'HH:mm:ss',
-                                ).format('hh:mm A')}`}
-                                fontFamily="Roboto"
-                                fontWeight="400"
-                                fontSize={13}
-                                textColor={Color.LIGHT_BLACK}
-                                style={{marginHorizontal: 6}}
-                              />
-                            </View>
-                          </View>
-                          <View
-                            style={{
-                              width: dimensions.SCREEN_WIDTH,
-                              height: 1,
-                              backgroundColor: '#E7EAF1',
-                              marginVertical: 7,
-                            }}></View>
-                          <View
-                            style={{
-                              marginHorizontal: 10,
-                              flexDirection: 'row',
-                            }}>
-                            <Zoom height={22}></Zoom>
-                            <MyText
-                              text={'Join Zoom Meeting'}
-                              fontFamily="Roboto"
-                              fontWeight="400"
-                              fontSize={13}
-                              textColor={'#3DA1E3'}
-                              style={{}}
+                              fontSize={12}
+                              textColor={Color.WHITE}
+                              style={{alignSelf: 'center'}}
                             />
                           </View>
                         </View>
-                      </TouchableOpacity>
-                    );
-                  } else {
-                    return (
-                      <TouchableOpacity
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          width: dimensions.SCREEN_WIDTH * 0.75,
-                        }}
-                        onPress={() => {
-                          navigation.navigate('SchduleDetails', {id: item?.id});
-                        }}>
-                        <MyText
-                          text={item.meeting_title}
-                          fontFamily="Roboto"
-                          fontWeight="700"
-                          fontSize={14}
-                          textColor={Color.LIGHT_BLACK}
-                          style={{}}
-                        />
-                        <Text>
-                          {moment(item.schedule_start_time, 'HH:mm:ss').format(
-                            'hh:mm A',
-                          )}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  }
-                }}
-                initDate={apiDate}
-                scrollToFirst
+
+                        <View
+                          style={{
+                            width: dimensions.SCREEN_WIDTH,
+                            height: 1,
+                            backgroundColor: '#E7EAF1',
+                            marginVertical: 5,
+                          }}></View>
+                        <View style={{marginHorizontal: 14}}>
+                          <MyText
+                            text={item?.meeting_title}
+                            fontFamily="Roboto"
+                            fontWeight="700"
+                            fontSize={14}
+                            textColor={Color.LIGHT_BLACK}
+                            style={{}}
+                          />
+
+                          <View style={{flexDirection: 'row'}}>
+                            <OnGoing></OnGoing>
+                            <MyText
+                              text={`${item?.schedule_start_date}, ${moment(
+                                item?.schedule_start_time,
+                                'HH:mm:ss',
+                              ).format('hh:mm A')}`}
+                              fontFamily="Roboto"
+                              fontWeight="400"
+                              fontSize={13}
+                              textColor={Color.LIGHT_BLACK}
+                              style={{marginHorizontal: 6}}
+                            />
+                          </View>
+                        </View>
+                        <View
+                          style={{
+                            width: dimensions.SCREEN_WIDTH,
+                            height: 1,
+                            backgroundColor: '#E7EAF1',
+                            marginVertical: 7,
+                          }}></View>
+                        <View
+                          style={{
+                            marginHorizontal: 10,
+                            flexDirection: 'row',
+                          }}>
+                          <Zoom height={22}></Zoom>
+                          <MyText
+                            text={'Join Zoom Meeting'}
+                            fontFamily="Roboto"
+                            fontWeight="400"
+                            fontSize={13}
+                            textColor={'#3DA1E3'}
+                            style={{}}
+                          />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                } else {
+                  return (
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        width: dimensions.SCREEN_WIDTH * 0.75,
+                      }}
+                      onPress={() => {
+                        navigation.navigate('SchduleDetails', {id: item?.id});
+                      }}>
+                      <MyText
+                        text={item.meeting_title}
+                        fontFamily="Roboto"
+                        fontWeight="700"
+                        fontSize={14}
+                        textColor={Color.LIGHT_BLACK}
+                        style={{}}
+                      />
+                      <Text>
+                        {moment(item.schedule_start_time, 'HH:mm:ss').format(
+                          'hh:mm A',
+                        )}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }
+              }}
+              
+              scrollToFirst
+            />
+          //   <EventCalendar
+
+          //   // initDate={'2024-05-03'}
+          //   // initDate={selectedDate}
+          //   initDate={selectedDate}
+          //   eventTapped={eventClicked}
+          //   // Function on event press
+          //   events={events}
+          //   // Passing the Array of event
+          //   width={dimensions.SCREEN_WIDTH}
+          //   // Container width
+          //   size={60}
+          //   renderEvent={(item) => {
+
+          //     // const startTime = new Date(`${item.start}`);
+          //     // const endTime = new Date(`${item.end}`);
+          //     // const timeDifference = endTime - startTime;
+          //     // var diff = (endTime.getTime() - startTime.getTime()) / 1000
+          //     // diff /= (60 * 60)
+          //     // console.log(Math.abs(Math.round(diff)))
+          //     // console.log('timediiidd1111', Math.abs(Math.round(diff)));
+          //     const startDate = new Date(`${item.start}`);
+          //     const endDate = new Date(`${item.end}`);
+
+          //     // Calculate the difference in milliseconds
+          //     const diffInMilliseconds = endDate - startDate;
+
+          //     // Convert the difference from milliseconds to hours
+          //     const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+          //     console.log(Math.abs(Math.round(diffInHours)), 'round off data')
+          //     const roundoff = Math.abs(Math.round(diffInHours))
+          //     // Log the result
+          //     console.log(diffInHours, 'diif in hourssss');
+
+          //     const dateTime = `${moment(item.schedule_start_date).format('MM/DD/YYYY')}, ${moment(item.schedule_start_time, "HH:mm:ss").format("hh:mm A")}`
+
+          //     // if (roundoff >= 2)
+          //     if (true) {
+          //       // console.log('if hsould be correct', roundoff > 2);
+          //       return (
+          //         <TouchableOpacity style={{
+          //           width: '98%', borderRadius: 4,
+          //           backgroundColor: 'white',
+          //           shadowColor: '#000',
+          //           shadowRadius: 2,
+          //           shadowOpacity: 0.2,
+          //           elevation: 3,
+          //           zIndex: 999,
+          //           // paddingVertical: 10,
+
+
+          //         }}
+          //           onPress={() => {
+          //             // navigation.navigate('SchduleDetails', { id: item?.id }) 
+          //           }}
+          //         >
+          //           <View style={{ width: '100%', height: 20, borderBottomColor: 'grey', borderBottomWidth: 0.5, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
+
+          //             <View style={{ width: 50, alignItems: 'center', }}>
+          //               <Text style={{ fontSize: 10, color: 'black', }}>{item?.meeting_title}</Text>
+          //             </View>
+
+          //             {/* <View style={{ width: 50 }}>
+          //               <Text style={{ fontSize: 10, color: 'black', }}>Goals</Text>
+          //             </View> */}
+
+          //             {/* <TouchableOpacity style={{ width: 30, height: '100%', backgroundColor: "#B357C3", borderRadius: 7,  justifyContent: "center" }}>
+          //               <Text style={{ fontSize: 10, color: "#fff", textAlign: "center", fontWeight: "400" }}>View</Text>
+          //             </TouchableOpacity> */}
+
+          //           </View>
+          //           <View style={{ width: '100%', flexDirection: 'row', padding: 3 }}>
+          //             {/* <Image source={OnGoing} /> */}
+          //             <Text style={{ fontSize: 12, color: 'black', }}>{item.note}</Text>
+          //           </View>
+          //           <View style={{ width: '100%', flexDirection: 'row', padding: 3 }}>
+          //             <Image source={OnGoing} />
+          //             <Text style={{ fontSize: 12, color: 'black', marginLeft: 5 }}>{dateTime}</Text>
+          //           </View>
+          //           <View style={{ height: 0.5, backgroundColor: "grey" }} />
+          //           <View style={{ width: '100%', flexDirection: 'row', padding: 5 }}>
+          //             <Image style={{ width: 18, height: 18 }} width={18} height={18} source={Zoom} />
+          //             <Text style={{ fontSize: 12, color: '#47AFF0', marginLeft: 5, }}>{"Join Zoom Meeting"}</Text>
+          //           </View>
+
+
+          //         </TouchableOpacity>
+
+          //       )
+          //     }
+          //     else {
+          //       return (
+          //         <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', width: dimensions.SCREEN_WIDTH * 0.75, }} onPress={() => { navigation.navigate('SchduleDetails', { id: item?.id }) }}>
+          //           <Text
+          //             text={item.meeting_title}
+          //             fontFamily="Roboto"
+          //             fontWeight='700'
+          //             fontSize={14}
+          //             color={Color.LIGHT_BLACK}
+          //             style={{}}
+
+          //           >{item.meeting_title}</Text>
+          //           <Text>{moment(item.schedule_start_time, "HH:mm:ss").format("hh:mm A")}</Text>
+
+          //         </TouchableOpacity>
+          //       )
+
+          //     }
+          //   }}
+
+          //   scrollToFirst
+          // />
+          ) : (
+            <View
+              style={{
+                alignSelf: 'center',
+                justifyContent: 'center',
+                width: dimensions.SCREEN_WIDTH * 0.9,
+                flex: 1,
+                alignItems: 'center',
+                height: dimensions.SCREEN_HEIGHT * 0.6,
+              }}>
+              <Nodata
+                style={{alignSelf: 'center'}}
+                height={119}
+                width={119}></Nodata>
+              <MyText
+                text={'No data found !'}
+                fontWeight="500"
+                fontSize={24}
+                textColor={Color.LIGHT_BLACK}
+                fontFamily="Roboto"
+                style={{alignSelf: 'center', top: 4}}
               />
-            ) : (
-              <View
+              <MyText
+                text={'Oops! this information is not available for a moment'}
+                fontWeight="400"
+                fontSize={16}
+                textColor={'#959FA6'}
+                fontFamily="Roboto"
                 style={{
                   alignSelf: 'center',
-                  justifyContent: 'center',
-                  width: dimensions.SCREEN_WIDTH * 0.9,
-                  flex: 1,
-                  alignItems: 'center',
-                  height: dimensions.SCREEN_HEIGHT * 0.6,
-                }}>
-                <Nodata
-                  style={{alignSelf: 'center'}}
-                  height={119}
-                  width={119}></Nodata>
-                <MyText
-                  text={'No data found !'}
-                  fontWeight="500"
-                  fontSize={24}
-                  textColor={Color.LIGHT_BLACK}
-                  fontFamily="Roboto"
-                  style={{alignSelf: 'center', top: 4}}
-                />
-                {/* <MyText
-                    text={
-                      'Oops! this information is not available for a moment'
-                    }
-                    fontWeight="400"
-                    fontSize={16}
-                    textColor={'#959FA6'}
-                    fontFamily="Roboto"
-                    style={{
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                      width: dimensions.SCREEN_WIDTH * 0.6,
-                      top: 4,
-                    }}
-                  /> */}
-              </View>
-            )}
-          </View>
-        
+                  textAlign: 'center',
+                  width: dimensions.SCREEN_WIDTH * 0.6,
+                  top: 4,
+                }}
+              />
+            </View>
+          )}
+        </View>
       </ScrollView>
       {/* <View style={{width:100,height:800}} /> */}
       {/* </ScrollView> */}
       <DatePicker
         modal
+        minimumDate={new Date()}
         open={open}
         date={date}
         mode="date"

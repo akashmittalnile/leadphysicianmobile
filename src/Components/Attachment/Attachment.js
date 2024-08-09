@@ -7,9 +7,11 @@ import {
   Alert,
   Platform,
   TouchableOpacity,
+  PermissionsAndroid,
 } from 'react-native';
 //third parties
 import ImagePicker from 'react-native-image-crop-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {PERMISSIONS, check, RESULTS, request} from 'react-native-permissions';
 //styles
@@ -26,7 +28,24 @@ const Attachment = ({visible, setVisibility, setImage, setDocument}) => {
   //function : imp function
   const CheckGalleryPermission = async () => {
     if (Platform.OS === 'android') {
-      openLibrary();
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+        PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED,
+        {
+          title: 'Storage Permission Required',
+          message:
+            'Application needs access to your storage to access camera',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        openLibrary();
+        console.log('Storage Permission Granted.');
+      } else {
+        Toast.show({type: 'error', text1: `Storage Permission Not Granted`});
+        // Alert.alert('Error', 'Storage Permission Not Granted');
+      }
+      // openLibrary();
     } else {
       const res = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
       if (res === RESULTS.GRANTED) {
@@ -51,25 +70,80 @@ const Attachment = ({visible, setVisibility, setImage, setDocument}) => {
       }
     }
   };
-  const openLibrary = async () => {
-    try {
-      let value = await ImagePicker.openPicker({
-        width: 1080,
-        height: 1080,
-        cropping: true,
-        mediaType: 'photo',
-        compressImageQuality: 1,
-        compressImageMaxHeight: 1080 / 2,
-        compressImageMaxWidth: 1080 / 2,
-      }).then(image => {
-        setDocument('');
-        setImage(image);
+
+  const openLibrary = () => {
+    let options = {
+      title: 'Select Image',
+      customButtons: [
+        {
+          name: 'customOptionKey',
+          title: 'Choose Photo from Custom Option',
+        },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        // Alert.alert('User cancelled camera picker');
         closeModal();
-      });
-    } catch (error) {
-      console.error('error in openLibrary', error.response);
-    }
+        // Toast.show({ text1: 'User cancelled image picker' });
+        // Alert.alert('User cancelled image picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        closeModal();
+        Toast.show({text1: 'Camera not available on device'});
+        // Alert.alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        closeModal();
+        Toast.show({text1: 'Permission not satisfied'});
+        // Alert.alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        closeModal();
+        Toast.show({text1: response.errorMessage});
+        // Alert.alert(response.errorMessage);
+        return;
+      } else {
+        setDocument('');
+        setImage(response.assets[0]);
+        closeModal();
+        // setFilePath(response.assets[0]);
+        // setShowImageSourceModal(false);
+      }
+      closeModal();
+    });
   };
+
+  // const openLibrary = async () => {
+  //   try {
+  //     let value = await ImagePicker.openPicker({
+  //       width: 1080,
+  //       height: 1080,
+  //       cropping: true,
+  //       mediaType: 'photo',
+  //       forceJpg: true,
+  //       compressImageQuality: 1,
+  //       compressImageMaxHeight: 1080 / 2,
+  //       compressImageMaxWidth: 1080 / 2,
+  //     })
+  //     // let value = await ImagePicker.openCamera({
+  //     //   width: 300,
+  //     //   height: 400,
+  //     //   cropping: true,
+  //     // })
+  //     .then(image => {
+  //       setDocument('');
+  //       setImage(image);
+  //       closeModal();
+  //     });
+  //   } catch (error) {
+  //     console.error('error in openLibrary', error);
+  //   }
+  // };
 
   // const openDocument = async () => {
   //   try {

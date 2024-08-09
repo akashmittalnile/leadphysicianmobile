@@ -148,14 +148,23 @@ const ChatDetail = ({navigation, route}) => {
         setShowLoader(true);
         const formData = new FormData();
         if (ChatDocument == '') {
-          const imageName = ChatImage.path.slice(
-            ChatImage.path.lastIndexOf('/'),
-            ChatImage.path.length,
+          // const imageName = ChatImage.path.slice(
+          //   ChatImage.path.lastIndexOf('/'),
+          //   ChatImage.path.length,
+          // );
+          // formData.append('image', {
+          //   name: imageName,
+          //   type: ChatImage.mime,
+          //   uri: ChatImage.path,
+          // });
+          const imageName = ChatImage?.uri?.slice(
+            ChatImage?.uri?.lastIndexOf('/'),
+            ChatImage?.uri?.length,
           );
           formData.append('image', {
             name: imageName,
-            type: ChatImage.mime,
-            uri: ChatImage.path,
+            type: ChatImage?.type,
+            uri: ChatImage?.uri,
           });
         } else {
           let documentPath = ChatDocument[0].uri;
@@ -245,17 +254,17 @@ const ChatDetail = ({navigation, route}) => {
     };
   }, []);
 
-  const documentPicker = useCallback(async () => {
-    try {
-      const resp = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      setChatDocument(resp);
-      console.log('result', resp);
-    } catch (err) {
-      console.log('document picker err', err.message);
-    }
-  }, []);
+  // const documentPicker = useCallback(async () => {
+  //   try {
+  //     const resp = await DocumentPicker.pick({
+  //       type: [DocumentPicker.types.allFiles],
+  //     });
+  //     setChatDocument(resp);
+  //     console.log('result', resp);
+  //   } catch (err) {
+  //     console.log('document picker err', err.message);
+  //   }
+  // }, []);
 
   // const openDocument = async () => {
   //     try {
@@ -349,7 +358,7 @@ const ChatDetail = ({navigation, route}) => {
               {ChatImage || ChatDocument ? (
                 <Image
                   source={{
-                    uri: ChatImage == '' ? pdfImageUrl : ChatImage.path,
+                    uri: ChatImage == '' ? pdfImageUrl : ChatImage.uri,
                   }}
                   style={{
                     height: 40,

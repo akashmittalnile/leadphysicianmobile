@@ -4,13 +4,19 @@ import { Alert } from 'react-native';
 //import : axios
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions} from '@react-navigation/core';
+import { store } from '../reduxToolkit/store/store';
+import { setUserToken } from '../reduxToolkit/reducer/user';
+import { useNavigation } from '@react-navigation/native';
 
 const isProduction = false;
+// const navigation = useNavigation();
 //endpoint : base_url
 // export const BASE_URL = `https://devtrackcert.trackallpro.com/api/`;
 
-export const BASE_URL = `https://www.niletechinnovations.com/projects/leadphysician/api/`;
-
+// export const BASE_URL = `https://www.niletechinnovations.com/projects/leadphysician/api/`;
+export const BASE_URL = `https://nileprojects.in/leadphysician/api/`;
 export const LOGIN = `login`;
 export const REGISTER = `register`;
 export const SET_GOAL = `goal`;
@@ -115,6 +121,22 @@ export const CHOOSE_SHIPPING_OPTION = 'choose-shipping-option';
 export const COUPON_APPLIED_COURSE = 'coupon-applied-course';
 export const REMOVE_APPLIED_COUPON_COURSE = 'remove-applied-coupon-course';
 
+const logout = async (message) => {
+    try {
+        Toast.show({ text1: message });
+        await AsyncStorage.clear();
+        store.navigate('Welcome');
+      
+    } catch (error) {
+      console.log('error in logout', error);
+    }
+     
+  };
+//   const gotoWelcome = () =>
+//     CommonActions.reset({
+//       index: 1,
+//       routes: [{name: 'Welcome'}],
+//     });
 
 //function : post API
 export const postAPI = async (endPoint, postData, token = '') => {
@@ -163,6 +185,7 @@ export const getApi = endPoint =>
                 console.log('data', error.response.data);
                 console.log('status', error.response.status);
             } else if (error?.response?.status === 401) {
+                // logout("Session has been expired, please login again");
                 // Alert.alert('', `${error.response.data.message}`);
                 // Toast.show({ text1: error.response.data.message });
                 console.log('data', error.response.data);
@@ -208,6 +231,7 @@ export const getApiWithToken = (token, endPoint) =>
                 console.log('data', error.response.data);
                 console.log('status', error.response.status);
             } else if (error?.response?.status === 401) {
+                // logout("Session has been expired, please login again");
                 // Alert.alert('', `${error.response.data.message}`);
                 // Toast.show({ text1: error.response.data.message });
                 console.log('data', error.response.data);
@@ -251,6 +275,7 @@ export const postApi = (endPoint, data) =>
                 console.log('error status', error?.response?.status);
                 console.log('error message', error.response.data.message);
             } else if (error?.response?.status === 401) {
+                // logout("Session has been expired, please login again");
                 // Alert.alert('', `${error.response.data.message}`);
                 Toast.show({ text1: error.response.data.message });
                 console.log('error status', error?.response?.status);
@@ -312,6 +337,7 @@ export const postApiWithToken = (token, endPoint, data) =>
                 console.log('error status', error?.response?.status);
                 console.log('error message', error.response.data.message);
             } else if (error?.response?.status === 401) {
+                // logout("Session has been expired, please login again");
                 // Alert.alert('', `${error.response.data.message}`);
                 // Toast.show({ text1: error.response.data.message });
                 console.log('error status', error?.response?.status);
@@ -354,6 +380,7 @@ export const postJsonApiWithToken = (token, endPoint, data) =>
                 console.log('data', error.response.data);
                 console.log('status', error.response.status);
             } else if (error?.response?.status === 401) {
+                // logout("Session has been expired, please login again");
                 // Alert.alert('', `${error.response.data.message}`);
                 // Toast.show({ text1: error.response.data.message });
                 console.log('data', error.response.data);
@@ -397,6 +424,7 @@ export const deleteApi = (token, endPoint, id) =>
                 console.log('data', error.response.data);
                 console.log('status', error.response.status);
             } else if (error?.response?.status === 401) {
+                // logout("Session has been expired, please login again");
                 // Alert.alert('', `${error.response.data.message}`);
                 Toast.show({ text1: error.response.data.message });
                 console.log('data', error.response.data);

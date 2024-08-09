@@ -21,6 +21,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
   return (
     <Calendar
       date={value ? value : undefined}
+      datef
       maxDate={`${new Date().toUTCString()}`}
       renderHeader={(date: any) => <CalendarCustomHeader date={date} />}
       // renderArrow={(props) => <RenderArrow obj={props} />}

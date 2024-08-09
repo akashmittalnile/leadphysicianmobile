@@ -27,6 +27,7 @@ import Nodata from '../../Global/Images/lock-circle.svg';
 import {styles} from './MyCourseStyle';
 // import CustomLoader from 'components/CustomLoader/CustomLoader';
 //import : third parties
+import debounce from 'lodash.debounce';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 // import DateTimePicker from '@react-native-community/datetimepicker';
@@ -50,33 +51,7 @@ import {
 } from '../../Global/Service';
 import {CommonActions} from '@react-navigation/core';
 import SkeletonContainer from '../../Components/Skelton/SkeltonContainer';
-const physicianCourse = [
-  {
-    id: '1',
-    title: 'Module 01',
-    status: 'Completed',
-  },
-  {
-    id: '2',
-    title: 'Module 02',
-    status: 'Ongoing',
-  },
-  {
-    id: '3',
-    title: 'Module 03',
-    status: 'Pending',
-  },
-  {
-    id: '4',
-    title: 'Module 03',
-    status: 'Pending',
-  },
-  {
-    id: '5',
-    title: 'Module 03',
-    status: 'Pending',
-  },
-];
+ 
 
 // import {WebView} from 'react-native-webview';
 
@@ -132,12 +107,14 @@ const MyCourse = ({navigation}) => {
   //get data for myCourses
   //get data for list
 
-  const getCartCount = async item => {
+  const getCartCount = debounce (async (item) => {
     var url = GET_MYCOURSES;
     var murl = `?title=` + item;
     if (item != '' || item != undefined) {
       url = url + murl;
     }
+    console.log("getCartCount.....",url);
+    
     try {
       setLoading(true);
       const resp = await getApiWithToken(userToken, url);
@@ -154,6 +131,12 @@ const MyCourse = ({navigation}) => {
       console.log('error in getCartCount', error);
     }
     setLoading(false);
+  },1000);
+  const handleSearch = (text) => {
+    console.log("handleSearch[[[",text);
+    
+    setsearchValue(text);
+    getCartCount(text); // Debounce the search function
   };
 
   const dateformates2 = (month, day, year) => {
@@ -407,6 +390,8 @@ const MyCourse = ({navigation}) => {
       </TouchableOpacity>
     );
   };
+ 
+
   //UI
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -443,17 +428,18 @@ const MyCourse = ({navigation}) => {
             onChangeText={e => {
               // setdisplaydate('');
               console.log('my e', e);
-              if (e.text === '') {
-                console.log('my empyt text');
-              }
-              setsearchValue(e);
-              getCartCount(e);
-              if (e.text === '') {
-                getCartCount('');
-              } else {
-                //  ArtSearch(e.text);
-                getCartCount(e, false);
-              }
+              handleSearch(e)
+              // if (e.text === '') {
+              //   console.log('my empyt text');
+              // }
+              // setsearchValue(e);
+              // getCartCount(e);
+              // if (e.text === '') {
+              //   getCartCount('');
+              // } else {
+              //   //  ArtSearch(e.text);
+              //   getCartCount(e, false);
+              // }
             }}
             onPress={() => {
               setsearchValue('');

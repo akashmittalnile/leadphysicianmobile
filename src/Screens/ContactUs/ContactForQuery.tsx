@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
+  RefreshControl,
 } from 'react-native';
 import React from 'react';
 import Container from './Container';
@@ -44,6 +45,7 @@ import CustomTextBox from '../../Components/CustomTextBox';
 import {CONTACT_US, postApiWithToken} from '../../Global/Service';
 import CommunityModal from './CommunityModal';
 import { height } from '../../Global/Constants';
+import MyHeader from '../../Components/MyHeader/MyHeader';
 
 const tempData = [
   {text: 'Plan Related', value: 1},
@@ -64,6 +66,7 @@ const ContactForQuery = () => {
 
   // const contact = useSelector(state => state.reload.Contact);
   const formikRef = React.useRef<Formik>();
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const [selectedButton, setSelectedButton] = React.useState<number>(1);
   const [modal, setModal] = React.useState<boolean>(false);
   const [loader, setLoader] = React.useState<boolean>(false);
@@ -165,14 +168,38 @@ const ContactForQuery = () => {
   const inquiryHandler = (number: number) => {
     setSelectedButton(number);
   };
+
+  const checkcon = () => {
+    setDescription('');
+  };
+  const wait = timeout => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    checkcon();
+    wait(2000).then(() => {
+      setRefreshing(false);
+    });
+  }, []);
+
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <Container
+    <SafeAreaView style={{flex: 1,}}>
+       <View style={styles.headerContainer}>
+        <MyHeader Title={`Contact us`} isBackButton />
+      </View>
+      {/* <Container
         headerText="Contact us"
         reloadOnScroll={false}
-        scrollViewContentContainerStyle={{height: '75%'}}>
-         
-            <View style={{paddingTop: 1}}>
+        // scrollViewContentContainerStyle={{height: '75%'}}
+        > */}
+         <ScrollView
+         showsVerticalScrollIndicator={false}
+         contentContainerStyle={{paddingBottom: '20%'}}
+         refreshControl={
+           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+         } 
+         >
+            <View style={{paddingTop: 1,flex:1,paddingHorizontal:20}}>
              
               <View style={{ marginTop: 0 }}>
                         <View style={{
@@ -249,7 +276,36 @@ const ContactForQuery = () => {
 
                   </CustomTextBox>
               </View>
-             
+             {/* <View style={{ marginTop: 12 }}>
+                        <View style={{
+                            height: 64,
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            borderRadius: 5,
+
+                            flexDirection: 'row',
+                            justifyContent: "center",
+                            alignItems: "center",
+                            paddingHorizontal: 10,
+                            alignSelf: 'center',
+                            borderWidth: 1,
+                            height: 64,
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            borderRadius: 5,
+                            width: '100%',
+                            flexDirection: 'row',
+                            justifyContent: "space-between",
+                            paddingHorizontal: 10,
+                            borderWidth: 1,
+                            borderColor: '#959FA6',
+                            paddingRight: 40,
+                            backgroundColor:'#D4D4D4'
+                        }}>
+                            <Call width={24} height={24} />
+                            <Text style={{ width: '90%', color: 'black' }}>{phoneno}</Text>
+                        </View>
+                    </View> */}
               <ScrollView
                 horizontal
                 style={{marginTop: responsiveHeight(2)}}
@@ -312,8 +368,8 @@ const ContactForQuery = () => {
               />
               <View style={{height: 800}}></View>
             </View>
-          
-      </Container>
+            </ScrollView>
+      {/* </Container> */}
       {modal && (
         <CommunityModal
           heading="Thank You For Submitting
@@ -350,6 +406,13 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     backgroundColor: Color.PRIMARY,
+  },
+  headerContainer: {
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    marginBottom: responsiveHeight(0.5),
+    paddingBottom: responsiveHeight(2),
+    // backgroundColor: Color.PRIMARY,
   },
   phoneInput: {
     // marginTop: responsiveHeight(0.2),
