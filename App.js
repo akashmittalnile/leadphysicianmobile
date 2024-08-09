@@ -1,5 +1,3 @@
-
-
 // import React, { useEffect, useRef } from 'react';
 
 // import {
@@ -63,7 +61,7 @@
 //   React.useEffect(() => {
 
 //     // dynamicLinks()
-//     // .getInitialLink() 
+//     // .getInitialLink()
 //     // .then(link => {
 //     //   console.log('My url is in App js ==>>',link)
 //     //   // if (link.url === 'https://invertase.io/offer') {
@@ -170,7 +168,7 @@
 // });
 
 // export default App;
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -178,34 +176,41 @@ import {
   LogBox,
   Platform,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import {NavigationContainer} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 import Drawer from './src/Navigation/Drawer/Drawer';
-import { StripeProvider } from '@stripe/stripe-react-native';
-import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
-import { Provider } from 'react-redux';
+import {StripeProvider} from '@stripe/stripe-react-native';
+import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
+import {Provider} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
-import { store } from './src/reduxToolkit/store/store';
-import { setUserNotifications } from './src/reduxToolkit/reducer/user';
-import { NotificationManagerAndroid } from './src/NotificationManagerAndroid';
-import { NotificationManagerIOS } from './src/NotificationManagerIOS';
+import {store} from './src/reduxToolkit/store/store';
+import {setUserNotifications} from './src/reduxToolkit/reducer/user';
+import {NotificationManagerAndroid} from './src/NotificationManagerAndroid';
+import {NotificationManagerIOS} from './src/NotificationManagerIOS';
+import {navigationRef} from './src/Global/Service';
 
 const App = () => {
   LogBox.ignoreAllLogs();
   const toastConfig = {
-    success: (props) => (
+    success: props => (
       <BaseToast
         {...props}
-        style={{ borderLeftColor: '#ADC430', borderColor: '#ADC430', borderWidth: 1, height: 55, width: '90%' }}
-        contentContainerStyle={{ paddingHorizontal: 15 }}
-        text1Style={{ fontSize: 12, fontWeight: '400' }}
+        style={{
+          borderLeftColor: '#ADC430',
+          borderColor: '#ADC430',
+          borderWidth: 1,
+          height: 55,
+          width: '90%',
+        }}
+        contentContainerStyle={{paddingHorizontal: 15}}
+        text1Style={{fontSize: 12, fontWeight: '400'}}
       />
     ),
-    error: (props) => (
+    error: props => (
       <ErrorToast
         {...props}
-        text1Style={{ fontSize: 12 }}
-        text2Style={{ fontSize: 12 }}
+        text1Style={{fontSize: 12}}
+        text2Style={{fontSize: 12}}
       />
     ),
   };
@@ -215,7 +220,9 @@ const App = () => {
   useEffect(() => {
     const requestUserPermission = async () => {
       const authStatus = await messaging().requestPermission();
-      const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
       if (enabled) {
         console.log('Authorization status:', authStatus);
       }
@@ -231,23 +238,26 @@ const App = () => {
       }
     });
 
-    const unsubscribeOnNotificationOpenedApp = messaging().onNotificationOpenedApp(remoteMessage => {
-      const data = remoteMessage.data;
-      if (data) {
-        console.log('Notification opened from background state:', data);
-        dispatch(setUserNotifications(data.count || '1'));
-      }
-    });
-
-    messaging().getInitialNotification().then(remoteMessage => {
-      if (remoteMessage) {
+    const unsubscribeOnNotificationOpenedApp =
+      messaging().onNotificationOpenedApp(remoteMessage => {
         const data = remoteMessage.data;
         if (data) {
-          console.log('Notification opened from quit state:', data);
+          console.log('Notification opened from background state:', data);
           dispatch(setUserNotifications(data.count || '1'));
         }
-      }
-    });
+      });
+
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          const data = remoteMessage.data;
+          if (data) {
+            console.log('Notification opened from quit state:', data);
+            dispatch(setUserNotifications(data.count || '1'));
+          }
+        }
+      });
 
     return () => {
       unsubscribeOnMessage();
@@ -255,13 +265,24 @@ const App = () => {
     };
   }, [dispatch]);
 
-  messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-    const { data, messageId } = remoteMessage;
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    const {data, messageId} = remoteMessage;
     console.log('Background notification data:', data, messageId);
     if (Platform.OS === 'android') {
-      NotificationManagerAndroid.showNotification(data.title, data.msg, messageId, data);
+      NotificationManagerAndroid.showNotification(
+        data.title,
+        data.msg,
+        messageId,
+        data,
+      );
     } else {
-      NotificationManagerIOS.showNotification(2, data.title, data.msg, data, {});
+      NotificationManagerIOS.showNotification(
+        2,
+        data.title,
+        data.msg,
+        data,
+        {},
+      );
     }
   });
 
@@ -271,7 +292,7 @@ const App = () => {
       urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
       merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
     >
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Drawer />
         <Toast config={toastConfig} />
       </NavigationContainer>
@@ -290,4 +311,3 @@ const styles = StyleSheet.create({
 });
 
 export default AppWrapper;
-

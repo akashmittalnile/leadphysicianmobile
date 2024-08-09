@@ -33,6 +33,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import Color from '../../Global/Color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {POST_APP_REVIEW, postApiWithToken} from '../../Global/Service';
+import {useSelector} from 'react-redux';
 
 interface ReviewModalProps {
   hideModal?: () => void;
@@ -40,6 +42,7 @@ interface ReviewModalProps {
 
 const ReviewModal: React.FC<ReviewModalProps> = ({hideModal}) => {
   // const dispatch = useAppDispatch();
+  const userToken = useSelector((state: any) => state.user.userToken);
   const [loader, setLoader] = React.useState<boolean>(false);
   const [review, setReview] = React.useState<{review: number; comment: string}>(
     {review: 1, comment: ''},
@@ -85,24 +88,17 @@ const ReviewModal: React.FC<ReviewModalProps> = ({hideModal}) => {
         setErr(true);
         return;
       }
-      const token = await AsyncStorage.getItem('userToken');
-      if (!token) {
-        return;
+      const response = await postApiWithToken(userToken, POST_APP_REVIEW, {
+        rating: review?.review,
+        review: review?.comment,
+      });
+      if (response?.data?.status) {
+        cancelModal();
       }
-      // const response = await PostApiWithToken(
-      //   endPoint.submitRating,
-      //   {rating: review.review, description: review.comment},
-      //   token,
-      // );
-      // if (response?.data?.status) {
-      //   dispatch(
-      //     userDetailsHandler({ratingSubmit: true, showReviewModal: false}),
-      //   );
-      // }
-      // Toast.show({
-      //   type: response?.data?.status ? 'success' : 'error',
-      //   text1: response?.data?.message,
-      // });
+      Toast.show({
+        type: response?.data?.status ? 'success' : 'error',
+        text1: response?.data?.message,
+      });
     } catch (err: any) {
       console.log('err in rating', err?.message);
     } finally {

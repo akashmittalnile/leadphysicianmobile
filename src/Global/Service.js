@@ -9,7 +9,9 @@ const isProduction = false;
 //endpoint : base_url
 // export const BASE_URL = `https://devtrackcert.trackallpro.com/api/`;
 
-export const BASE_URL = `https://www.niletechinnovations.com/projects/leadphysician/api/`;
+// export const BASE_URL = `https://www.niletechinnovations.com/projects/leadphysician/api/`;
+
+export const BASE_URL = 'https://nileprojects.in/leadphysician/api/';
 
 export const LOGIN = `login`;
 export const REGISTER = `register`;
@@ -33,6 +35,7 @@ export const SAVE_LATER = `course/module/step/save-to-later`;
 export const GET_FAVORIES = `course/favourite-modules`;
 export const GET_SAVED = `course/saved-modules`;
 export const GET_HOME = `home`;
+export const POST_APP_REVIEW = 'reviews';
 export const GET_GROUPS = `plans-with-users`;
 export const POST_REVIEW = `course/add-review`;
 export const ALL_REVIE = `course/review-list`;
@@ -116,12 +119,44 @@ export const CHOOSE_SHIPPING_OPTION = 'choose-shipping-option';
 export const COUPON_APPLIED_COURSE = 'coupon-applied-course';
 export const REMOVE_APPLIED_COUPON_COURSE = 'remove-applied-coupon-course';
 export const IOS_SUBSCRIPTION = 'ios-subscription';
-import {CommonActions} from '@react-navigation/core';
+import { createRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {store} from '../reduxToolkit/store/store';
+import {setUser, setUserToken} from '../reduxToolkit/reducer/user';
+
+export const navigationRef = createRef()
+
+export function _navigate(name, params) {
+  navigationRef.current?.navigate(name, params);
+}
 
 const loginHandler = async () => {
-  await AsyncStorage.clear('userToken');
-  CommonActions?.navigate('SignIn');
+  try {
+    const qwer = await AsyncStorage.clear();
+    console.log({qwer});
+    store?.dispatch(setUserToken(''));
+    store?.dispatch(setUser(''));
+    setTimeout(() => {
+      _navigate('SignIn')
+    }, 300);
+  } catch (err) {
+    console.log('err in loginHandler in service', err);
+  }
+};
+
+const handleError = async error => {
+  if (error?.response) {
+    const {status, data} = error.response;
+    Toast.show({text1: data.message});
+    console.log('Error data:', data);
+    if (status === 401) {
+      loginHandler();
+    }
+    console.log('Status:', status);
+  } else {
+    Toast.show({text1: error.message});
+    console.log('Error:', error);
+  }
 };
 
 //function : post API
@@ -159,33 +194,7 @@ export const getApi = endPoint =>
       return res;
     })
     .catch(error => {
-      if (error?.response?.status === 422) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-        console.log(error.response.headers);
-      } else if (error?.response?.status === 404) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else if (error?.response?.status === 401) {
-        // Alert.alert('', `${error.response.data.message}`);
-        // Toast.show({ text1: error.response.data.message });
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else if (error?.response?.status === 500) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      }
+      handleError(error);
     });
 //function :  get api with token
 export const getApiWithToken = (token, endPoint) =>
@@ -203,35 +212,7 @@ export const getApiWithToken = (token, endPoint) =>
       return res;
     })
     .catch(error => {
-      console.log(endPoint, 'getApiWithToken', error);
-      if (error?.response?.status === 422) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-        console.log(error.response.headers);
-      } else if (error?.response?.status === 404) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else if (error?.response?.status === 401) {
-        loginHandler();
-        // Alert.alert('', `${error.response.data.message}`);
-        // Toast.show({ text1: error.response.data.message });
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else if (error?.response?.status === 500) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else {
-        // Alert.alert('', `${error.response.data.message}`);
-        // Toast.show({ text1: error.response.data.message });
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      }
+      handleError(error);
     });
 //function :  post api
 export const postApi = (endPoint, data) =>
@@ -246,44 +227,7 @@ export const postApi = (endPoint, data) =>
       return res;
     })
     .catch(error => {
-      console.log('data', error.response);
-      console.log('status', error.response);
-      console.log('header', error.response);
-      if (error?.response?.status === 422) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      } else if (error?.response?.status === 404) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      } else if (error?.response?.status === 401) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      } else if (error?.response?.status === 500) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      } else if (error?.response?.status === 0) {
-        // Alert.alert(
-        //   '',
-        //   `Internet connection appears to be offline. Please check your internet connection and try again.`,
-        // );
-        Toast.show({
-          text1:
-            'Internet connection appears to be offline. Please check your internet connection and try again.',
-        });
-      } else {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      }
+      handleError(error);
     });
 
 //function : post api with token
@@ -307,35 +251,7 @@ export const postApiWithToken = (token, endPoint, data) =>
       return res;
     })
     .catch(error => {
-      console.log('postApiWithToken', endPoint, data);
-      console.log('error', error);
-      if (error?.response?.status === 422) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-        console.log(error.response.headers);
-      } else if (error?.response?.status === 404) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      } else if (error?.response?.status === 401) {
-        // Alert.alert('', `${error.response.data.message}`);
-        // Toast.show({ text1: error.response.data.message });
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      } else if (error?.response?.status === 500) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      } else {
-        // Alert.alert('', `${error}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('error status', error?.response?.status);
-        console.log('error message', error.response.data.message);
-      }
+      handleError(error);
     });
 //function : post api with json data
 export const postJsonApiWithToken = (token, endPoint, data) =>
@@ -351,33 +267,7 @@ export const postJsonApiWithToken = (token, endPoint, data) =>
       return res;
     })
     .catch(error => {
-      if (error?.response?.status === 422) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-        console.log(error.response.headers);
-      } else if (error?.response?.status === 404) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else if (error?.response?.status === 401) {
-        // Alert.alert('', `${error.response.data.message}`);
-        // Toast.show({ text1: error.response.data.message });
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else if (error?.response?.status === 500) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else {
-        // Alert.alert('', `${error}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      }
+      handleError(error);
     });
 
 export const deleteApi = (token, endPoint, id) =>
@@ -393,33 +283,7 @@ export const deleteApi = (token, endPoint, id) =>
       return res;
     })
     .catch(error => {
-      if (error?.response?.status === 422) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-        console.log(error.response.headers);
-      } else if (error?.response?.status === 404) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else if (error?.response?.status === 401) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else if (error?.response?.status === 500) {
-        // Alert.alert('', `${error.response.data.message}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      } else {
-        // Alert.alert('', `${error}`);
-        Toast.show({text1: error.response.data.message});
-        console.log('data', error.response.data);
-        console.log('status', error.response.status);
-      }
+      handleError(error);
     });
 
 export const requestPostApi = async (endPoint, body, method, token) => {
@@ -444,7 +308,7 @@ export const requestPostApi = async (endPoint, body, method, token) => {
       body: body == '' ? '' : JSON.stringify(body),
       headers: header,
     });
-    let code = await response.status;
+    let code = response.status;
     console.log('the api responce is------------->>', url, code);
     //  let responseJ = await response.json();
     //  console.log('the api responce is',responseJ.headers)

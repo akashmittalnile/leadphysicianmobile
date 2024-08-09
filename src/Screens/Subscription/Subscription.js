@@ -23,6 +23,8 @@ import {
   getAvailablePurchases,
   requestSubscription,
   clearTransactionIOS,
+  purchaseUpdatedListener,
+  finishTransaction,
 } from 'react-native-iap';
 import {styles} from './SubscriptionStyle';
 import Loader from '../../Components/Loader';
@@ -69,6 +71,36 @@ const Subscription = ({navigation, route}) => {
     {code: '+91', label: 'India'},
     // Add more country codes as needed
   ];
+
+  React.useEffect(() => {
+    const subscriptionListener = purchaseUpdatedListener(async purchase => {
+      try {
+        const receipt = purchase?.transactionReceipt;
+        if (receipt) {
+          // await finishTransaction(purchase);
+          console.log({
+            subscription_id: purchase?.originalTransactionIdentifierIOS,
+            plan_id: selectedSubscription?.id,
+            transaction_id: purchase?.transactionId,
+            type: '2',
+          })
+         const res = await postApiWithToken(userToken, IOS_SUBSCRIPTION, {
+            subscription_id: purchase?.originalTransactionIdentifierIOS,
+            plan_id: selectedSubscription?.id,
+            transaction_id: purchase?.transactionId,
+            type: '2',
+          });
+          console.log('nile', res?.data)
+        }
+      } catch (err) {
+        console.log('Error finishing transaction', err);
+      }
+    });
+
+    return () => {
+      subscriptionListener?.remove();
+    };
+  }, []);
 
   React.useEffect(() => {
     // let IosInAppListener = null;
@@ -179,36 +211,34 @@ const Subscription = ({navigation, route}) => {
   const renderDoneButton = () => null;
 
   const requestIosSubscription = async sku => {
-    console.log('1');
     try {
-      const transaction = await requestSubscription({sku});
-      // console.log('shoaib', transaction);
-      if (transaction?.transactionReceipt) {
-        console.log('hit ios_subscription');
-        await postApiWithToken(userToken, IOS_SUBSCRIPTION, {
-          subscription_id: transaction?.originalTransactionIdentifierIOS,
-          plan_id: selectedSubscription?.id,
-          transaction_id: transaction?.transactionId,
-          type: '2',
-        });
-      }
+      console.log({sku});
+      const _requestSubscription = await requestSubscription({sku});
+      console.log('requestSubscription', _requestSubscription);
     } catch (err) {
       console.log('err in requesting ios subscription', err);
     } finally {
-      clearTransactionIOS();
+      await clearTransactionIOS();
       setInAppLoader(false);
     }
   };
 
   const iosSubscriptionHandler = async _item => {
-    setInAppLoader(true);
-    if (iosSubscription?.length > 0) {
-      const item = iosSubscription?.filter(
-        item => item?.title?.toLowerCase() === _item?.name?.toLowerCase(),
-      );
-      const shoaib = await getAvailablePurchases();
-      console.log('shoaib nile', shoaib?.length);
-      requestIosSubscription(item[0]?.productId);
+    try {
+      setInAppLoader(true);
+      console.log('2');
+      if (iosSubscription?.length > 0) {
+        console.log('3');
+        // console.log('iosSubscription length shoaib', iosSubscription, _item)
+        const item = iosSubscription?.filter(
+          item => item?.title?.toLowerCase() === _item?.name?.toLowerCase(),
+        );
+        // const shoaib = await getAvailablePurchases();
+        console.log('shoaib nile', item);
+        requestIosSubscription(item[0]?.productId);
+      }
+    } catch (err) {
+      console.log('err in iosSubscriptionHandler', err);
     }
   };
   // console.log('selectedSubscription', selectedSubscription?.id);

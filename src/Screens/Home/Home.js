@@ -1656,7 +1656,7 @@ const Home = ({navigation}) => {
               )}
             />
           </View>
-          {true && (
+          {home?.reviews?.review && (
             <View
               style={{
                 flexDirection: 'row',

@@ -41,7 +41,7 @@ const Welcome = ({ navigation }) => {
         navigation.navigate('TermsCondition', { params: 'Policy' })
     }
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
 
             <View style={{
                 backgroundColor: 'white', flex: 1,
@@ -127,7 +127,7 @@ const Welcome = ({ navigation }) => {
             </View>
 
             {loading ? <Loader /> : null}
-        </SafeAreaView>
+        </View>
     );
 };
 const styles = StyleSheet.create({

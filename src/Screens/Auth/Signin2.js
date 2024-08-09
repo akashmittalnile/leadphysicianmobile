@@ -26,12 +26,7 @@ import CustomButtonBlue from '../../Components/CustomButtonBlue';
 import CustomTextBox from '../../Components/CustomTextBox';
 import Color from '../../Global/Color';
 import {dimensions} from '../../Global/Color';
-import {
-  requestPostApi,
-  LOGIN,
-  LOGOUT,
-  postApiWithToken,
-} from '../../Global/Service';
+import {requestPostApi, LOGIN, LOGOUT, postApiWithToken} from '../../Global/Service';
 import {CommonActions} from '@react-navigation/native';
 // svg image
 import {useDispatch} from 'react-redux';
@@ -71,37 +66,9 @@ const SignIn = ({navigation}) => {
     routes: [{name: 'BottomTab'}],
   });
 
-  async function registerAppWithFCM() {
-    const registerFCM = await messaging().registerDeviceForRemoteMessages();
-    console.log('Register status:', registerFCM);
-    if (registerFCM) {
-      console.log('Register Fcm  status:', registerFCM);
-      FcmToken();
-    }
-  }
-
-  async function requestUserPermission() {
-    try {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
-        registerAppWithFCM();
-      }
-    } catch (err) {
-      console.log(
-        'err in getting permission for messaging fcm token',
-        err?.message,
-      );
-    }
-  }
-
   const checkToken = async () => {
     try {
-      await requestUserPermission();
+      
       const token = await messaging().getToken();
       if (token) {
         console.log('fcm token', token);
@@ -139,9 +106,9 @@ const SignIn = ({navigation}) => {
     }
     return true;
   };
-  const logout = async token => {
-    console.log('logout--token', token);
-
+  const logout = async (token) => {
+    console.log("logout--token",token);
+    
     setLoading(true);
     try {
       const resp = await postApiWithToken(token, LOGOUT, {});
@@ -165,30 +132,29 @@ const SignIn = ({navigation}) => {
         password: password,
         device_id: fcmToken,
       };
-      // console.log('clllll----->>>', data);
+      console.log('clllll----->>>', data);
       setLoading(true);
       const {responseJson, err} = await requestPostApi(LOGIN, data, 'POST', '');
       // console.log('login?????????', responseJson.authorization.token);
-      if (responseJson.status) {
+      if (responseJson.status == true) {
         // console.log("true");
         setLoading(false);
-        // console.log('sign in jsonValue', responseJson.user);
+        console.log('sign in jsonValue', responseJson.user);
         await AsyncStorage.setItem(
           'userToken',
           responseJson.authorization.token,
         );
         const jsonValue = JSON.stringify(responseJson.user);
-        // console.log('sign in jsonValue', jsonValue);
+        console.log('sign in jsonValue', jsonValue);
         await AsyncStorage.setItem('userInfo', jsonValue);
-        // console.log('sign in --------nValue', responseJson.authorization.token);
+        console.log('sign in --------nValue', responseJson.authorization.token);
         dispatch(setUserToken(responseJson.authorization.token));
-        // console.log('after dispatch');
+        console.log('after dispatch');
         dispatch(setUser(responseJson.user));
         setLoading(false);
         navigation.dispatch(resetIndexGoToBottomTab);
-        Toast.show({type: 'success', text1: 'Loggedin successfully'});
-      } else {
-        // responseJson.json().then(data => {console.log('shoaib', data)})
+        Toast.show({ type: 'success', text1: 'Loggedin successfully' });
+      }  else {
         if (responseJson?.token) {
           Alert.alert('', `${responseJson.message}`, [
             {
@@ -199,7 +165,7 @@ const SignIn = ({navigation}) => {
             {text: 'Reset', onPress: () => logout(responseJson?.token)},
           ]);
         } else {
-          Toast.show({type: 'error', text1: responseJson?.message});
+          Toast.show({ type: 'error', text1: responseJson?.message });
           setLoading(false);
         }
       }
@@ -222,114 +188,109 @@ const SignIn = ({navigation}) => {
   };
 
   return (
-    <>
-      <KeyboardAvoidingView
-        style={{flex: 1, backgroundColor: 'white'}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ScrollView
-          keyboardShouldPersistTaps="always"
-          bounces={false}
-          contentContainerStyle={{flexGrow: 1}}>
-          <ImageBackground
-            source={require('../../Global/Images/BackgroundAuth.png')}
-            style={styles.backgroundImg}>
-            <CustomHeader navigation={navigation} text="Sign In" />
-            <Logo
-              width={300}
-              height={80}
-              style={{alignSelf: 'center', marginVertical: 30}}></Logo>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <KeyboardAvoidingView style={{flex:1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView keyboardShouldPersistTaps="always" bounces={false} contentContainerStyle={{flexGrow: 1}}>
+        <ImageBackground
+          source={require('../../Global/Images/BackgroundAuth.png')}
+          style={styles.backgroundImg}>
+          <CustomHeader navigation={navigation} text="Sign In" />
+          <Logo
+            width={300}
+            height={80}
+            style={{alignSelf: 'center', marginVertical: 30}}></Logo>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              marginTop: 120,
+            }}>
+            {/* <Logo width={300} height={100} style={{ alignSelf: 'center', marginVertical: 30 }} ></Logo> */}
+
+            <View style={{marginTop: 10}}>
+              <CustomTextBox
+                imageComponent={<EmailSvg width={24} height={24} />}
+                //  placeholder='Email address'
+                value={emailid}
+                onChangeText={text => {
+                  setEmailid(text);
+                }}
+                placeholder={'Email Address'}></CustomTextBox>
+            </View>
+
+            <View style={{marginTop: 12}}>
+              <CustomTextBox
+                imageComponent={<Lock width={24} height={24} />}
+                placeholder="Password"
+                value={password}
+                onChangeText={text => {
+                  setPassword(text);
+                }}
+                secureTextEntry={true}
+                style={{color: 'black', backgroundColor: 'red'}}
+                placeholderTextColor="black"></CustomTextBox>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                console.log('did i reach here');
+                navigation.navigate('ForgotPassword');
+              }}>
+              <MyText
+                text="Forgot Password?"
+                fontWeight="normal"
+                fontSize={14}
+                textColor={Color.LIGHT_BLACK}
+                fontFamily="Roboto"
+                style={{
+                  fontWeight: '400',
+                  textAlign: 'right',
+                  marginVertical: 13,
+                }}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                LoginPressed();
+              }}
+              style={{marginTop: 20}}>
+              <CustomButtonBlue name="Login"></CustomButtonBlue>
+            </TouchableOpacity>
             <View
               style={{
-                backgroundColor: 'white',
-                width: '90%',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                marginTop: 80,
+                alignSelf: 'center',
+                marginTop: '14%',
+                flexDirection: 'row',
               }}>
-              {/* <Logo width={300} height={100} style={{ alignSelf: 'center', marginVertical: 30 }} ></Logo> */}
-
-              <View style={{marginTop: 10}}>
-                <CustomTextBox
-                  imageComponent={<EmailSvg width={24} height={24} />}
-                  //  placeholder='Email address'
-                  value={emailid}
-                  onChangeText={text => {
-                    setEmailid(text);
-                  }}
-                  placeholder={'Email Address'}></CustomTextBox>
-              </View>
-
-              <View style={{marginTop: 12}}>
-                <CustomTextBox
-                  imageComponent={<Lock width={24} height={24} />}
-                  placeholder="Password"
-                  value={password}
-                  onChangeText={text => {
-                    setPassword(text);
-                  }}
-                  secureTextEntry={true}
-                  style={{color: 'black', backgroundColor: 'red'}}
-                  placeholderTextColor="black"></CustomTextBox>
-              </View>
+              <Text style={styles.myText}>Don’t have an account?</Text>
               <TouchableOpacity
                 onPress={() => {
-                  console.log('did i reach here');
-                  navigation.navigate('ForgotPassword');
+                  navigation.navigate('Signup');
                 }}>
-                <MyText
-                  text="Forgot Password?"
-                  fontWeight="normal"
-                  fontSize={14}
-                  textColor={Color.LIGHT_BLACK}
-                  fontFamily="Roboto"
-                  style={{
-                    fontWeight: '400',
-                    textAlign: 'right',
-                    marginVertical: 13,
-                  }}
-                />
+                <Text style={[styles.myText, {color: Color.PRIMARY}]}>
+                  {' '}
+                  Signup
+                </Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  console.log('dftgyhujikol');
-                  LoginPressed();
-                }}
-                style={{marginTop: 20}}>
-                <CustomButtonBlue name="Login" />
-              </TouchableOpacity>
-              <View
-                style={{
-                  alignSelf: 'center',
-                  marginTop: '14%',
-                  flexDirection: 'row',
-                }}>
-                <Text style={styles.myText}>Don’t have an account?</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('Signup');
-                  }}>
-                  <Text style={[styles.myText, {color: Color.PRIMARY}]}>
-                    {' '}
-                    Signup
-                  </Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </ImageBackground>
-          {/* <View style={{height:210}}/> */}
-        </ScrollView>
+          </View>
+        </ImageBackground>
+        <View style={{height:210}}/>
+      </ScrollView>
       </KeyboardAvoidingView>
       {My_Alert ? (
-        <MyAlert
-          sms={alert_sms}
-          okPress={() => {
-            setMy_Alert(false);
-          }}
-        />
-      ) : null}
+          <MyAlert
+            sms={alert_sms}
+            okPress={() => {
+              setMy_Alert(false);
+            }}
+          />
+        ) : null}
       {loading ? <Loader /> : null}
-    </>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
